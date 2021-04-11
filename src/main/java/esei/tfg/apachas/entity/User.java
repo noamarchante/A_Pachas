@@ -44,6 +44,8 @@ public class User implements Serializable {
 
     //ATRIBUTO: CONTRASEÑA
     @Column(name = "userPassword", nullable = false)
+    @NotNull
+    @NotBlank
     private String userPassword;
 
     //ATRIBUTO: EMAIL
@@ -67,32 +69,28 @@ public class User implements Serializable {
     @Column(name = "userPhoto")
     private String userPhoto;
 
+    //N:M USUARIO RELACIONADO CON USUARIO
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserUser> userUserSet = new HashSet<>();
+
+    //N:M USUARIO RELACIONADO CON USUARIO
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserUser> userFriendSet = new HashSet<>();
+
     public User() {
     }
 
     public User(long userId, String userName, String userSurname, String userLogin, String userPassword, String userEmail, Date userBirthday, String userPhoto) {
         this.userId = userId;
-        this.userName = userName;
-        this.userSurname = userSurname;
-        this.userLogin = userLogin;
-        this.userPassword = userPassword;
-        this.userEmail = userEmail;
-        this.userBirthday = userBirthday;
-        this.userPhoto = userPhoto;
-    }
-
-    public User( String userName, String userSurname, String userLogin, String userPassword, String userEmail, Date userBirthday, String userPhoto) {
-        this.userName = userName;
-        this.userSurname = userSurname;
-        this.userLogin = userLogin;
-        this.userPassword = userPassword;
-        this.userEmail = userEmail;
-        this.userBirthday = userBirthday;
-        this.userPhoto = userPhoto;
-    }
-
-    public User (long userId){
-        this.userId = userId;
+        this.setUserName(userName);
+        this.setUserSurname(userSurname);
+        this.setUserLogin(userLogin);
+        this.setUserPassword(userPassword);
+        this.setUserEmail(userEmail);
+        this.setUserBirthday(userBirthday);
+        this.setUserPhoto(userPhoto);
     }
 
     public long getUserId() {
@@ -103,12 +101,8 @@ public class User implements Serializable {
         return userName;
     }
 
-    public Date getUserBirthday() {
-        return userBirthday;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
+    public String getUserSurname() {
+        return userSurname;
     }
 
     public String getUserLogin() {
@@ -119,43 +113,59 @@ public class User implements Serializable {
         return userPassword;
     }
 
-    public String getUserSurname() {
-        return userSurname;
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public Date getUserBirthday() {
+        return userBirthday;
     }
 
     public String getUserPhoto() {
         return userPhoto;
     }
 
-    public void setUserBirthday(Date userBirthday) {
-        this.userBirthday = userBirthday;
+    public Set<UserUser> getUserUserSet() {
+        return userUserSet;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
+    public Set<UserUser> getUserFriendSet() {
+        return userFriendSet;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    public void setUserSurname(String userSurname) {
+        this.userSurname = userSurname;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
+
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setUserBirthday(Date userBirthday) {
+        this.userBirthday = userBirthday;
     }
 
     public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;
     }
 
-    public void setUserSurname(String userSurname) {
-        this.userSurname = userSurname;
+    public void setUserUserSet(Set<UserUser> userUserSet) {
+        this.userUserSet = userUserSet;
+    }
+
+    public void setUserFriendSet(Set<UserUser> userFriendSet) {
+        this.userFriendSet = userFriendSet;
     }
 }
