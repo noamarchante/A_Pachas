@@ -79,6 +79,31 @@ public class User implements Serializable {
     @Transient
     private Set<UserUser> userFriendSet = new HashSet<>();
 
+    //N:M USUARIO PARTICIPA EN EVENTO
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserEventParticipate> userEventParticipateSet = new HashSet<>();
+
+    //1:N USUARIO CREA EVENTO
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Transient
+    private Set<Event> eventSet = new HashSet<>();
+
+    //N:M USUARIO PAGA ELEMENTO
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserItemPay> userItemPaySet = new HashSet<>();
+
+    //N:M USUARIO DEBE ELEMENTO
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserItemDebt> userItemDebtSet = new HashSet<>();
+
+    //N:M USUARIO INTEGRADO EN GRUPO
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserGroupUser> userGroupUserSet = new HashSet<>();
+
     public User() {
     }
 
@@ -168,4 +193,45 @@ public class User implements Serializable {
     public void setUserFriendSet(Set<UserUser> userFriendSet) {
         this.userFriendSet = userFriendSet;
     }
+
+    public Set<UserEventParticipate> getUserEventSet() {
+        return userEventParticipateSet;
+    }
+
+    public void setUserEventSet(Set<UserEventParticipate> userEventParticipateSet) {
+        this.userEventParticipateSet = userEventParticipateSet;
+    }
+
+    public Set<Event> getEventSet() {
+        return eventSet;
+    }
+
+    public void setEventSet(Set<Event> eventSet) {
+        this.eventSet = eventSet;
+    }
+
+    public Set<UserItemPay> getUserItemPaySet() {
+        return userItemPaySet;
+    }
+
+    public void setUserItemPaySet(Set<UserItemPay> userItemPaySet) {
+        this.userItemPaySet = userItemPaySet;
+    }
+
+    public Set<UserItemDebt> getUserItemDebtSet() {
+        return userItemDebtSet;
+    }
+
+    public void setUserItemDebtSet(Set<UserItemDebt> userItemDebtSet) {
+        this.userItemDebtSet = userItemDebtSet;
+    }
+
+    public Set<UserGroupUser> getUserGroupUserSet() {
+        return userGroupUserSet;
+    }
+
+    public void setUserGroupUserSet(Set<UserGroupUser> userGroupUserSet) {
+        this.userGroupUserSet = userGroupUserSet;
+    }
+
 }
