@@ -1,0 +1,50 @@
+.form-signin {
+	width: 100%;
+	max-width: 600px;
+	padding: 15px;
+	margin: auto;
+}
+
+.title {
+	margin-bottom: 3.5rem;
+}
+
+.form-input {
+	font-family: inherit;
+	width: 100%;
+	border: 0;
+	border-bottom: 2px solid gray;
+	outline: 0;
+	font-size: 1.1rem;
+	margin: 1rem 0 1rem 0;
+	background: transparent;
+	transition: border-color 0.2s;	
+}
+
+::placeholder {
+	font-size: 0.9rem;
+}
+
+form button {
+	color: white;
+	background-color: #0079b8;
+	height: 2rem;
+	font-size: 0.9rem;
+	padding: 5px;	
+	margin: 1rem 0 1rem 0;
+}
+
+form button:focus {
+	box-shadow: none;
+	outline: 5px auto -webkit-focus-ring-color;
+}
+form button:hover {
+	background-color: #004a70;
+}
+
+.alert {
+	font-size: 0.8rem;
+	font-weight: 100;
+	padding: 5px;
+	margin: 0;
+}
