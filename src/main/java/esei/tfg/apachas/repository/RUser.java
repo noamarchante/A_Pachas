@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface RUser extends CrudRepository<User, Long>, PagingAndSortingRepository<User, Long> {
 
     User findByUserId(long userId);
+    User findByUserLogin (String userLogin);
 
     @Override
     Page<User> findAll(Pageable pageable);

@@ -23,7 +23,7 @@ public class ConUser {
     }
 
     public User conMUser(MUser mUser) {
-        return new User(mUser.getUserId(), mUser.getUserName(), mUser.getUserSurname(), mUser.getUserLogin(), mUser.getUserPassword(), mUser.getUserEmail(), mUser.getUserBirthday(), mUser.getUserPhoto());
+        return new User(mUser.getUserId(), mUser.getUserName(), mUser.getUserSurname(), mUser.getUserLogin(), mUser.getUserPassword(), mUser.getUserEmail(), mUser.getUserBirthday(), mUser.getUserPhoto(), mUser.getRoles(), mUser.getPermissions());
     }
 
 

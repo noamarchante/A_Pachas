@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name = "user")
 @Table(name = "user")
@@ -69,6 +67,10 @@ public class User implements Serializable {
     @Column(name = "userPhoto")
     private String userPhoto;
 
+    private String roles = "";
+
+    private String permissions = "";
+
     //N:M USUARIO RELACIONADO CON USUARIO
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Transient
@@ -107,7 +109,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(long userId, String userName, String userSurname, String userLogin, String userPassword, String userEmail, Date userBirthday, String userPhoto) {
+    public User(long userId, String userName, String userSurname, String userLogin, String userPassword, String userEmail, Date userBirthday, String userPhoto, String roles, String permissions) {
         this.userId = userId;
         this.setUserName(userName);
         this.setUserSurname(userSurname);
@@ -116,6 +118,13 @@ public class User implements Serializable {
         this.setUserEmail(userEmail);
         this.setUserBirthday(userBirthday);
         this.setUserPhoto(userPhoto);
+        this.setPermissions(permissions);
+        this.setRoles(roles);
+
+    }
+
+    public User(long userId){
+        this.userId = userId;
     }
 
     public long getUserId() {
@@ -178,9 +187,7 @@ public class User implements Serializable {
         this.userEmail = userEmail;
     }
 
-    public void setUserBirthday(Date userBirthday) {
-        this.userBirthday = userBirthday;
-    }
+    public void setUserBirthday(Date userBirthday) { this.userBirthday = userBirthday; }
 
     public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;
@@ -234,4 +241,33 @@ public class User implements Serializable {
         this.userGroupUserSet = userGroupUserSet;
     }
 
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
+    }
+
+    public List<String> getRoleList(){
+        if(this.roles.length() > 0){
+            return Arrays.asList(this.roles.split(","));
+        }
+        return new ArrayList<>();
+    }
+
+    public List<String> getPermissionList(){
+        if(this.permissions.length() > 0){
+            return Arrays.asList(this.permissions.split(","));
+        }
+        return new ArrayList<>();
+    }
 }

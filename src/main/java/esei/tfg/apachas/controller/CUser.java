@@ -1,5 +1,6 @@
 package esei.tfg.apachas.controller;
 
+import esei.tfg.apachas.configuration.SecurityConfiguration;
 import esei.tfg.apachas.model.MUser;
 import esei.tfg.apachas.service.SUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,27 +15,34 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/users")
 @CrossOrigin
 public class CUser {
     @Autowired
     @Qualifier("SUser")
     SUser sUser;
 
-    @PostMapping("/userAdd")
+    @Autowired
+    SecurityConfiguration securityConfiguration;
+
+    @PostMapping
     public ResponseEntity<Void> addUser(@RequestBody @Valid MUser mUser, UriComponentsBuilder builder) {
+        mUser.setUserPassword(securityConfiguration.passwordEncoder().encode(mUser.getUserPassword()));
+
         boolean flag = sUser.insert(mUser);
         if (!flag) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(builder.path("/userSelect/{userId}").buildAndExpand(mUser.getUserId()).toUri());
+            headers.setLocation(builder.path("/{userId}").buildAndExpand(mUser.getUserId()).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
         }
     }
 
-    @PutMapping("/userUpdate")
+    @PutMapping
     public ResponseEntity<MUser> updateUser(@RequestBody @Valid MUser mUser) {
+        mUser.setUserPassword(securityConfiguration.passwordEncoder().encode(mUser.getUserPassword()));
+
         boolean flag = sUser.update(mUser);
         if (!flag) {
             return new ResponseEntity<>(mUser, HttpStatus.NOT_FOUND);
@@ -43,7 +51,7 @@ public class CUser {
         }
     }
 
-    @DeleteMapping("/userDelete/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable("userId") long userId) {
         boolean flag = sUser.delete(userId);
         if (!flag) {
@@ -53,19 +61,19 @@ public class CUser {
         }
     }
 
-    @GetMapping("/userSelect/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<MUser> getUserById(@PathVariable("userId") long userId) {
         MUser mUser = sUser.selectById(userId);
         return new ResponseEntity<>(mUser, HttpStatus.OK);
     }
 
-    @GetMapping("/userSelect")
+    @GetMapping
     public ResponseEntity<List<MUser>> getAllUser() {
         List<MUser> userList = sUser.selectAll();
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-    @GetMapping("/userPageableSelect")
+    @GetMapping("/pageable")
     public ResponseEntity<List<MUser>> getPageableUser(Pageable pageable) {
         List<MUser> userList = sUser.selectPageable(pageable);
         return new ResponseEntity<>(userList, HttpStatus.OK);

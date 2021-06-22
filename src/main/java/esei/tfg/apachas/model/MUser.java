@@ -15,6 +15,8 @@ public class MUser {
     private String userEmail;
     private Date userBirthday;
     private String userPhoto;
+    private String roles;
+    private String permissions;
 
     public MUser() {
     }
@@ -28,6 +30,8 @@ public class MUser {
         this.userEmail = user.getUserEmail();
         this.userBirthday = user.getUserBirthday();
         this.userPhoto = user.getUserPhoto();
+        this.roles = user.getRoles();
+        this.permissions = user.getPermissions();
     }
 
     public long getUserId() {
@@ -92,5 +96,21 @@ public class MUser {
 
     public void setUserSurname(String userSurname) {
         this.userSurname = userSurname;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
     }
 }
