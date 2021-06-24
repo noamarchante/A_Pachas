@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-@CrossOrigin
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST, RequestMethod.DELETE})
 public class CUserUser {
     @Autowired
     @Qualifier("SUserUser")

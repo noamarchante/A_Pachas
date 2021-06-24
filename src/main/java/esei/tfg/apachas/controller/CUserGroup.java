@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-@CrossOrigin
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class CUserGroup {
     @Autowired
     @Qualifier("SUserGroup")

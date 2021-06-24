@@ -22,12 +22,7 @@ export class AuthenticationService {
 
 		this.user.login = login;
 		this.user.password = password;
-    console.log("AUTHENTICATION.SERVICE" + login);
-    console.log("AUTHENTICATION.SERVICE" + password);
 
-    console.log("AUTHENTICATION.SERVICE USER" + this.user.login);
-    console.log("AUTHENTICATION.SERVICE USER" + this.user.password);
-  console.log("URL " + `${environment.restApi}/login`);
     return this.http.post<void>(`${environment.restApi}/login`, {
       "username":this.user.login,
       "password": this.user.password
@@ -42,8 +37,6 @@ export class AuthenticationService {
 	public logIn(login: string, password: string) {
 		this.user.login = login;
 		this.user.password = password;
-    console.log("AUTHENTICATION.SERVICE LOGIN" + login);
-    console.log("AUTHENTICATION.SERVICE LOGIN" + password);
 		this.user.authHeader = this.getAuthorizationHeader();
 		this.user.authenticated = true;
 		this.user.save();
