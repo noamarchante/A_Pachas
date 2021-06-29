@@ -11,6 +11,8 @@ export class User {
   private _userBirthday: Date;
   private _userPhoto: string;
   private _passwordConfirm: string;
+  private _rol: string;
+  private _permissions: string;
 
   constructor() {
     const user: User = JSON.parse(<string>localStorage.getItem('currentUser'));
@@ -25,6 +27,8 @@ export class User {
       this._passwordConfirm = user._passwordConfirm;
       this._authenticated = user._authenticated;
       this._authHeader = user._authHeader;
+      this._rol = user._rol;
+      this._permissions = user._permissions;
     } else {
       this._authenticated = false;
     }
@@ -106,6 +110,22 @@ export class User {
 
   set password(value: string) {
     this._password = value;
+  }
+
+  get rol(): string {
+    return this._rol;
+  }
+
+  set rol(value: string) {
+    this._rol = value;
+  }
+
+  get permissions(): string {
+    return this._permissions;
+  }
+
+  set permissions(value: string) {
+    this._permissions = value;
   }
 
   //ALMACENA AL USUARIO LOGGEADO ASOCIADO A LA CLAVE currentUser EN FORMATO JSON

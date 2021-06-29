@@ -45,4 +45,7 @@ export class AppComponent implements OnInit {
     this.authenticationService.logOut();
     this.router.navigateByUrl('/login');
   }
+  logIn(){
+    this.router.navigateByUrl('/login');
+  }
 }

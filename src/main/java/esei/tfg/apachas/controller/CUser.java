@@ -28,6 +28,7 @@ public class CUser {
     @PostMapping
     public ResponseEntity<Void> addUser(@RequestBody @Valid MUser mUser, UriComponentsBuilder builder) {
         mUser.setUserPassword(securityConfiguration.passwordEncoder().encode(mUser.getUserPassword()));
+        mUser.setRoles("USER");
 
         boolean flag = sUser.insert(mUser);
         if (!flag) {

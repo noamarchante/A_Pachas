@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpRequest} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {User} from '../models/User';
-import {Observable} from 'rxjs';
 import {APachasError} from '../modules/notification/entities';
 
 //SERVICE -> Se encarga de acceder a los datos para entregarlos a los componentes
@@ -14,31 +13,37 @@ import {APachasError} from '../modules/notification/entities';
 export class AuthenticationService {
 
 	private user: User = new User();
+	authorizationHeader: string;
 
 	constructor(private  http: HttpClient) {}
 
   //COMPRUEBA SI LAS CREDENCIALES SON CORRECTAS
-	checkCredentials(login: string, password: string): Observable<void> {
+	checkCredentials(login: string, password: string) {
 
 		this.user.login = login;
 		this.user.password = password;
 
     return this.http.post<void>(`${environment.restApi}/login`, {
-      "username":this.user.login,
+      "username": this.user.login,
       "password": this.user.password
-    })
+    }, {observe:"response" as "body", responseType: 'json'})
       .pipe(
         APachasError.throwOnError('Failed to login', `User or password incorrect. Please try again.`)
-      );
-
+      )/*.subscribe((data: any) => {
+          this.authorizationHeader = data.headers.get('authorization');
+          console.log("Authorization " + this.authorizationHeader);
+        })*/;
 	}
 
   //CONFIGURA AL USUARIO LOGGEADO
-	public logIn(login: string, password: string) {
-		this.user.login = login;
+	public logIn(login: string, password: string, authorization: string ) {
+    this.authorizationHeader = authorization;
+    console.log(this.authorizationHeader);
+	  this.user.login = login;
 		this.user.password = password;
-		this.user.authHeader = this.getAuthorizationHeader();
+		this.user.authHeader = this.authorizationHeader;
 		this.user.authenticated = true;
+
 		this.user.save();
 	}
 
@@ -49,9 +54,8 @@ export class AuthenticationService {
 	}
 
 	//CABECERA DE LA AUTORIZACION => TOKEN
-  //como consigo el token de la cabecera de la respuesta del login
 	public getAuthorizationHeader(): string {
-		return 'Basic ' + btoa(this.user.login + ':' + this.user.password);
+		return this.authorizationHeader;
 	}
 
 	//DEVUELVE EL USUARIO AUTENTICADO
