@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Entity(name = "userUser")
 @Table(name = "userUser")
 public class UserUser implements Serializable {
+
     @EmbeddedId
     private UserUserId userUserId;
 
@@ -20,11 +21,15 @@ public class UserUser implements Serializable {
     @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     private User friend;
 
+    @Column(name = "status")
+    private boolean status;
+
     public UserUser (){
 
     }
-    public UserUser(UserUserId userUserId) {
+    public UserUser(UserUserId userUserId, boolean status) {
         this.userUserId = userUserId;
+        this.status = status;
     }
 
     public UserUserId getUserUserId() {
@@ -45,6 +50,14 @@ public class UserUser implements Serializable {
 
     public User getFriend() {
         return friend;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public void setFriend(User friend) {

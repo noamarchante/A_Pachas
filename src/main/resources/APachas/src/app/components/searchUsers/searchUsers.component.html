@@ -1,0 +1,30 @@
+<div class="searchDiv">
+    <form ngNativeValidate (input)="searchInput()" #friendsForm="ngForm">
+        <input type="search" id="friend_nameLogin" name="nameLogin" placeholder="Buscar por nombre de usuario" [(ngModel)]="login" required #userLoginForm="ngModel" aria-label="Search">
+    </form>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div *ngFor="let user of users">
+        <div class="col">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img class="image" [src]="getImage(user)">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="title">{{user.userLogin}}</h5>
+                            <p class="card-text"><a class="status" (click)="setStatus(user.userId)">{{friends[user.userId]}}</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="paginationDiv">
+    <ul class="pagination">
+        <li *ngIf="page!=0"><a (click)="setPage(-1)">Anterior</a></li>
+        <li *ngIf="page+1<totalPage"><a (click)="setPage(1)">Siguiente</a></li>
+    </ul>
+</div>

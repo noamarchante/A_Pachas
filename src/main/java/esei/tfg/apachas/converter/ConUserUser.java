@@ -22,6 +22,6 @@ public class ConUserUser {
     }
 
     public UserUser conMUserUser(MUserUser mUserUser) {
-        return new UserUser(new UserUserId(mUserUser.getFriendId(), mUserUser.getUserId()));
+        return new UserUser(new UserUserId(mUserUser.getFriendId(), mUserUser.getUserId()), mUserUser.getStatus());
     }
 }

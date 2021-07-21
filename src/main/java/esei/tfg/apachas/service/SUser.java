@@ -103,12 +103,29 @@ public class SUser implements UserDetailsService {
         return conUser.conUserList(userList);
     }
 
-    public synchronized List<MUser> selectPageable(Pageable pageable) {
-        return conUser.conUserList(rUser.findAll(pageable).getContent());
+    public synchronized List<MUser> selectPageable(String userLogin, Pageable pageable) {
+        return conUser.conUserList(rUser.findUsersByRolesEqualsAndUserLoginIsNotOrderByUserLoginAsc("USER", userLogin,pageable).getContent());
+    }
+
+    public synchronized List<MUser> selectPageableByUserLogin(String userLogin, String authLogin, Pageable pageable) {
+        return conUser.conUserList(rUser.findUsersByUserLoginContainingAndUserLoginIsNotAndRolesEqualsOrderByUserLoginAsc(userLogin, authLogin, "USER", pageable).getContent());
     }
 
     public synchronized MUser selectById(long userId) {
         User user = rUser.findById(userId).get();
         return conUser.conUser(user);
+    }
+
+    public synchronized MUser selectByUserLogin(String userLogin) {
+        User user = rUser.findByUserLogin(userLogin);
+        return conUser.conUser(user);
+    }
+
+    public synchronized Long countUsers(String authLogin){
+        return rUser.countByRolesAndUserLoginIsNot("USER",authLogin);
+    }
+
+    public synchronized Long countSearchUsers(String userLogin, String authLogin){
+        return rUser.countByRolesAndUserLoginContainingAndUserLoginIsNot("USER",userLogin,authLogin);
     }
 }

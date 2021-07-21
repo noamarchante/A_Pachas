@@ -21,7 +21,7 @@ public class ApachasApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApachasApplication.class, args);
     }
-    @Bean
+   /* @Bean
     public ServletWebServerFactory servletContainer(){
 
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory(){
@@ -42,14 +42,14 @@ public class ApachasApplication {
 
         tomcat.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
         return tomcat;
-    }
+    }*/
 
-    private Connector httpToHttpsRedirectConnector(){
+    /*private Connector httpToHttpsRedirectConnector(){
         Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
         connector.setScheme("http");
         connector.setPort(8080);
         connector.setSecure(false);
         connector.setRedirectPort(8443);
         return connector;
-    }
+    }*/
 }

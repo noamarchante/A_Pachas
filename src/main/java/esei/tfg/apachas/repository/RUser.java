@@ -12,7 +12,10 @@ public interface RUser extends CrudRepository<User, Long>, PagingAndSortingRepos
 
     User findByUserId(long userId);
     User findByUserLogin (String userLogin);
-
+    Long countByRolesAndUserLoginIsNot(String roles, String authLogin);
+    Long countByRolesAndUserLoginContainingAndUserLoginIsNot(String roles,String userLogin, String authLogin);
+    Page<User> findUsersByUserLoginContainingAndUserLoginIsNotAndRolesEqualsOrderByUserLoginAsc (String userLogin, String authLogin, String roles, Pageable pageable);
     @Override
     Page<User> findAll(Pageable pageable);
+    Page<User> findUsersByRolesEqualsAndUserLoginIsNotOrderByUserLoginAsc(String roles, String userLogin, Pageable pageable);
 }

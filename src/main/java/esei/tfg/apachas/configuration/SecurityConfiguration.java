@@ -127,6 +127,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         CorsConfiguration corsConf = new CorsConfiguration();
         corsConf.addExposedHeader("Authorization");
+        corsConf.addAllowedOrigin("*");
+        corsConf.addAllowedMethod("GET");
+        corsConf.addAllowedMethod("POST");
+        corsConf.addAllowedMethod("PUT");
+        corsConf.addAllowedMethod("DELETE");
+        corsConf.addAllowedMethod("OPTIONS");
         corsConf.applyPermitDefaultValues();
         http
                 .cors().configurationSource(request ->corsConf)
@@ -139,7 +145,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
-                .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/users").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.PUT, "/users").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET, "/usersUsers").hasAnyRole("ADMIN", "USER")
+
+
                 .anyRequest().authenticated();
     }
 

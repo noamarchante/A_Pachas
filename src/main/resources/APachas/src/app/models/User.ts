@@ -1,34 +1,33 @@
 //USUARIO AUTENTICADO
 
 export class User {
-  private _login: string;
-  private _password: string;
   private _authHeader: string;
   private _authenticated: boolean;
-  private _userName: string;
-  private _userSurname: string;
-  private _userEmail: string;
-  private _userBirthday: Date;
-  private _userPhoto: string;
-  private _passwordConfirm: string;
-  private _rol: string;
-  private _permissions: string;
+  private userLogin: string;
+  private userPassword: string;
+  private userName: string;
+  private userSurname: string;
+  private userEmail: string;
+  private userBirthday: Date;
+  private userPhoto: Blob;
+  private roles: string;
+  private permissions: string;
+  private userId: number;
 
   constructor() {
     const user: User = JSON.parse(<string>localStorage.getItem('currentUser'));
     if (user != null) {
-      this._login = user._login;
-      this._password = user._password;
-      this._userName = user._userName;
-      this._userEmail = user._userEmail;
-      this._userSurname = user._userSurname;
-      this._userBirthday = user._userBirthday;
-      this._userPhoto = user._userPhoto;
-      this._passwordConfirm = user._passwordConfirm;
+      this.userLogin = user.userLogin;
+      this.userPassword = user.userPassword;
+      this.userName = user.userName;
+      this.userEmail = user.userEmail;
+      this.userSurname = user.userSurname;
+      this.userBirthday = user.userBirthday;
+      this.userPhoto = user.userPhoto;
       this._authenticated = user._authenticated;
       this._authHeader = user._authHeader;
-      this._rol = user._rol;
-      this._permissions = user._permissions;
+      this.roles = user.roles;
+      this.permissions = user.permissions;
     } else {
       this._authenticated = false;
     }
@@ -51,81 +50,81 @@ export class User {
   }
 
   get email(): string {
-    return this._userEmail;
+    return this.userEmail;
   }
 
   set email(value: string) {
-    this._userEmail = value;
-  }
-
-  get passwordConfirm(): string {
-    return this._passwordConfirm;
-  }
-
-  set passwordConfirm(value: string) {
-    this._passwordConfirm = value;
+    this.userEmail = value;
   }
 
   get birthday(): Date {
-    return this._userBirthday;
+    return this.userBirthday;
   }
 
   set birthday(value: Date) {
-    this._userBirthday = value;
+    this.userBirthday = value;
   }
 
-  get photo(): string {
-    return this._userPhoto;
+  get photo(): Blob {
+    return this.userPhoto;
   }
 
-  set photo(value: string) {
-    this._userPhoto = value;
+  set photo(value: Blob) {
+    this.userPhoto = value;
   }
   get surname(): string {
-    return this._userSurname;
+    return this.userSurname;
   }
 
   set surname(value: string) {
-    this._userSurname = value;
+    this.userSurname = value;
   }
 
   get name(): string {
-    return this._userName;
+    return this.userName;
   }
 
   set name(value: string) {
-    this._userName = value;
+    this.userName = value;
   }
   get login(): string {
-    return this._login;
+    return this.userLogin;
   }
 
   set login(value: string) {
-    this._login = value;
+    this.userLogin = value;
   }
 
   get password(): string {
-    return this._password;
+    return this.userPassword;
   }
 
   set password(value: string) {
-    this._password = value;
+    this.userPassword = value;
   }
 
   get rol(): string {
-    return this._rol;
+    return this.roles;
   }
 
   set rol(value: string) {
-    this._rol = value;
+    this.roles = value;
   }
 
-  get permissions(): string {
-    return this._permissions;
+  get permission(): string {
+    return this.permissions;
   }
 
-  set permissions(value: string) {
-    this._permissions = value;
+  set permission(value: string) {
+    this.permissions = value;
+  }
+
+  get id(): number {
+    return this.userId;
+  }
+
+  set id(value: number) {
+    this.userId = value;
   }
 
   //ALMACENA AL USUARIO LOGGEADO ASOCIADO A LA CLAVE currentUser EN FORMATO JSON

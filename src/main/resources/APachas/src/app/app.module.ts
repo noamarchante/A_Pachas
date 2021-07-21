@@ -12,12 +12,14 @@ import {AuthenticationInterceptor} from './helpers/authentication.interceptor';
 import {HomeComponent} from './components/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RegisterComponent} from "./components/register/register.component";
+import {SearchUsersComponent} from "./components/searchUsers/searchUsers.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
+    SearchUsersComponent,
     HomeComponent
   ],
   imports: [

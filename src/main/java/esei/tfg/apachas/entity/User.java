@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.*;
 
 @Entity(name = "user")
@@ -33,7 +34,7 @@ public class User implements Serializable {
     private String userSurname;
 
     //ATRIBUTO: LOGIN
-    @Column(name = "userLogin", length = 15, nullable = false, unique = true)
+    @Column(name = "userLogin", length = 14, nullable = false, unique = true)
     @Size(min = 4, max = 15)
     @NotBlank
     @NotNull
@@ -64,8 +65,9 @@ public class User implements Serializable {
     private Date userBirthday;
 
     //ATRIBUTO: FOTO_USUARIO
-    @Column(name = "userPhoto")
-    private String userPhoto;
+    @Lob
+    @Column(name = "userPhoto", length = 100000)
+    private byte[] userPhoto;
 
     private String roles = "";
 
@@ -109,7 +111,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(long userId, String userName, String userSurname, String userLogin, String userPassword, String userEmail, Date userBirthday, String userPhoto, String roles, String permissions) {
+    public User(long userId, String userName, String userSurname, String userLogin, String userPassword, String userEmail, Date userBirthday, byte[] userPhoto, String roles, String permissions) {
         this.userId = userId;
         this.setUserName(userName);
         this.setUserSurname(userSurname);
@@ -155,7 +157,7 @@ public class User implements Serializable {
         return userBirthday;
     }
 
-    public String getUserPhoto() {
+    public byte[] getUserPhoto() {
         return userPhoto;
     }
 
@@ -189,7 +191,7 @@ public class User implements Serializable {
 
     public void setUserBirthday(Date userBirthday) { this.userBirthday = userBirthday; }
 
-    public void setUserPhoto(String userPhoto) {
+    public void setUserPhoto(byte[] userPhoto) {
         this.userPhoto = userPhoto;
     }
 

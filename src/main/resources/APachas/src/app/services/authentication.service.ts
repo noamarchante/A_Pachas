@@ -13,7 +13,6 @@ import {APachasError} from '../modules/notification/entities';
 export class AuthenticationService {
 
 	private user: User = new User();
-	authorizationHeader: string;
 
 	constructor(private  http: HttpClient) {}
 
@@ -29,19 +28,14 @@ export class AuthenticationService {
     }, {observe:"response" as "body", responseType: 'json'})
       .pipe(
         APachasError.throwOnError('Failed to login', `User or password incorrect. Please try again.`)
-      )/*.subscribe((data: any) => {
-          this.authorizationHeader = data.headers.get('authorization');
-          console.log("Authorization " + this.authorizationHeader);
-        })*/;
+      );
 	}
 
   //CONFIGURA AL USUARIO LOGGEADO
 	public logIn(login: string, password: string, authorization: string ) {
-    this.authorizationHeader = authorization;
-    console.log(this.authorizationHeader);
 	  this.user.login = login;
 		this.user.password = password;
-		this.user.authHeader = this.authorizationHeader;
+		this.user.authHeader = authorization;
 		this.user.authenticated = true;
 
 		this.user.save();
@@ -55,7 +49,7 @@ export class AuthenticationService {
 
 	//CABECERA DE LA AUTORIZACION => TOKEN
 	public getAuthorizationHeader(): string {
-		return this.authorizationHeader;
+		return this.getUser().authHeader;
 	}
 
 	//DEVUELVE EL USUARIO AUTENTICADO

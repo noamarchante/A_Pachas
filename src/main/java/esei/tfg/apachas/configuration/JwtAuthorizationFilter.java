@@ -46,15 +46,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         if (token != null) {
 
-            String userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
+            String userLogin = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
                     .build()
                     .verify(token)
                     .getSubject();
 
-            if (userName != null) {
-                User user = rUser.findByUserLogin(userName);
+            if (userLogin != null) {
+                User user = rUser.findByUserLogin(userLogin);
                 UserPrincipal principal = new UserPrincipal(user);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userName, null, principal.getAuthorities());
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userLogin, null, principal.getAuthorities());
                 return auth;
             }
             return null;

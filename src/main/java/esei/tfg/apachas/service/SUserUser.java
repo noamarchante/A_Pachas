@@ -43,7 +43,7 @@ public class SUserUser {
         }
     }
 
-    /*public synchronized boolean update(MUserUser mUserUser) {
+    public synchronized boolean update(MUserUser mUserUser) {
         UserUser userUser = conUserUser.conMUserUser(mUserUser);
         UserUser existingUserUser = rUserUser.findByUserUserId(userUser.getUserUserId());
         User existingUser = rUser.findByUserId(userUser.getUserUserId().getUserId());
@@ -55,7 +55,7 @@ public class SUserUser {
         } else {
             return false;
         }
-    }*/
+    }
 
     public synchronized boolean delete(UserUserId userUserId) {
         UserUser existingUserUser = rUserUser.findByUserUserId(userUserId);

@@ -14,7 +14,7 @@ public class MUser {
     private String userPassword;
     private String userEmail;
     private Date userBirthday;
-    private String userPhoto;
+    private byte[] userPhoto;
     private String roles;
     private String permissions;
 
@@ -62,7 +62,7 @@ public class MUser {
         return userSurname;
     }
 
-    public String getUserPhoto() {
+    public byte[] getUserPhoto() {
         return userPhoto;
     }
 
@@ -90,7 +90,7 @@ public class MUser {
         this.userPassword = userPassword;
     }
 
-    public void setUserPhoto(String userPhoto) {
+    public void setUserPhoto(byte[] userPhoto) {
         this.userPhoto = userPhoto;
     }
 

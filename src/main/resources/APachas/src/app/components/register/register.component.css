@@ -10,7 +10,6 @@ section
 {
   position: relative;
   min-height: 100vh;
-  background: #d1e5c5;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,6 +91,18 @@ section .container .user .formBx h2
   width: 100%;
   margin-bottom: 10px;
   color: #555;
+}
+
+section .container .user .formBx h2 a {
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+  color: #555;
+  text-decoration: none;
 }
 section .container .user .formBx input
 {

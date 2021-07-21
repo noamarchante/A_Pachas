@@ -3,7 +3,7 @@
     <div class="user signupBx">
       <div class="formBx">
         <form (submit)="onCreate()" ngNativeValidate #loginForm="ngForm">
-          <h2>Crear una cuenta en ¡A pachas!</h2>
+          <h2>Crear una cuenta en <a href="/home">¡A pachas!</a></h2>
           <div>
             <input type="text" id="register_userName" name="userName" placeholder="Nombre" pattern="[a-zA-ZñÑ]{1,100}" title="Must be an alpha"
                    [(ngModel)]="name" required #usernameForm="ngModel">
@@ -20,7 +20,7 @@
             </div>
           </div>
           <div>
-            <input type="text" id="register_userLogin" name="userLogin" placeholder="Nombre de usuario" [(ngModel)]="login" required #userLoginForm="ngModel" minlength="6" pattern="[a-zA-ZñÑ0-9_-]{1,100}" title="Must be an alphanumeric">
+            <input type="text" id="register_userLogin" name="userLogin" placeholder="Nombre de usuario" [(ngModel)]="login" required #userLoginForm="ngModel" minlength="6"  maxlength="13" pattern="[a-zA-ZñÑ0-9_-]{1,100}" title="Must be an alphanumeric">
             <div *ngIf="loginForm.submitted && userLoginForm.invalid" class="alert alert-danger">
               <div *ngIf="userLoginForm.errors.required">El nombre de usuario es un campo obligatorio</div>
               <div *ngIf="userLoginForm.errors.pattern">El nombre de usuario solo puede contener letras, número, _ y debe estar comprendido entre 1 y 100 caracteres</div>
