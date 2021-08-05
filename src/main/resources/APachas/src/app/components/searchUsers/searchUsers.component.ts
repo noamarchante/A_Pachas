@@ -9,7 +9,11 @@ import {DomSanitizer} from "@angular/platform-browser";
 
 
 export enum STATUS {
-    REQUESTSTATUS = 'Solicitar amistad', PENDINGSTATUS = 'Solicitud pendiente', FRIENDSSTATUS = 'Siguiendo'
+    REQUEST = 'Solicitar amistad', PENDING = 'Solicitud pendiente', FOLLOW = 'Siguiendo', SENT = 'Solicitud enviada'
+}
+
+export enum MESSAGE{
+    CANCELREQUEST = '¿Cancelar solicitud?', UNFOLLOW = '¿Dejar de seguir?', ALLOWREQUEST = '¿Aceptar solicitud?'
 }
 
 @Component({
@@ -18,16 +22,16 @@ export enum STATUS {
     styleUrls: ['./searchUsers.component.css']
 })
 export class SearchUsersComponent implements OnInit {
-    users: MUser[] = [];
-    friends: {[index: number]: any;} = {};
-    images: {[index:number]: any;} = {};
-    authUser: MUser;
     login = "";
-    totalPage = 0;
+    users: MUser[] = [];
+    images: {[index:number]: any;} = {};
     defaultImage = "./assets/user.png";
+    messages: {[index: number]: any;} = {};
+    friends: {[index: number]: any;} = {};
+    totalPage = 0;
     page = 0;
-    size = 6;
-    return = 'home';
+    private size = 6;
+    private authUser: MUser;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -44,18 +48,57 @@ export class SearchUsersComponent implements OnInit {
         this.page += page;
         this.pagination();
     }
-    pagination(){
-        if(this.login == ""){
-        this.getUsers();
-        }else{
-            this.search();
-        }
-    }
+
     searchInput(){
         this.page=0;
         this.pagination();
     }
-    search(){
+
+    setStatus (userId: number){
+        let status: string = this.friends[userId];
+        if (status == STATUS.REQUEST){
+            let mUserUser: MUserUser = new MUserUser();
+            mUserUser.userId = this.authUser.userId;
+            mUserUser.friendId = userId;
+            mUserUser.status = false;
+            this.userUserService.create(mUserUser).subscribe();
+            this.friends[userId] = STATUS.SENT;
+        }else if (status == STATUS.FOLLOW){
+            this.messages[userId] = MESSAGE.UNFOLLOW;
+        }else if (status == STATUS.SENT){
+            this.messages[userId] = MESSAGE.CANCELREQUEST;
+        }else if (status == STATUS.PENDING){
+            this.messages[userId] = MESSAGE.ALLOWREQUEST;
+        }
+    }
+
+    acceptButton(userId: number){
+        if (this.messages[userId] == MESSAGE.CANCELREQUEST || this.messages[userId] == MESSAGE.UNFOLLOW){
+            this.deleteUserUser(userId);
+        }else if (this.messages[userId] == MESSAGE.ALLOWREQUEST){
+            let mUserUser: MUserUser = new MUserUser();
+            mUserUser.userId = userId
+            mUserUser.friendId = this.authUser.userId;
+            mUserUser.status = true;
+            this.userUserService.update(mUserUser).subscribe();
+            this.friends[userId] = STATUS.FOLLOW;
+        }
+        this.messages[userId] = null;
+    }
+
+    refuseButton(userId:number){
+       if (this.messages[userId] == MESSAGE.ALLOWREQUEST){
+            this.deleteUserUser(userId);
+        }
+        this.messages[userId] = null;
+    }
+
+    private deleteUserUser(userId: number){
+        this.userUserService.delete(userId, this.authUser.userId).subscribe();
+        this.friends[userId] = STATUS.REQUEST;
+    }
+
+    private search(){
         this.userService.getPageableUser(this.login, this.authenticationService.getUser().login, this.page, this.size).subscribe((response) => {
             this.users = response;
             this.getStatus(response);
@@ -64,27 +107,11 @@ export class SearchUsersComponent implements OnInit {
         });
     }
 
-    getImage(user: MUser): string{
-        let image: string = this.images[user.userId];
-        if (user.userPhoto != null){
-            return image
+    private pagination(){
+        if(this.login == ""){
+            this.getUsers();
         }else{
-            return this.defaultImage;
-        }
-    }
-
-    setStatus (userId: number){
-        let status: string = this.friends[userId];
-        if (status == STATUS.REQUESTSTATUS){
-            let mUserUser: MUserUser = new MUserUser();
-            mUserUser.userId = this.authUser.userId;
-            mUserUser.friendId = userId;
-            mUserUser.status = false;
-            this.userUserService.create(mUserUser).subscribe();
-            this.friends[userId] = STATUS.PENDINGSTATUS;
-        }else{
-            this.userUserService.delete(userId, this.authUser.userId).subscribe();
-            this.friends[userId] = STATUS.REQUESTSTATUS;
+            this.search();
         }
     }
 
@@ -103,12 +130,14 @@ export class SearchUsersComponent implements OnInit {
         });
     }
 
-    private statusValue (statusBD: boolean): string {
+    private statusValue (statusBD: boolean, friend: boolean): string {
         let status: string;
         if (statusBD) {
-            status = STATUS.FRIENDSSTATUS;
-        } else {
-            status = STATUS.PENDINGSTATUS;
+            status = STATUS.FOLLOW;
+        } else if (friend) {
+            status = STATUS.PENDING;
+        }else{
+            status = STATUS.SENT;
         }
         return status;
     }
@@ -117,15 +146,25 @@ export class SearchUsersComponent implements OnInit {
         mUser.forEach((mUser) => {
             this.userUserService.get(mUser.userId, this.authUser.userId).subscribe((response) => {
                 if (response != null) {
-                    this.friends[mUser.userId] = this.statusValue(response.status);
+                    this.friends[mUser.userId] = this.statusValue(response.status,false);
                 } else {
-                    this.friends[mUser.userId] = STATUS.REQUESTSTATUS;
+                    this.friendStatus(mUser);
                 }
             });
         });
     }
 
-    private totalPages () {
+    private friendStatus(mUser: MUser){
+            this.userUserService.get(this.authUser.userId,mUser.userId).subscribe((response) => {
+                if (response != null) {
+                    this.friends[mUser.userId] = this.statusValue(response.status, true);
+                }else{
+                    this.friends[mUser.userId] = STATUS.REQUEST;
+                }
+            });
+    }
+
+    private totalPages() {
         this.userService.count(this.authenticationService.getUser().login).subscribe((response) => {
             this.totalPage = Math.ceil(response/this.size);
         });

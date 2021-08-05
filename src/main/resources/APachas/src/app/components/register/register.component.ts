@@ -10,14 +10,14 @@ import {User} from "../../models/User";
 })
 
 export class RegisterComponent implements OnInit {
-  user: User = new User();
+  private user: User = new User();
+  name = "";
+  surname = "";
   login = "";
   password = "";
-  name = "";
-  email = "";
-  surname = "";
   passwordConfirm = "";
-  return = 'login';
+  email = "";
+  private return = 'login';
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -30,16 +30,9 @@ export class RegisterComponent implements OnInit {
     this.user.name = this.name;
     this.user.email = this.email;
     this.user.surname = this.surname;
-    if(this.passwordVerif()) {
+    if(this.password == this.passwordConfirm) {
       this.userService.create(this.user).subscribe();
       this.router.navigateByUrl(this.return);
-    }
-  }
-  passwordVerif(): boolean{
-    if(this.password != this.passwordConfirm){
-      return false;
-    }else{
-      return true;
     }
   }
 }

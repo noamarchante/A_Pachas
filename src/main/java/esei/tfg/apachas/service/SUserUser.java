@@ -67,11 +67,21 @@ public class SUserUser {
         }
     }
 
+    /*public synchronized Long countByAuthUser(Long authId) {
+        return rUserUser.countByUserUserId_FriendId(authId);
+    }*/
+
     public synchronized List<MUserUser> selectAll() {
         List<UserUser> userUserList = new ArrayList<>();
         rUserUser.findAll().forEach(e -> userUserList.add(e));
         return conUserUser.conUserUserList(userUserList);
     }
+
+    /*public synchronized List<MUserUser> selectAllByAuthUser(Long authId) {
+        List<UserUser> userUserList = new ArrayList<>();
+        rUserUser.findByUserUserId_FriendIdAAndStatus(authId,false).forEach(e -> userUserList.add(e));
+        return conUserUser.conUserUserList(userUserList);
+    }*/
 
     public synchronized List<MUserUser> selectPageable(Pageable pageable) {
         return conUserUser.conUserUserList(rUserUser.findAll(pageable).getContent());

@@ -20,6 +20,16 @@ export class UserUserService {
         return this.http.get<MUserUser[]>(`${environment.restApi}/users/pageable?page=${page}&size=${size}`);
     }
 
+    count(authId: number): Observable<number>{
+        return this.http.get<number>(`${environment.restApi}/usersUsers/count/${authId}`);
+    }
+
+    getFriendshipRequest(authId: number): Observable<MUserUser> {
+        return this.http.get<MUserUser>(`${environment.restApi}/usersUsers/${authId}`);
+    }
+
+
+
    /* getPageableUser(userLogin: string, page: number, size: number): Observable<MUserUser[]>{
         return this.http.get<MUserUser[]>(`${environment.restApi}/users/pageableUser/${userLogin}?page=${page}&size=${size}`);
     }*/
@@ -40,7 +50,7 @@ export class UserUserService {
     }
 
     update(user: MUserUser): Observable<MUserUser> {
-        return this.http.put<MUserUser>(`${environment.restApi}/users`, user);
+        return this.http.put<MUserUser>(`${environment.restApi}/usersUsers`, user);
     }
 
     delete( friendId: number, userId: number): Observable<void> {

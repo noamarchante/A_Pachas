@@ -11,13 +11,7 @@
 {
     padding-top: 50px;
     padding-bottom: 30px;
-    padding-right: 120px;
-    position: center;
     background: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
 }
 
 .searchDiv input {
@@ -36,41 +30,95 @@
     background-position-x: 5px;
     padding-left:30px;
 }
-
 input[type="search"]::-webkit-search-cancel-button{
     -webkit-appearance: none;
-    background-image: url("../../../assets/close.svg");
-    width: 0.7rem;
-    height: 0.7rem;
+    background-image: url("../../../assets/closeSearch.svg");
+    background-size: 0.8rem 0.8rem;
+    width: 0.8rem;
+    height: 0.8rem;
     cursor:pointer;
 }
 
 .col{
     padding-top: 15px;
+    padding-bottom: 20px;
 }
 
 .card{
-    max-width: 540px;
     border: none;
 }
 
+.col-xxl-5{
+    text-align: center;
+}
+.col-xl-12{
+    text-align: center;
+}
+.col-md-12{
+    text-align: center;
+}
+.col-sm-5{
+    text-align: center;
+}
+
 .image {
-    width:160px;
-    height:160px;
+    width:173px;
+    height:173px;
     border-radius:90px;
     box-shadow: 0 10px 50px rgba(0,0,0,0.5);
 }
 
+.col-xxl-7{
+    align-self: center;
+}
+.col-xl-12{
+    align-self: center;
+}
+.col-sm-7{
+    align-self: center;
+}
+
+.card-body-xxl-7{
+    text-align: center;
+}
+
+.card-body-xl-12{
+    text-align: center;
+}
+
+.card-body-md-12{
+    text-align: center;
+}
+
+.card-body-sm-7{
+    text-align: center;
+}
+
 .title{
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
-    padding-left: 2rem;
-    padding-top: 2rem;
+}
+
+.card-text{
+    padding-top: 5px;
+    text-align: right;
 }
 
 .status
+{
+    cursor:pointer;
+    border: none;
+    width: 13px;
+    height: 13px;
+    padding-right: 15px;
+    background: url("../../../assets/right.svg") top left no-repeat;
+    background-position: center;
+    background-size: 13px 13px;
+}
+
+.message
 {
     cursor:pointer;
     text-decoration: none;
@@ -78,27 +126,41 @@ input[type="search"]::-webkit-search-cancel-button{
     border: none;
     outline: none;
     box-shadow: none;
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 1px;
     font-weight: 300;
     text-transform: uppercase;
-    padding-left: 2rem;
+    padding-right: 5px;
+}
+
+.accept
+{
+    border: none;
+    width: 14px;
+    height: 14px;
+    padding-right: 15px;
+    background: url("../../../assets/check.svg") top left no-repeat;
+    background-size: 14px 14px;
+}
+
+.refuse
+{
+    border: none;
+    width: 14px;
+    height: 14px;
+    background: url("../../../assets/close.svg")  top left no-repeat;
+    background-size: 14px 14px;
 }
 
 div.paginationDiv {
-    text-align: right;
+    padding-top: 10px;
 }
 
-ul.pagination
-{
-    display: inline-block;
-}
-
-ul.pagination li {
+ul li {
     display: inline;
 }
 
-ul.pagination li a {
+ul li a {
     float: left;
     padding: 8px 16px;
     text-decoration: none;
@@ -115,211 +177,85 @@ ul.pagination li a {
     outline: none;
 }
 
-.pagination li:first-child a
+ul li:first-child a
 {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     cursor:pointer;
 }
 
-.pagination li:last-child a
+ul li:last-child a
 {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     cursor:pointer;
 }
 
-
-@media (max-width: 768px)
-{
-    .searchDiv{
-        margin-left: 30px;
-    }
-
-    .row
-    {
-        max-width: 400px;
-    }
-    .col-md-8
-    {
-        text-align: right;
-        margin-top: -150px;
-        margin-left: 50px;
-    }
-
-    .image{
-        margin-left: 45px;
-    }
-
-}
-
-@media (width: 768px){
-    .row{
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        padding-left: 60px;
-    }
-
-    .card-body
-    {
-        width: 300px;
-        margin-left: 80px;
-    }
-
-}
-
-@media (min-width: 769px) and (max-width: 860px){
-    .col-md-8
-    {
-        margin-top: 180px;
-        margin-left: -80px;
-    }
-
-    .card-body{
-        margin: -50px;
-        text-align: center;
-    }
-
-    .paginationDiv{
-        margin-top: 30px;
-        width: 700px;
-    }
-}
-
-@media (min-width: 860px) and (max-width: 940px){
-    .col-md-8
-    {
-        margin-top: 180px;
-        margin-left: -80px;
-    }
-
-    .card-body{
-        margin: -50px;
-        text-align: center;
-    }
-
-    .paginationDiv{
-        margin-top: 30px;
-        width: 760px;
-    }
-}
-
-@media (min-width: 940px) and (max-width: 991px){
-    .col-md-8
-    {
-        margin-top: 180px;
-        margin-left: -80px;
-    }
-
-    .card-body{
-        margin: -50px;
-        text-align: center;
-    }
-
-    .paginationDiv{
-        margin-top: 30px;
-        width: 800px;
-    }
-}
-
-@media (min-width: 990px) and (max-width: 992px){
-
-    .col{
-        margin-left: 10px;
-    }
-    .col-md-8
-    {
-        margin-top: 180px;
-        margin-left: -70px;
-    }
-
-    .card-body{
-        margin: -50px;
-        text-align: center;
-    }
-
-    .title{
-        font-size: 17px;
-    }
-
-    .paginationDiv{
-        margin-top: 30px;
-        width: 800px;
-    }
-}
-
-@media (width: 992px){
-
-    .col{
-        margin-left: 60px;
-    }
-    .col-md-8
-    {
-        margin-top: 180px;
-        margin-left: -90px;
-    }
-
-    .card-body{
-        margin: -50px;
-        text-align: center;
-    }
-
-    .paginationDiv{
-        margin-top: 30px;
-        width: 900px;
-    }
-}
-
-@media (min-width: 993px) and (max-width: 1200px){
-    .col{
-        margin-left: 50px;
-    }
-    .col-md-8
-    {
-        margin-top: 180px;
-        margin-left: -95px;
-    }
-
-    .card-body{
-        margin: -50px;
-        text-align: center;
-    }
-
-    .paginationDiv{
-        margin-top: 30px;
-        width: 900px;
-    }
-}
-
-@media (width: 1200px){
-    .col{
-        margin-left: 85px;
-    }
-    .col-md-8
-    {
-        margin-top: 180px;
-        margin-left: -115px;
-    }
-
-    .card-body{
-        margin: -50px;
-        text-align: center;
-    }
-
-    .paginationDiv{
-        margin-top: 30px;
-    }
-}
-
-@media (min-width: 1200px) and (max-width: 1400px){
-    .title{
-        font-size: 17px;
-    }
-}
-
+/*XXL*/
 @media (min-width: 1400px) {
-    .status{
-        float:left;
+    .card-text{
+        padding-right: 20px;
+    }
+    .searchDiv input {
+        width: 23%;
+    }
+}
 
+/*XL*/
+@media (min-width: 1200px) and (max-width: 1400px) {
+    .title{
+        padding-top: 20px;
+    }
+    .card-text{
+        text-align: center;
+    }
+    .searchDiv input {
+        width: 27%;
+    }
+}
+
+/*L*/
+@media (min-width: 993px) and (max-width: 1200px) {
+    .card-text{
+        padding-right: 30px;
+    }
+    .searchDiv input {
+        width: 33%;
+    }
+}
+
+/*M*/
+@media (min-width: 768px) and (max-width: 992px) {
+    .title{
+        padding-top: 20px;
+    }
+    .card-text{
+        text-align: center;
+    }
+    .searchDiv input {
+        width: 42%;
+    }
+}
+
+/*S*/
+@media (min-width: 576px) and (max-width: 768px) {
+    .card-text{
+        padding-right: 45px;
+    }
+    .searchDiv input {
+        width: 57%;
+    }
+}
+
+/*XS*/
+@media (max-width: 576px) {
+    .title{
+        padding-top: 20px;
+    }
+    .card-text{
+        text-align: center;
+    }
+    .searchDiv input {
+        width: 55%;
     }
 }

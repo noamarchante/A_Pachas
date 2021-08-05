@@ -35,7 +35,7 @@
           </div>
           <div>
             <input type="password" id="register_userPasswordConfirm" name="userPasswordConfirm" placeholder="Confirmación de contraseña" [(ngModel)]="passwordConfirm" required #userPasswordConfirmForm="ngModel" minlength="6">
-            <div *ngIf="!passwordVerif()" class="alert alert-danger">
+            <div *ngIf="password != passwordConfirm" class="alert alert-danger">
               <div>La contraseña de confirmación no coincide</div>
             </div>
             <div *ngIf="loginForm.submitted && userPasswordConfirmForm.invalid" class="alert alert-danger">

@@ -1,20 +1,35 @@
-<div class="searchDiv">
+<div class="searchDiv col-auto text-center">
     <form ngNativeValidate (input)="searchInput()" #friendsForm="ngForm">
         <input type="search" id="friend_nameLogin" name="nameLogin" placeholder="Buscar por nombre de usuario" [(ngModel)]="login" required #userLoginForm="ngModel" aria-label="Search">
     </form>
 </div>
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-xxl-3 row-cols-xl-3 row-cols-lg-2 row-cols-md-2 row-cols-sm-1 g-4">
     <div *ngFor="let user of users">
         <div class="col">
             <div class="card mb-3">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                        <img class="image" [src]="getImage(user)">
+                    <div class="col-xxl-5 col-xl-12 col-lg-5 col-md-12 col-sm-5">
+                        <ng-container *ngIf="user.userPhoto != null; else imagesDiv">
+                            <img class="image" [src]="images[user.userId]">
+                        </ng-container>
+                        <ng-template #imagesDiv>
+                            <img class="image" [src]="defaultImage">
+                        </ng-template>
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
+                    <div class="col-xxl-7 col-xl-12 col-lg-7 col-md-12 col-sm-7">
+                        <div class="card-body-xxl-7 card-body-xl-12 card-body-lg-7 card-body-md-12 card-body-sm-7">
                             <h5 class="title">{{user.userLogin}}</h5>
-                            <p class="card-text"><a class="status" (click)="setStatus(user.userId)">{{friends[user.userId]}}</a></p>
+                            <p class="card-text">
+                                <ng-container *ngIf="messages[user.userId] != null; else friendsDiv">
+                                    <a type="button" class="message" (click)="setStatus(user.userId)">{{ messages[user.userId]}}</a>
+                                    <button type="button" class="accept" (click)="acceptButton(user.userId)"></button>
+                                    <button type="button" class="refuse" (click)="refuseButton(user.userId)"></button>
+                                </ng-container>
+                                <ng-template #friendsDiv>
+                                    <a *ngIf="messages[user.userId] == null" class="message" (click)="setStatus(user.userId)">{{friends[user.userId]}}</a>
+                                    <a class="status" (click)="setStatus(user.userId)"></a>
+                                </ng-template>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -24,7 +39,7 @@
 </div>
 <div class="paginationDiv">
     <ul class="pagination">
-        <li *ngIf="page!=0"><a (click)="setPage(-1)">Anterior</a></li>
-        <li *ngIf="page+1<totalPage"><a (click)="setPage(1)">Siguiente</a></li>
+        <li class="page-item" *ngIf="page!=0"><a class="page-link" (click)="setPage(-1)">Anterior</a></li>
+        <li class="page-item" *ngIf="page+1<totalPage"><a class="page-link" (click)="setPage(1)">Siguiente</a></li>
     </ul>
 </div>

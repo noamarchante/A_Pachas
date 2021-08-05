@@ -49,11 +49,22 @@ public class CUserUser {
     public ResponseEntity<Void> deleteUserUser(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
         boolean flag = sUserUser.delete(new UserUserId(friendId,userId));
         if (!flag) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
+            boolean flag2 = sUserUser.delete(new UserUserId(userId, friendId));
+            if (!flag2) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        }else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+    /*@GetMapping("/count/{authId}")
+    public ResponseEntity<Long> countUsersUsersByAuthUser( @PathVariable("authId") Long authId) {
+        long userCount = sUserUser.countByAuthUser(authId);
+        return new ResponseEntity<>(userCount, HttpStatus.OK);
+    }*/
 
     @GetMapping("/{friendId}/{userId}")
     public ResponseEntity<MUserUser> getUserUserById(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
@@ -67,6 +78,12 @@ public class CUserUser {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
+
+   /* @GetMapping("/{authId}")
+    public ResponseEntity<List<MUserUser>> getAllUserUserByAuthUser(@PathVariable("authId") long authId) {
+        List<MUserUser> userUserList = sUserUser.selectAllByAuthUser(authId);
+        return new ResponseEntity<>(userUserList, HttpStatus.OK);
+    }*/
 
     @GetMapping
     public ResponseEntity<List<MUserUser>> getAllUserUser() {
