@@ -6,6 +6,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/searchUsers"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>Añadir amigos</a>
+      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/createGroup"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>Crear grupo</a>
       <a *ngIf="authenticationService.getUser().authenticated == false" class="nav-link active" aria-current="page" (click)="logIn()"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>Iniciar sesión</a>
       <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" (click)="logOut()"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>Cerrar sesión</a>
     </div>

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {environment} from "../../environments/environment";
 import {APachasError} from "../modules/notification/entities";
 import {MUserUser} from "./entities/MUserUser";
+import {MUser} from "./entities/MUser";
 
 @Injectable({
     providedIn: 'root'
@@ -36,6 +37,10 @@ export class UserUserService {
 
     get(friendId: number, userId: number): Observable<MUserUser> {
         return this.http.get<MUserUser>(`${environment.restApi}/usersUsers/${friendId}/${userId}`);
+    }
+
+    getFriends(friendId: number): Observable<MUser[]> {
+        return this.http.get<MUser[]>(`${environment.restApi}/usersUsers/${friendId}`);
     }
 
     create(userUser: MUserUser): Observable<void> {

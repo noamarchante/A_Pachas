@@ -91,4 +91,13 @@ public class SUserUser {
         UserUser userUser = rUserUser.findById(userUserId).get();
         return conUserUser.conUserUser(userUser);
     }
+
+    public synchronized List<User> selectAllUserByFriendId(long friendId) {
+        return rUserUser.findUserByUserUserId_FriendId(friendId);
+    }
+
+    public synchronized List<User> selectAllFriendByUserId(long userId) {
+        return rUserUser.findFriendByUserUserId_UserId(userId);
+
+    }
 }

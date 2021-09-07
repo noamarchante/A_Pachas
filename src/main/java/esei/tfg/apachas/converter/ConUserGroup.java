@@ -1,5 +1,6 @@
 package esei.tfg.apachas.converter;
 
+import esei.tfg.apachas.entity.User;
 import org.springframework.stereotype.Component;
 import esei.tfg.apachas.entity.UserGroup;
 import esei.tfg.apachas.model.MUserGroup;
@@ -22,7 +23,7 @@ public class ConUserGroup {
     }
 
     public UserGroup conMUserGroup(MUserGroup mUserGroup) {
-        return new UserGroup(mUserGroup.getUserGroupId(), mUserGroup.getUserGroupName());
+        return new UserGroup(mUserGroup.getUserGroupId(), mUserGroup.getUserGroupName(), mUserGroup.getUserGroupDescription(), mUserGroup.getUserGroupPhoto(), mUserGroup.getUserGroupRemoval(), new User(mUserGroup.getUserGroupOwner()));
     }
 
 }

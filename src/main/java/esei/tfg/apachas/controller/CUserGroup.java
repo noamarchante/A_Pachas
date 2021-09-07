@@ -14,28 +14,29 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/usersGroups")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class CUserGroup {
     @Autowired
     @Qualifier("SUserGroup")
-    SUserGroup UserGroup;
+    SUserGroup sUserGroup;
 
-    @PostMapping("/userGroupAdd")
-    public ResponseEntity<Void> addUserGroup(@RequestBody @Valid MUserGroup mUserGroup, UriComponentsBuilder builder) {
-        boolean flag = UserGroup.insert(mUserGroup);
-        if (!flag) {
+    @PostMapping
+    public ResponseEntity<Long> addUserGroup(@RequestBody @Valid MUserGroup mUserGroup, UriComponentsBuilder builder) {
+        //boolean flag = sUserGroup.insert(mUserGroup);
+        Long userGroupId = sUserGroup.insert(mUserGroup);
+        if (userGroupId ==0) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(builder.path("/userGroupSelect/{userGroupId}").buildAndExpand(mUserGroup.getUserGroupId()).toUri());
-            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+            headers.setLocation(builder.path("/userGroups/{userGroupId}").buildAndExpand(mUserGroup.getUserGroupId()).toUri());
+            return new ResponseEntity<>(userGroupId, HttpStatus.CREATED);
         }
     }
 
-    @PutMapping("/userGroupUpdate")
+    @PutMapping
     public ResponseEntity<MUserGroup> updateUserGroup(@RequestBody @Valid MUserGroup mUserGroup) {
-        boolean flag = UserGroup.update(mUserGroup);
+        boolean flag = sUserGroup.update(mUserGroup);
         if (!flag) {
             return new ResponseEntity<>(mUserGroup, HttpStatus.NOT_FOUND);
         } else {
@@ -43,9 +44,9 @@ public class CUserGroup {
         }
     }
 
-    @DeleteMapping("/userGroupDelete/{userGroupId}")
+    @DeleteMapping("/{userGroupId}")
     public ResponseEntity<Void> deleteUserGroup(@PathVariable("userGroupId") long userGroupId) {
-        boolean flag = UserGroup.delete(userGroupId);
+        boolean flag = sUserGroup.delete(userGroupId);
         if (!flag) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -53,21 +54,21 @@ public class CUserGroup {
         }
     }
 
-    @GetMapping("/userGroupSelect/{userGroupId}")
+    @GetMapping("/{userGroupId}")
     public ResponseEntity<MUserGroup> getUserGroupById(@PathVariable("userGroupId") long userGroupId) {
-        MUserGroup mUserGroup = UserGroup.selectUserGroupById(userGroupId);
+        MUserGroup mUserGroup = sUserGroup.selectUserGroupById(userGroupId);
         return new ResponseEntity<>(mUserGroup, HttpStatus.OK);
     }
 
-    @GetMapping("/userGroupSelect")
+    @GetMapping
     public ResponseEntity<List<MUserGroup>> getAllUserGroup() {
-        List<MUserGroup> userGroupList = UserGroup.selectAll();
+        List<MUserGroup> userGroupList = sUserGroup.selectAll();
         return new ResponseEntity<>(userGroupList, HttpStatus.OK);
     }
 
-    @GetMapping("/userGroupPageableSelect")
+    @GetMapping("/pageable")
     public ResponseEntity<List<MUserGroup>> getPageableUserGroup(Pageable pageable) {
-        List<MUserGroup> userGroupList = UserGroup.selectPageable(pageable);
+        List<MUserGroup> userGroupList = sUserGroup.selectPageable(pageable);
         return new ResponseEntity<>(userGroupList, HttpStatus.OK);
     }
 }

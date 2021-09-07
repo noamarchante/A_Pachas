@@ -22,6 +22,6 @@ public class ConUserGroupUser {
     }
 
     public UserGroupUser conMUserGroupUser(MUserGroupUser mUserGroupUser) {
-        return new UserGroupUser(new UserGroupUserId(mUserGroupUser.getUserGroupId(), mUserGroupUser.getUserId()));
+        return new UserGroupUser(new UserGroupUserId(mUserGroupUser.getUserGroupId(), mUserGroupUser.getUserId()), mUserGroupUser.getUserGroupUserExited());
     }
 }

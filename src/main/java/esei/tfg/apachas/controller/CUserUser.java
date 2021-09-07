@@ -1,5 +1,6 @@
 package esei.tfg.apachas.controller;
 
+import esei.tfg.apachas.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -78,6 +79,18 @@ public class CUserUser {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<User>> getAllUserIdByFriendId(@PathVariable("id") long id) {
+        try {
+            List<User> mUserUser = sUserUser.selectAllUserByFriendId(id);
+            mUserUser.addAll(sUserUser.selectAllFriendByUserId(id));
+            return new ResponseEntity<>(mUserUser, HttpStatus.OK);
+        }catch ( NoSuchElementException e){
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
 
    /* @GetMapping("/{authId}")
     public ResponseEntity<List<MUserUser>> getAllUserUserByAuthUser(@PathVariable("authId") long authId) {

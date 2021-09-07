@@ -6,7 +6,7 @@ export class MUser {
     userPassword: string;
     userEmail: string;
     userBirthday: Date;
-    userPhoto: Blob;
+    userPhoto: string;
     roles: string;
     permissions: string;
 }

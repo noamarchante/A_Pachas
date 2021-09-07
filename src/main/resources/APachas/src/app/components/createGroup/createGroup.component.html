@@ -1,0 +1,39 @@
+<section>
+    <div class="container">
+        <div class="user signupBx">
+            <div class="formBx">
+                <form (submit)="onCreate()" ngNativeValidate #createUserGroupForm="ngForm">
+                    <div>
+                        <input type="text" id="createUserGroup_userGroupName" name="userGroupName" placeholder="Nombre" pattern="[a-zA-ZñÑ]{1,100}" title="Must be an alpha"
+                               [(ngModel)]="groupName" required #userGroupNameForm="ngModel">
+                        <div *ngIf="createUserGroupForm.submitted && createUserGroupForm.invalid" class="alert alert-danger">
+                            <div *ngIf="userGroupNameForm.errors.required">El nombre es un campo obligatorio</div>
+                            <div *ngIf="userGroupNameForm.errors.pattern">El nombre solo puede contener letras y debe estar comprendido entre 1 y 100 caracteres</div>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" id="createUserGroup_userGroupDescription" name="userGroupDescription" placeholder="Descripcion" pattern="[a-zA-ZñÑ]{1,100}" title="Must be an alpha"
+                               [(ngModel)]="groupDescription" required #userGroupDescriptionForm="ngModel">
+                        <div *ngIf="createUserGroupForm.submitted && createUserGroupForm.invalid" class="alert alert-danger">
+                            <div *ngIf="userGroupDescriptionForm.errors.required">La descripción es un campo obligatorio</div>
+                            <div *ngIf="userGroupDescriptionForm.errors.pattern">La descripción solo puede contener letras y debe estar comprendido entre 1 y 100 caracteres</div>
+                        </div>
+                    </div>
+                    <div>
+                        <input (change)="getImage($event)" type="file" id="createUserGroup_userGroupPhoto" name="userGroupPhoto" pattern="[a-zA-ZñÑ]{1,100}">
+                    </div>
+                   <div *ngIf="groupPhoto">
+                        <img [src]="groupPhoto" alt="" id="createUserGroup_photo">
+                    </div>
+                    <div>
+                        <select id="createUserGroup_userGroupMembers" name="userGroupMembers" multiple="multiple" [(ngModel)]="groupMembers">
+                            <option [value]="user" *ngFor="let user of friends">{{user.userName}}</option>
+                        </select>
+                    </div>
+                    <input type="submit" value="Crear grupo">
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<simple-notifications></simple-notifications>

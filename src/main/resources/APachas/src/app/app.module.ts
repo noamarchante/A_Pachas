@@ -13,6 +13,8 @@ import {HomeComponent} from './components/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RegisterComponent} from "./components/register/register.component";
 import {SearchUsersComponent} from "./components/searchUsers/searchUsers.component";
+import {CreateGroupComponent} from "./components/createGroup/createGroup.component";
+
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import {SearchUsersComponent} from "./components/searchUsers/searchUsers.compone
     LoginComponent,
     RegisterComponent,
     SearchUsersComponent,
+    CreateGroupComponent,
     HomeComponent
   ],
   imports: [

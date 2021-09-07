@@ -21,14 +21,15 @@ public class SUserGroup {
     @Qualifier("ConUserGroup")
     private ConUserGroup conUserGroup;
 
-    public synchronized boolean insert(MUserGroup mUserGroup) {
+    public synchronized Long insert(MUserGroup mUserGroup) {
         UserGroup userGroup = conUserGroup.conMUserGroup(mUserGroup);
         UserGroup existingUserGroup = rUserGroup.findByUserGroupId(userGroup.getUserGroupId());
         if (existingUserGroup != null) {
-            return false;
+            //return false;
+            return 0L;
         } else {
-            rUserGroup.save(userGroup);
-            return true;
+            return rUserGroup.save(userGroup).getUserGroupId();
+            //return true;
         }
     }
 

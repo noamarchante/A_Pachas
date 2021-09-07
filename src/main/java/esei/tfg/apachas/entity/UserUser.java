@@ -18,7 +18,7 @@ public class UserUser implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
-    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
+    @JoinColumn(name = "friendId", referencedColumnName = "userId", nullable = false)
     private User friend;
 
     @Column(name = "status")

@@ -5,6 +5,7 @@ import {HomeComponent} from './components/home/home.component';
 import {AuthGuard} from './guards/authGuard';
 import {RegisterComponent} from "./components/register/register.component";
 import {SearchUsersComponent} from "./components/searchUsers/searchUsers.component";
+import {CreateGroupComponent} from "./components/createGroup/createGroup.component";
 
 const routes: Routes = [
 	{
@@ -13,11 +14,14 @@ const routes: Routes = [
 	{
 		path: 'login', component: LoginComponent
 	},
-  {
-    path: 'register', component: RegisterComponent
-  },
+  	{
+    	path: 'register', component: RegisterComponent
+  	},
 	{
 		path: 'searchUsers', component: SearchUsersComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'createGroup', component: CreateGroupComponent, canActivate: [AuthGuard]
 	},
 	{
 		path: '', redirectTo: 'home', pathMatch: 'full'

@@ -9,7 +9,7 @@ export class User {
   private userSurname: string;
   private userEmail: string;
   private userBirthday: Date;
-  private userPhoto: Blob;
+  private userPhoto: string;
   private roles: string;
   private permissions: string;
   private userId: number;
@@ -65,11 +65,11 @@ export class User {
     this.userBirthday = value;
   }
 
-  get photo(): Blob {
+  get photo(): string {
     return this.userPhoto;
   }
 
-  set photo(value: Blob) {
+  set photo(value: string) {
     this.userPhoto = value;
   }
   get surname(): string {

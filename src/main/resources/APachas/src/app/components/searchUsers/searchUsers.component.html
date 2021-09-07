@@ -1,5 +1,5 @@
 <div class="searchDiv col-auto text-center">
-    <form ngNativeValidate (input)="searchInput()" #friendsForm="ngForm">
+    <form ngNativeValidate (input)="searchInput()" #searchUsersForm="ngForm">
         <input type="search" id="friend_nameLogin" name="nameLogin" placeholder="Buscar por nombre de usuario" [(ngModel)]="login" required #userLoginForm="ngModel" aria-label="Search">
     </form>
 </div>

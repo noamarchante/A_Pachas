@@ -2,6 +2,7 @@ package esei.tfg.apachas.model;
 
 import esei.tfg.apachas.entity.User;
 
+import java.sql.Blob;
 import java.util.Date;
 
 
@@ -14,7 +15,7 @@ public class MUser {
     private String userPassword;
     private String userEmail;
     private Date userBirthday;
-    private byte[] userPhoto;
+    private String userPhoto;
     private String roles;
     private String permissions;
 
@@ -62,7 +63,7 @@ public class MUser {
         return userSurname;
     }
 
-    public byte[] getUserPhoto() {
+    public String getUserPhoto() {
         return userPhoto;
     }
 
@@ -90,7 +91,7 @@ public class MUser {
         this.userPassword = userPassword;
     }
 
-    public void setUserPhoto(byte[] userPhoto) {
+    public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;
     }
 

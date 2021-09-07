@@ -16,14 +16,14 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/usersGroupsUsers")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class CUserGroupUser {
     @Autowired
     @Qualifier("SUserGroupUser")
     SUserGroupUser sUserGroupUser;
 
-    @PostMapping("/userGroupUserAdd")
+    @PostMapping
     public ResponseEntity<Void> addUserGroupUser(@RequestBody @Valid MUserGroupUser mUserGroupUser, UriComponentsBuilder builder) {
         boolean flag = sUserGroupUser.insert(mUserGroupUser);
         if (!flag) {
@@ -45,7 +45,7 @@ public class CUserGroupUser {
         }
     }*/
 
-    @DeleteMapping("/userGroupUserDelete/{userGroupId}/{userId}")
+    @DeleteMapping("/{userGroupId}/{userId}")
     public ResponseEntity<Void> deleteUserGroupUser(@PathVariable("userGroupId") long userGroupId, @PathVariable("userId") long userId) {
         boolean flag = sUserGroupUser.delete(new UserGroupUserId(userGroupId,userId));
         if (!flag) {
@@ -55,13 +55,13 @@ public class CUserGroupUser {
         }
     }
 
-    @GetMapping("/userGroupUserSelect/{userGroupId}/{userId}")
+    @GetMapping("/{userGroupId}/{userId}")
     public ResponseEntity<MUserGroupUser> getUserGroupUserById(@PathVariable("userGroupId") long userGroupId, @PathVariable("userId") long userId) {
         MUserGroupUser mUserGroupUser = sUserGroupUser.selectUserGroupUserById(new UserGroupUserId(userGroupId,userId));
         return new ResponseEntity<>(mUserGroupUser, HttpStatus.OK);
     }
 
-    @GetMapping("/userGroupUserSelect")
+    @GetMapping
     public ResponseEntity<List<MUserGroupUser>> getAllUserGroupUser() {
         List<MUserGroupUser> userGroupUserList = sUserGroupUser.selectAll();
         return new ResponseEntity<>(userGroupUserList, HttpStatus.OK);

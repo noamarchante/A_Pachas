@@ -1,8 +1,10 @@
 package esei.tfg.apachas.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import esei.tfg.apachas.entity.id.UserGroupUserId;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Table(name = "UserGroupUser")
 @Entity(name = "UserGroupUser")
@@ -21,11 +23,24 @@ public class UserGroupUser implements Serializable {
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
+    @Column(name = "userGroupuserAdded")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private Date userGroupUserAdded;
+
+    @Column(name = "userGroupUserExited")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private Date userGroupUserExited;
+
     public UserGroupUser() {
+
     }
 
-    public UserGroupUser(UserGroupUserId userGroupUserId) {
+    public UserGroupUser(UserGroupUserId userGroupUserId, Date userGroupUserExited) {
         this.userGroupUserId = userGroupUserId;
+        this.userGroupUserAdded = new Date();
+        this.userGroupUserExited = userGroupUserExited;
     }
 
     public UserGroupUserId getUserGroupUserId() {
@@ -50,5 +65,21 @@ public class UserGroupUser implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Date getUserGroupUserAdded() {
+        return userGroupUserAdded;
+    }
+
+    public void setUserGroupUserAdded(Date userGroupUserAdded) {
+        this.userGroupUserAdded = userGroupUserAdded;
+    }
+
+    public Date getUserGroupUserExited() {
+        return userGroupUserExited;
+    }
+
+    public void setUserGroupUserExited(Date userGroupUserExited) {
+        this.userGroupUserExited = userGroupUserExited;
     }
 }
