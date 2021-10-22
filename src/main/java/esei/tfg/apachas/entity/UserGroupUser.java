@@ -23,7 +23,7 @@ public class UserGroupUser implements Serializable {
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
-    @Column(name = "userGroupuserAdded")
+    @Column(name = "userGroupUserAdded")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date userGroupUserAdded;

@@ -1,0 +1,34 @@
+<div class="modal fade" id="detailUserModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="detailUserLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title">
+                    {{user.userLogin}}
+                </h5>
+                <button type="button" id="closeButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!-- (click)="pageMember=0" -->
+            </div>
+            <div class="modal-body">
+                <div class="col container-fluid">
+                    <div class="row">
+                        <div class="imageGroupDiv col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                            <ng-container *ngIf="user.userPhoto; else imagesDiv">
+                                <img class="image" [src]="user.userPhoto" alt=""
+                                     id="detailUser_photo">
+                            </ng-container>
+                            <ng-template #imagesDiv>
+                                <img class="image" [src]="defaultImage">
+                            </ng-template>
+                        </div>
+                        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 description-row text"
+                             name="userName"
+                             id="detailUser_userName">
+                            {{user.userName}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<simple-notifications></simple-notifications>

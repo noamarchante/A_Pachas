@@ -14,6 +14,7 @@ public class MUserGroup {
     private String userGroupDescription;
     private String userGroupPhoto;
     private long userGroupOwner;
+    private Date userGroupCreation;
     private Date userGroupRemoval;
 
     public MUserGroup(){
@@ -25,6 +26,7 @@ public class MUserGroup {
         this.userGroupName = userGroup.getUserGroupName();
         this.userGroupDescription = userGroup.getUserGroupDescription();
         this.userGroupPhoto = userGroup.getUserGroupPhoto();
+        this.userGroupCreation = userGroup.getUserGroupCreation();
         this.userGroupOwner = userGroup.getUser().getUserId();
         this.userGroupRemoval = userGroup.getUserGroupRemoval();
     }
@@ -75,5 +77,13 @@ public class MUserGroup {
 
     public void setUserGroupRemoval(Date userGroupRemoval) {
         this.userGroupRemoval = userGroupRemoval;
+    }
+
+    public Date getUserGroupCreation() {
+        return userGroupCreation;
+    }
+
+    public void setUserGroupCreation(Date userGroupCreation) {
+        this.userGroupCreation = userGroupCreation;
     }
 }

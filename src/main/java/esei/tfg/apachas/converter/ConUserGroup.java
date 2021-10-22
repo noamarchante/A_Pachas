@@ -23,7 +23,7 @@ public class ConUserGroup {
     }
 
     public UserGroup conMUserGroup(MUserGroup mUserGroup) {
-        return new UserGroup(mUserGroup.getUserGroupId(), mUserGroup.getUserGroupName(), mUserGroup.getUserGroupDescription(), mUserGroup.getUserGroupPhoto(), mUserGroup.getUserGroupRemoval(), new User(mUserGroup.getUserGroupOwner()));
+        return new UserGroup(mUserGroup.getUserGroupId(), mUserGroup.getUserGroupName(), mUserGroup.getUserGroupDescription(), mUserGroup.getUserGroupPhoto(), new User(mUserGroup.getUserGroupOwner()));
     }
 
 }

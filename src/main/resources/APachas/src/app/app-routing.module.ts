@@ -4,8 +4,11 @@ import {LoginComponent} from './components/login/login.component';
 import {HomeComponent} from './components/home/home.component';
 import {AuthGuard} from './guards/authGuard';
 import {RegisterComponent} from "./components/register/register.component";
-import {SearchUsersComponent} from "./components/searchUsers/searchUsers.component";
-import {CreateGroupComponent} from "./components/createGroup/createGroup.component";
+import {ListUsersComponent} from "./components/users/listUsers/listUsers.component";
+import {CreateGroupComponent} from "./components/groups/createGroup/createGroup.component";
+import {ListGroupsComponent} from "./components/groups/listGroups/listGroups.component";
+import {DetailGroupComponent} from "./components/groups/detailGroup/detailGroup.component";
+import {DetailUserComponent} from "./components/users/detailUser/detailUser.component";
 
 const routes: Routes = [
 	{
@@ -18,10 +21,19 @@ const routes: Routes = [
     	path: 'register', component: RegisterComponent
   	},
 	{
-		path: 'searchUsers', component: SearchUsersComponent, canActivate: [AuthGuard]
+		path: 'listUsers', component: ListUsersComponent, canActivate: [AuthGuard]
 	},
 	{
 		path: 'createGroup', component: CreateGroupComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'listGroups', component: ListGroupsComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'detailGroup', component: DetailGroupComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'detailUser', component: DetailUserComponent, canActivate: [AuthGuard]
 	},
 	{
 		path: '', redirectTo: 'home', pathMatch: 'full'

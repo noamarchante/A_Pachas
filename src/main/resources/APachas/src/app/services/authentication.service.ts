@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpRequest} from '@angular/common/http';
+ import { Injectable } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {User} from '../models/User';
 import {APachasError} from '../modules/notification/entities';
+import {UserService} from "./user.service";
 
 //SERVICE -> Se encarga de acceder a los datos para entregarlos a los componentes
 @Injectable({
@@ -14,7 +15,7 @@ export class AuthenticationService {
 
 	private user: User = new User();
 
-	constructor(private  http: HttpClient) {}
+	constructor(private  http: HttpClient,  private userService: UserService) {}
 
   //COMPRUEBA SI LAS CREDENCIALES SON CORRECTAS
 	checkCredentials(login: string, password: string) {
@@ -22,23 +23,36 @@ export class AuthenticationService {
 		this.user.login = login;
 		this.user.password = password;
 
-    return this.http.post<void>(`${environment.restApi}/login`, {
-      "username": this.user.login,
-      "password": this.user.password
-    }, {observe:"response" as "body", responseType: 'json'})
-      .pipe(
-        APachasError.throwOnError('Failed to login', `User or password incorrect. Please try again.`)
-      );
+		return this.http.post<void>(`${environment.restApi}/login`, {
+		  "username": this.user.login,
+		  "password": this.user.password
+		}, {observe:"response" as "body", responseType: 'json'}
+		)
+		  .pipe(
+			APachasError.throwOnError('Failed to login', `User or password incorrect. Please try again.`)
+		  );
 	}
 
   //CONFIGURA AL USUARIO LOGGEADO
-	public logIn(login: string, password: string, authorization: string ) {
+	public logIn(login: string, password: string, authorization: string) {
 	  this.user.login = login;
 		this.user.password = password;
 		this.user.authHeader = authorization;
 		this.user.authenticated = true;
+		this.setAuthUser(login);
 
-		this.user.save();
+	}
+
+	//RECOGER OTROS DATOS DEL USUARIO AUTENTICADO
+	public setAuthUser(login: string){
+		this.userService.getUserByLogin(login).subscribe((response) => {
+			this.user.id = response.userId;
+			this.user.email = response.userEmail;
+			this.user.permission = response.permissions;
+			this.user.rol = response.roles;
+			this.user.save();
+		});
+
 	}
 
 	//CIERRE DE SESION

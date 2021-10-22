@@ -2,6 +2,7 @@ package esei.tfg.apachas.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import esei.tfg.apachas.model.MUser;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -27,7 +28,6 @@ public class UserGroup implements Serializable {
     @Size(min = 4, max = 50)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[[:alpha:]áéíóúÁÉÍÓÚñÑ]+(?:[[:space:]][[:alnum:]áéíóúÁÉÍÓÚñÑ]+)*$")
     private String userGroupName;
 
     @Column(name = "userGroupDescription", length = 155)
@@ -62,13 +62,13 @@ public class UserGroup implements Serializable {
 
     }
 
-    public UserGroup(long userGroupId, String userGroupName, String userGroupDescription, String userGroupPhoto, Date userGroupRemoval, User user) {
+    public UserGroup(long userGroupId, String userGroupName, String userGroupDescription, String userGroupPhoto, User user) {
         this.userGroupId = userGroupId;
         this.userGroupName = userGroupName;
         this.userGroupDescription = userGroupDescription;
         this.userGroupPhoto = userGroupPhoto;
         this.userGroupCreation = new Date();
-        this.userGroupRemoval = userGroupRemoval;
+        this.userGroupRemoval = null;
         this.user =user;
     }
 

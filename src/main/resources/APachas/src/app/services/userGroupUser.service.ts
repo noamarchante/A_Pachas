@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {environment} from "../../environments/environment";
 import {APachasError} from "../modules/notification/entities";
+import {MUser} from "./entities/MUser";
+import {MUserUser} from "./entities/MUserUser";
+import {MUserGroupUser} from "./entities/MUserGroupUser";
+import {UserGroupService} from "./userGroup.service";
 import {MUserGroup} from "./entities/MUserGroup";
 
 @Injectable({
@@ -10,35 +14,21 @@ import {MUserGroup} from "./entities/MUserGroup";
 })
 export class UserGroupUserService {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,
+                private userGroupService: UserGroupService) { }
 
-    /*getAll(): Observable<MUserGroup[]> {
-        return this.http.get<MUserGroup[]>(`${environment.restApi}/users`);
+    getPageableUsersByUserGroupId(userGroupId: number, page:number, size: number): Observable<MUser[]>{
+        return this.http.get<MUser[]>(`${environment.restApi}/usersGroupsUsers/pageable/${userGroupId}?page=${page}&size=${size}`);
     }
 
-    getPageable(page: number, size: number): Observable<MUserGroup[]>{
-        return this.http.get<MUserGroup[]>(`${environment.restApi}/users/pageable?page=${page}&size=${size}`);
+    getUsersByUserGroupId(userGroupId: number): Observable<MUser[]>{
+        return this.http.get<MUser[]>(`${environment.restApi}/usersGroupsUsers/pageable/${userGroupId}`);
     }
 
-    count(authId: number): Observable<number>{
-        return this.http.get<number>(`${environment.restApi}/usersUsers/count/${authId}`);
+    countUsersGroupsUsersByUserGroupId(userGroupId: number): Observable<number>{
+        return this.http.get<number>(`${environment.restApi}/usersGroupsUsers/count/${userGroupId}`);
     }
-
-    getFriendshipRequest(authId: number): Observable<MUserGroup> {
-        return this.http.get<MUserGroup>(`${environment.restApi}/usersUsers/${authId}`);
-    }
-*/
-
-
-    /* getPageableUser(userLogin: string, page: number, size: number): Observable<MUserUser[]>{
-         return this.http.get<MUserUser[]>(`${environment.restApi}/users/pageableUser/${userLogin}?page=${page}&size=${size}`);
-     }*/
-
-    get(userGroupId: number): Observable<MUserGroup> {
-        return this.http.get<MUserGroup>(`${environment.restApi}/usersGroups/${userGroupId}`);
-    }
-
-    create(userGroupId: any, userId: number): Observable<void> {
+    createUserGroupUser(userGroupId: any, userId: number): Observable<void> {
         return this.http.post<void>(`${environment.restApi}/usersGroupsUsers`,{
             "userGroupId":userGroupId,
             "userId": userId,
@@ -49,11 +39,25 @@ export class UserGroupUserService {
             );
     }
 
-    /*update(user: MUserGroup): Observable<MUserGroup> {
-        return this.http.put<MUserGroup >(`${environment.restApi}/usersUsers`, user);
+    editUserGroupUser(userGroupId: any, userId: number): Observable<void> {
+        return this.http.put<void>(`${environment.restApi}/usersGroupsUsers`,{
+            "userGroupId":userGroupId,
+            "userId": userId,
+            "userGroupUserExited": ""
+        })
+            .pipe(
+                APachasError.throwOnError('Fallo al editar integrantes al grupo', `Por favor, inténtelo de nuevo`)
+            );
     }
 
-    delete( friendId: number, userId: number): Observable<void> {
-        return this.http.delete<void>(`${environment.restApi}/usersUsers/${friendId}/${userId}`);
-    }*/
+
+    deleteUserGroupUser(userGroupId: number, userId: number): Observable<void> {
+        return this.http.put<void>(`${environment.restApi}/usersGroupsUsers`, {
+            "userGroupId":userGroupId,
+            "userId": userId,
+            "userGroupUserExited": ""
+        }).pipe(
+            APachasError.throwOnError('Fallo al eliminar usuario del grupo', `Por favor, inténtelo de nuevo`)
+        );
+    }
 }

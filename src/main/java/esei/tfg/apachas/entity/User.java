@@ -21,7 +21,6 @@ public class User implements Serializable {
     @Size(min = 3, max = 50)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[[:alpha:]áéíóúÁÉÍÓÚñÑ]+(?:[[:space:]][[:alnum:]áéíóúÁÉÍÓÚñÑ]+)*$")
     private String userName;
 
     //ATRIBUTO: APELLIDOS
@@ -29,7 +28,6 @@ public class User implements Serializable {
     @Size(min = 4, max = 50)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[[:alpha:]áéíóúÁÉÍÓÚñÑ]+(?:[[:space:]][[:alnum:]áéíóúÁÉÍÓÚñÑ]+)*$")
     private String userSurname;
 
     //ATRIBUTO: LOGIN
@@ -37,7 +35,6 @@ public class User implements Serializable {
     @Size(min = 4, max = 15)
     @NotBlank
     @NotNull
-    @Pattern(regexp = "^\\w+$")
     private String userLogin;
 
     //ATRIBUTO: CONTRASEÑA
@@ -64,8 +61,10 @@ public class User implements Serializable {
     @Column(name = "userPhoto", length = 100000)
     private String userPhoto;
 
+    @Column(name = "roles", nullable = false)
     private String roles = "";
 
+    @Column(name = "permissions")
     private String permissions = "";
 
     //N:M USUARIO RELACIONADO CON USUARIO

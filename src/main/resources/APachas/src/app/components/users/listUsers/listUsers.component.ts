@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from "../../services/user.service";
-import {MUser} from "../../services/entities/MUser";
-import {MUserUser} from "../../services/entities/MUserUser";
-import {UserUserService} from "../../services/userUser.service";
-import {AuthenticationService} from "../../services/authentication.service";
+import {UserService} from "../../../services/user.service";
+import {MUser} from "../../../services/entities/MUser";
+import {MUserUser} from "../../../services/entities/MUserUser";
+import {UserUserService} from "../../../services/userUser.service";
+import {AuthenticationService} from "../../../services/authentication.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import {MUserGroup} from "../../../services/entities/MUserGroup";
 
 
 export enum STATUS {
@@ -17,11 +18,11 @@ export enum MESSAGE{
 }
 
 @Component({
-    selector: 'app-friends',
-    templateUrl: './searchUsers.component.html',
-    styleUrls: ['./searchUsers.component.css']
+    selector: 'app-users',
+    templateUrl: './listUsers.component.html',
+    styleUrls: ['./listUsers.component.css']
 })
-export class SearchUsersComponent implements OnInit {
+export class ListUsersComponent implements OnInit {
     login = "";
     users: MUser[] = [];
     images: {[index:number]: any;} = {};
@@ -31,7 +32,10 @@ export class SearchUsersComponent implements OnInit {
     totalPage = 0;
     page = 0;
     private size = 6;
-    private authUser: MUser;
+    previous:string;
+    next:string;
+    selectedUsers: MUser;
+    selectedUsersDetails: [number,number,number, number, MUser[]];
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -41,12 +45,43 @@ export class SearchUsersComponent implements OnInit {
                 private sanitizer: DomSanitizer) {}
 
     ngOnInit() {
-        this.getAuthUser();
+        this.getUsers();
+        this.paginationClass();
+    }
+
+    selectUser(index: number){
+        this.selectedUsers = this.users[index];
+        this.selectedUsersDetails = [index, this.page, this.size, this.totalPage, this.users];
+    }
+
+    setIndex(index: number){
+        if(index == -1){
+            this.selectedUsersDetails[0] = this.size-1;
+        }else{
+            this.selectedUsersDetails[0] = 0;
+        }
+    }
+
+    paginationClass(){
+        if(this.page!=0 && this.page+1<this.totalPage){
+            this.previous = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9";
+            this.next = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3";
+        }else if (this.page==0 && this.page+1<this.totalPage){
+            this.previous = "";
+            this.next = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+        }else if(this.page!=0 && this.page+1==this.totalPage){
+            this.previous = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.next = "";
+        }else{
+            this.previous = "";
+            this.next = "";
+        }
     }
 
     setPage(page: number){
         this.page += page;
         this.pagination();
+        this.paginationClass();
     }
 
     searchInput(){
@@ -58,10 +93,10 @@ export class SearchUsersComponent implements OnInit {
         let status: string = this.friends[userId];
         if (status == STATUS.REQUEST){
             let mUserUser: MUserUser = new MUserUser();
-            mUserUser.userId = this.authUser.userId;
+            mUserUser.userId = this.authenticationService.getUser().id;
             mUserUser.friendId = userId;
             mUserUser.status = false;
-            this.userUserService.create(mUserUser).subscribe();
+            this.userUserService.createUserUser(mUserUser).subscribe();
             this.friends[userId] = STATUS.SENT;
         }else if (status == STATUS.FOLLOW){
             this.messages[userId] = MESSAGE.UNFOLLOW;
@@ -78,9 +113,9 @@ export class SearchUsersComponent implements OnInit {
         }else if (this.messages[userId] == MESSAGE.ALLOWREQUEST){
             let mUserUser: MUserUser = new MUserUser();
             mUserUser.userId = userId
-            mUserUser.friendId = this.authUser.userId;
+            mUserUser.friendId = this.authenticationService.getUser().id;
             mUserUser.status = true;
-            this.userUserService.update(mUserUser).subscribe();
+            this.userUserService.updateUserUser(mUserUser).subscribe();
             this.friends[userId] = STATUS.FOLLOW;
         }
         this.messages[userId] = null;
@@ -94,12 +129,12 @@ export class SearchUsersComponent implements OnInit {
     }
 
     private deleteUserUser(userId: number){
-        this.userUserService.delete(userId, this.authUser.userId).subscribe();
+        this.userUserService.deleteUserUser(userId, this.authenticationService.getUser().id).subscribe();
         this.friends[userId] = STATUS.REQUEST;
     }
 
-    private search(){
-        this.userService.getPageableUser(this.login, this.authenticationService.getUser().login, this.page, this.size).subscribe((response) => {
+    private searchUsers(){
+        this.userService.getPageableUserByLogin(this.login, this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
             this.users = response;
             this.getStatus(response);
             this.searchTotalPages();
@@ -111,12 +146,12 @@ export class SearchUsersComponent implements OnInit {
         if(this.login == ""){
             this.getUsers();
         }else{
-            this.search();
+            this.searchUsers();
         }
     }
 
-    private getUsers(){
-        this.userService.getPageable(this.authenticationService.getUser().login, this.page, this.size).subscribe((response) => {
+    getUsers(){
+        this.userService.getPageableUser(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
             this.users = response;
             this.getURL(response);
             this.getStatus(response);
@@ -144,7 +179,7 @@ export class SearchUsersComponent implements OnInit {
 
     private getStatus (mUser: MUser[]) {
         mUser.forEach((mUser) => {
-            this.userUserService.get(mUser.userId, this.authUser.userId).subscribe((response) => {
+            this.userUserService.getUserUser(mUser.userId, this.authenticationService.getUser().id).subscribe((response) => {
                 if (response != null) {
                     this.friends[mUser.userId] = this.statusValue(response.status,false);
                 } else {
@@ -155,7 +190,7 @@ export class SearchUsersComponent implements OnInit {
     }
 
     private friendStatus(mUser: MUser){
-            this.userUserService.get(this.authUser.userId,mUser.userId).subscribe((response) => {
+            this.userUserService.getUserUser(this.authenticationService.getUser().id,mUser.userId).subscribe((response) => {
                 if (response != null) {
                     this.friends[mUser.userId] = this.statusValue(response.status, true);
                 }else{
@@ -165,21 +200,14 @@ export class SearchUsersComponent implements OnInit {
     }
 
     private totalPages() {
-        this.userService.count(this.authenticationService.getUser().login).subscribe((response) => {
+        this.userService.countUsers(this.authenticationService.getUser().id).subscribe((response) => {
             this.totalPage = Math.ceil(response/this.size);
         });
     }
 
     private searchTotalPages(){
-        this.userService.searchCount(this.login, this.authenticationService.getUser().login).subscribe((response) => {
+        this.userService.countSearchUsers(this.login, this.authenticationService.getUser().id).subscribe((response) => {
             this.totalPage = Math.ceil(response/this.size);
-        });
-    }
-
-    private getAuthUser(){
-        this.userService.getByLogin(this.authenticationService.getUser().login).subscribe((response) => {
-            this.authUser = response;
-            this.getUsers();
         });
     }
 }

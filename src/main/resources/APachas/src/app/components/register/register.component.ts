@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from "../../services/user.service";
-import {User} from "../../models/User";
+import {MUser} from "../../services/entities/MUser";
 
 @Component({
   selector: 'app-register',
@@ -10,7 +10,7 @@ import {User} from "../../models/User";
 })
 
 export class RegisterComponent implements OnInit {
-  private user: User = new User();
+  private mUser: MUser = new MUser();
   name = "";
   surname = "";
   login = "";
@@ -25,13 +25,13 @@ export class RegisterComponent implements OnInit {
   }
   ngOnInit() {}
   onCreate(){
-    this.user.login = this.login;
-    this.user.password = this.password;
-    this.user.name = this.name;
-    this.user.email = this.email;
-    this.user.surname = this.surname;
+    this.mUser.userLogin = this.login;
+    this.mUser.userPassword = this.password;
+    this.mUser.userName = this.name;
+    this.mUser.userEmail = this.email;
+    this.mUser.userSurname = this.surname;
     if(this.password == this.passwordConfirm) {
-      this.userService.create(this.user).subscribe();
+      this.userService.createUser(this.mUser).subscribe();
       this.router.navigateByUrl(this.return);
     }
   }

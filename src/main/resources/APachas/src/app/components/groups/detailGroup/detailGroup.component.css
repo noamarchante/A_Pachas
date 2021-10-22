@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+*
+{
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.title{
+    padding-top: 5px;
+    padding-right: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: right;
+    width: 55%;
+    color: #555;
+}
+
+.row{
+    align-content: center;
+}
+
+.col{
+    text-align: center;
+}
+
+.imageGroupDiv{
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+.imageGroup {
+    width:173px;
+    height:173px;
+    border-radius:90px;
+    background-color: white;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+}
+
+.description-row{
+    padding-top: 10px;
+    text-align: left !important;
+}
+
+.text{
+    text-decoration: none;
+    border: 1px solid #ffffff;
+    box-shadow: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 300;
+    color: #333;
+    outline: none;
+}
+
+div.paginationMemberDiv {
+    padding-top: 10px;
+    overflow: auto;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: #333333;
+}
+
+.paginationMember{
+    align-items: center;
+}
+
+.previousMember{
+    float: left;
+}
+
+.imageMember {
+    width:100px;
+    height:100px;
+    border-radius:90px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+}
+
+.nameMember{
+    margin-top: -8px;
+}
+
+.member{
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: #333;
+    text-align: center;
+    width:100px;
+}
+
+.owner{
+    border-style: solid;
+    border-color: rgba(102, 187, 106, 0.53);
+    box-shadow: 0 10px 50px rgba(102, 187, 106, 0.2);
+}
+
+ul.paginationMember{
+    list-style-type:none;
+    display:flex;
+}
+
+ul.paginationMember li{
+    display: inline;
+    border: none;
+}
+
+ul.paginationMember li a{
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ffffff;
+    box-shadow: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 300;
+    background: #f5f5f5;
+    color: #333;
+    outline: none;
+    padding: 8px 16px;
+}
+
+ul.paginationMember li:first-child a
+{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    cursor:pointer;
+}
+
+ul.paginationMember li:last-child a
+{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor:pointer;
+}
+
+.itemPosition{
+    padding-left: 12%;
+}
+
+.itemPosition:first-child{
+    padding-left: 20%;
+}
+
+.nextMember{
+    float: right;
+}
+
+.date{
+    font-size: 10px;
+    width: 100%;
+    padding-top: 10px;
+}
+
+
+div.paginationUserGroupDiv {
+    padding-top: 10px;
+}
+
+.paginationUserGroup{
+    align-items: center;
+}
+
+ul.paginationUserGroup{
+    list-style-type:none;
+    display:flex;
+    width: 100%;
+}
+
+ul.paginationUserGroup li {
+    display: inline;
+    border: none;
+}
+
+ul.paginationUserGroup li a {
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ffffff;
+    box-shadow: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 300;
+    background: #f5f5f5;
+    color: #333;
+    outline: none;
+}
+
+ul.paginationUserGroup li:first-child a
+{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    cursor:pointer;
+
+}
+
+ul.paginationUserGroup li:last-child a
+{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor:pointer;
+}
+
+.previousUserGroup{
+    float: left;
+}
+
+.editDiv{
+    padding-top: 5px;
+    padding-right: 10px;
+}
+
+.deleteDiv{
+    padding-top: 5px;
+}
+.editButton{
+    cursor:pointer;
+    border: none;
+    width: 40px;
+    height: 40px;
+    background: url("../../../../assets/edit.svg") top left no-repeat;
+    background-size: 40px 40px;
+}
+
+.deleteButton{
+    cursor:pointer;
+    border: none;
+    width: 40px;
+    height: 40px;
+    background: url("../../../../assets/delete.svg") top left no-repeat;
+    background-position: center;
+    background-size: 40px 40px;
+}
+
+.nextUserGroup{
+    float: right;
+}
+
+.closeButton{
+    margin-top: -50px;
+}

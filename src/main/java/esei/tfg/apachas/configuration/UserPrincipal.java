@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class UserPrincipal implements UserDetails {
@@ -41,6 +42,38 @@ public class UserPrincipal implements UserDetails {
     @Override
     public String getUsername() {
         return this.user.getUserLogin();
+    }
+
+    public long getUserId(){
+        return this.user.getUserId();
+    }
+
+    public String getRoles(){
+        return this.user.getRoles();
+    }
+
+    public String getPermissions(){
+        return this.user.getPermissions();
+    }
+
+    public Date getUserBirthday(){
+        return this.user.getUserBirthday();
+    }
+
+    public String getUserPhoto(){
+        return this.user.getUserPhoto();
+    }
+
+    public String getName(){
+        return this.user.getUserName();
+    }
+
+    public String getSurname(){
+        return this.user.getUserSurname();
+    }
+
+    public String getEmail () {
+        return this.user.getUserEmail();
     }
 
     @Override

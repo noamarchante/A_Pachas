@@ -1,0 +1,112 @@
+<div class="modal fade" id="detailGroupModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="detailGroupLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title">{{userGroup.userGroupName}}</h5>
+                <div class="editDiv">
+                    <button type="button" *ngIf="edit()" class="editButton" title="Editar grupo"
+                            data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#createGroupModal"
+                            (click)="pageMember=0"></button>
+                </div>
+                <div class="deleteDiv">
+                    <button type="button" class="deleteButton" title="Eliminar grupo" data-bs-dismiss="modal"
+                            (click)="delete(); pageMember=0"></button>
+                </div>
+                <button type="button" id="closeButton" class="btn-close closeButton" data-bs-dismiss="modal"
+                        aria-label="Close"
+                        (click)="pageMember=0"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col container-fluid">
+                    <div class="row">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <div class="imageGroupDiv">
+                                <ng-container *ngIf="userGroup.userGroupPhoto; else imagesDiv">
+                                    <img class="imageGroup" [src]="userGroup.userGroupPhoto" alt=""
+                                         id="detailUserGroup_photo">
+                                </ng-container>
+                                <ng-template #imagesDiv>
+                                    <img class="imageGroup" [src]="defaultImage">
+                                </ng-template>
+                                <div class="date text">
+                                    Creación: {{userGroup.userGroupCreation}}</div>
+                                <div class="description-row text"
+                                     name="userGroupDescription"
+                                     id="detailUserGroup_userGroupDescription">
+                                    {{userGroup.userGroupDescription}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="paginationMemberDiv col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <div *ngFor="let user of groupMembers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                <ng-container *ngIf="user.userPhoto; else userImagesDiv">
+                                    <p title="{{owner(user.userId)}}">
+                                        <img class="imageMember" [ngClass]="ownerBorder(user.userId)"
+                                           [src]="user.userPhoto" alt="" id="detailUser_photo">
+                                    </p>
+                                    <p title="{{owner(user.userId)}}" class="nameMember member">
+                                      {{user.userLogin}}
+                                    </p>
+                                </ng-container>
+                                <ng-template #userImagesDiv>
+                                    <p title="{{owner(user.userId)}}">
+                                        <img class="imageMember" [src]="defaultUserImage">
+                                    </p>
+                                    <p title="{{owner(user.userId)}}" class="nameMember member">
+                                      {{user.userLogin}}
+                                    </p>
+                                </ng-template>
+                            </div>
+                        </div>
+                        <!--<div class="paginationMemberDiv col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <ul class="row pagination paginationMember">
+                                <li class="page-item" *ngIf="pageMember!=0;"><a
+                                        class="page-link previousMember"
+                                        (click)="setPageMember(-1, userGroup.userGroupId)">
+                                    < </a></li>
+                                <li *ngFor="let user of groupMembers" class="page-item">
+                                    <ng-container *ngIf="user.userPhoto; else userImagesDiv">
+                                        <p title="{{owner(user.userId)}}" class="nameMember member">
+                                            <img class="imageMember" [ngClass]="ownerBorder(user.userId)"
+                                                 [src]="user.userPhoto" alt="" id="detailUser_photo">
+                                        </p>
+                                        <p title="{{owner(user.userId)}}" class="nameMember member">
+                                            {{user.userLogin}}
+                                        </p>
+                                    </ng-container>
+                                    <ng-template #userImagesDiv>
+                                        <p title="{{owner(user.userId)}}" class="nameMember member">
+                                            <img class="imageMember"
+                                                 [src]="defaultUserImage">
+                                        </p>
+                                        <p title="{{owner(user.userId)}}" class="nameMember member">
+                                            {{user.userLogin}}
+                                        </p>
+                                    </ng-template>
+                                </li>
+                                <li class="page-item" *ngIf="pageMember+1<totalPageMember"><a
+                                        class="page-link nextMember" (click)="setPageMember(1, userGroup.userGroupId)">
+                                    > </a>
+                                </li>
+                            </ul>
+                        </div>-->
+                    </div>
+                    <div class="modal-footer paginationUserGroupDiv">
+                        <ul class="row pagination paginationUserGroup">
+                            <li class="page-item" [ngClass]="previousUserGroup"
+                                *ngIf="(_pageUserGroup!=0) || (_pageUserGroup==0 && _indexUserGroup !=0)"><a
+                                    class="page-link previousUserGroup" (click)="setPageUserGroup(-1)">Anterior</a>
+                            </li>
+                            <li class="page-item" [ngClass]="nextUserGroup"
+                                *ngIf="(_pageUserGroup+1<_totalPagesUserGroup) || (_pageUserGroup+1==_totalPagesUserGroup && _indexUserGroup+1 !=_sizeUserGroup && _userGroups[_indexUserGroup+1]!=undefined)">
+                                <a class="page-link nextUserGroup" (click)="setPageUserGroup(1)">Siguiente</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<simple-notifications></simple-notifications>

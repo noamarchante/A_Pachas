@@ -1,9 +1,8 @@
 package esei.tfg.apachas.controller;
 
-import esei.tfg.apachas.entity.User;
+import esei.tfg.apachas.model.MUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class CUserUser {
 
     @PostMapping
     public ResponseEntity<Void> addUserUser(@RequestBody @Valid MUserUser mUserUser, UriComponentsBuilder builder) {
-        boolean flag = sUserUser.insert(mUserUser);
+        boolean flag = sUserUser.insertUserUser(mUserUser);
         if (!flag) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
@@ -38,7 +37,7 @@ public class CUserUser {
 
     @PutMapping
     public ResponseEntity<MUserUser> updateUserUser(@RequestBody @Valid MUserUser mUserUser) {
-        boolean flag = sUserUser.update(mUserUser);
+        boolean flag = sUserUser.updateUserUser(mUserUser);
         if (!flag) {
             return new ResponseEntity<>(mUserUser, HttpStatus.NOT_FOUND);
         } else {
@@ -48,9 +47,9 @@ public class CUserUser {
 
     @DeleteMapping("/{friendId}/{userId}")
     public ResponseEntity<Void> deleteUserUser(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
-        boolean flag = sUserUser.delete(new UserUserId(friendId,userId));
+        boolean flag = sUserUser.deleteUserUser(new UserUserId(friendId,userId));
         if (!flag) {
-            boolean flag2 = sUserUser.delete(new UserUserId(userId, friendId));
+            boolean flag2 = sUserUser.deleteUserUser(new UserUserId(userId, friendId));
             if (!flag2) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }else{
@@ -60,12 +59,6 @@ public class CUserUser {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
-
-    /*@GetMapping("/count/{authId}")
-    public ResponseEntity<Long> countUsersUsersByAuthUser( @PathVariable("authId") Long authId) {
-        long userCount = sUserUser.countByAuthUser(authId);
-        return new ResponseEntity<>(userCount, HttpStatus.OK);
-    }*/
 
     @GetMapping("/{friendId}/{userId}")
     public ResponseEntity<MUserUser> getUserUserById(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
@@ -81,10 +74,10 @@ public class CUserUser {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<User>> getAllUserIdByFriendId(@PathVariable("id") long id) {
+    public ResponseEntity<List<MUser>> getFriends(@PathVariable("id") long id) {
         try {
-            List<User> mUserUser = sUserUser.selectAllUserByFriendId(id);
-            mUserUser.addAll(sUserUser.selectAllFriendByUserId(id));
+            List<MUser> mUserUser = sUserUser.selectFriendsByFriendId(id);
+            mUserUser.addAll(sUserUser.selectFriendsByUserId(id));
             return new ResponseEntity<>(mUserUser, HttpStatus.OK);
         }catch ( NoSuchElementException e){
             return new ResponseEntity<>(null, HttpStatus.OK);
@@ -96,7 +89,7 @@ public class CUserUser {
     public ResponseEntity<List<MUserUser>> getAllUserUserByAuthUser(@PathVariable("authId") long authId) {
         List<MUserUser> userUserList = sUserUser.selectAllByAuthUser(authId);
         return new ResponseEntity<>(userUserList, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping
     public ResponseEntity<List<MUserUser>> getAllUserUser() {
@@ -109,4 +102,10 @@ public class CUserUser {
         List<MUserUser> userUserList = sUserUser.selectPageable(pageable);
         return new ResponseEntity<>(userUserList, HttpStatus.OK);
     }
+
+    @GetMapping("/count/{authId}")
+    public ResponseEntity<Long> countUsersUsersByAuthUser( @PathVariable("authId") Long authId) {
+        long userCount = sUserUser.countByAuthUser(authId);
+        return new ResponseEntity<>(userCount, HttpStatus.OK);
+    }*/
 }

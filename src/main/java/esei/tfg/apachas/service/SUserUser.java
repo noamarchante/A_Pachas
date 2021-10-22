@@ -1,8 +1,9 @@
 package esei.tfg.apachas.service;
 
+import esei.tfg.apachas.converter.ConUser;
+import esei.tfg.apachas.model.MUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import esei.tfg.apachas.converter.ConUserUser;
 import esei.tfg.apachas.entity.User;
@@ -11,7 +12,6 @@ import esei.tfg.apachas.entity.id.UserUserId;
 import esei.tfg.apachas.model.MUserUser;
 import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RUserUser;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("SUserUser")
@@ -28,7 +28,11 @@ public class SUserUser {
     @Qualifier("ConUserUser")
     private ConUserUser conUserUser;
 
-    public synchronized boolean insert(MUserUser mUserUser) {
+    @Autowired
+    @Qualifier("ConUser")
+    private ConUser conUser;
+
+    public synchronized boolean insertUserUser(MUserUser mUserUser) {
         UserUser userUser = conUserUser.conMUserUser(mUserUser);
         UserUser existingUserUser = rUserUser.findByUserUserId(userUser.getUserUserId());
         User existingUser = rUser.findByUserId(userUser.getUserUserId().getUserId());
@@ -43,7 +47,7 @@ public class SUserUser {
         }
     }
 
-    public synchronized boolean update(MUserUser mUserUser) {
+    public synchronized boolean updateUserUser(MUserUser mUserUser) {
         UserUser userUser = conUserUser.conMUserUser(mUserUser);
         UserUser existingUserUser = rUserUser.findByUserUserId(userUser.getUserUserId());
         User existingUser = rUser.findByUserId(userUser.getUserUserId().getUserId());
@@ -57,7 +61,7 @@ public class SUserUser {
         }
     }
 
-    public synchronized boolean delete(UserUserId userUserId) {
+    public synchronized boolean deleteUserUser(UserUserId userUserId) {
         UserUser existingUserUser = rUserUser.findByUserUserId(userUserId);
         if (existingUserUser != null) {
             rUserUser.delete(existingUserUser);
@@ -67,9 +71,24 @@ public class SUserUser {
         }
     }
 
+    public synchronized MUserUser selectUserUserById(UserUserId userUserId) {
+        UserUser userUser = rUserUser.findById(userUserId).get();
+        return conUserUser.conUserUser(userUser);
+    }
+
+    public synchronized List<MUser> selectFriendsByFriendId(long friendId) {
+        List<User> userList = rUserUser.findUserByUserUserId_FriendId(friendId);
+        return conUser.conUserList(userList);
+    }
+
+    public synchronized List<MUser> selectFriendsByUserId(long userId) {
+        List<User> userList = rUserUser.findFriendByUserUserId_UserId(userId);
+        return conUser.conUserList(userList);
+    }
+
     /*public synchronized Long countByAuthUser(Long authId) {
         return rUserUser.countByUserUserId_FriendId(authId);
-    }*/
+    }
 
     public synchronized List<MUserUser> selectAll() {
         List<UserUser> userUserList = new ArrayList<>();
@@ -77,27 +96,13 @@ public class SUserUser {
         return conUserUser.conUserUserList(userUserList);
     }
 
-    /*public synchronized List<MUserUser> selectAllByAuthUser(Long authId) {
+    public synchronized List<MUserUser> selectAllByAuthUser(Long authId) {
         List<UserUser> userUserList = new ArrayList<>();
         rUserUser.findByUserUserId_FriendIdAAndStatus(authId,false).forEach(e -> userUserList.add(e));
         return conUserUser.conUserUserList(userUserList);
-    }*/
+    }
 
     public synchronized List<MUserUser> selectPageable(Pageable pageable) {
         return conUserUser.conUserUserList(rUserUser.findAll(pageable).getContent());
-    }
-
-    public synchronized MUserUser selectUserUserById(UserUserId userUserId) {
-        UserUser userUser = rUserUser.findById(userUserId).get();
-        return conUserUser.conUserUser(userUser);
-    }
-
-    public synchronized List<User> selectAllUserByFriendId(long friendId) {
-        return rUserUser.findUserByUserUserId_FriendId(friendId);
-    }
-
-    public synchronized List<User> selectAllFriendByUserId(long userId) {
-        return rUserUser.findFriendByUserUserId_UserId(userId);
-
-    }
+    }*/
 }

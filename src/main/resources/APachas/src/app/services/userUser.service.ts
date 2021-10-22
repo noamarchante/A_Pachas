@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {environment} from "../../environments/environment";
 import {APachasError} from "../modules/notification/entities";
@@ -13,7 +13,34 @@ export class UserUserService {
 
     constructor(private http: HttpClient) { }
 
-    getAll(): Observable<MUserUser[]> {
+    getUserUser(friendId: number, userId: number): Observable<MUserUser> {
+        return this.http.get<MUserUser>(`${environment.restApi}/usersUsers/${friendId}/${userId}`);
+    }
+
+    getFriends(friendId: number): Observable<MUser[]> {
+        return this.http.get<MUser[]>(`${environment.restApi}/usersUsers/${friendId}`);
+    }
+
+    createUserUser(userUser: MUserUser): Observable<void> {
+        return this.http.post<void>(`${environment.restApi}/usersUsers`,{
+            "friendId":userUser.friendId,
+            "userId": userUser.userId,
+            "status": userUser.status
+        })
+            .pipe(
+                APachasError.throwOnError('Fallo en la solicitud de amistad o solicitud ya enviada', `Por favor, inténtelo de nuevo`)
+            );
+    }
+
+    updateUserUser(user: MUserUser): Observable<MUserUser> {
+        return this.http.put<MUserUser>(`${environment.restApi}/usersUsers`, user);
+    }
+
+    deleteUserUser(friendId: number, userId: number): Observable<void> {
+        return this.http.delete<void>(`${environment.restApi}/usersUsers/${friendId}/${userId}`);
+    }
+
+   /* getAll(): Observable<MUserUser[]> {
         return this.http.get<MUserUser[]>(`${environment.restApi}/users`);
     }
 
@@ -29,36 +56,9 @@ export class UserUserService {
         return this.http.get<MUserUser>(`${environment.restApi}/usersUsers/${authId}`);
     }
 
-
-
-   /* getPageableUser(userLogin: string, page: number, size: number): Observable<MUserUser[]>{
+    getPageableUser(userLogin: string, page: number, size: number): Observable<MUserUser[]>{
         return this.http.get<MUserUser[]>(`${environment.restApi}/users/pageableUser/${userLogin}?page=${page}&size=${size}`);
-    }*/
-
-    get(friendId: number, userId: number): Observable<MUserUser> {
-        return this.http.get<MUserUser>(`${environment.restApi}/usersUsers/${friendId}/${userId}`);
     }
 
-    getFriends(friendId: number): Observable<MUser[]> {
-        return this.http.get<MUser[]>(`${environment.restApi}/usersUsers/${friendId}`);
-    }
-
-    create(userUser: MUserUser): Observable<void> {
-        return this.http.post<void>(`${environment.restApi}/usersUsers`,{
-            "friendId":userUser.friendId,
-            "userId": userUser.userId,
-            "status": userUser.status
-        })
-            .pipe(
-                APachasError.throwOnError('Fallo en la solicitud de amistad o solicitud ya enviada', `Por favor, inténtelo de nuevo`)
-            );
-    }
-
-    update(user: MUserUser): Observable<MUserUser> {
-        return this.http.put<MUserUser>(`${environment.restApi}/usersUsers`, user);
-    }
-
-    delete( friendId: number, userId: number): Observable<void> {
-        return this.http.delete<void>(`${environment.restApi}/usersUsers/${friendId}/${userId}`);
-    }
+    */
 }

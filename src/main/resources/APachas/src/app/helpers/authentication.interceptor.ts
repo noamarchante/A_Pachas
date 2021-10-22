@@ -27,6 +27,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 			Authorization: this.authenticationService.getAuthorizationHeader()
 			}
 		});
+
 		return next.handle(request);
 	}
 }

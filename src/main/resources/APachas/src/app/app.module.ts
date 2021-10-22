@@ -12,8 +12,12 @@ import {AuthenticationInterceptor} from './helpers/authentication.interceptor';
 import {HomeComponent} from './components/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RegisterComponent} from "./components/register/register.component";
-import {SearchUsersComponent} from "./components/searchUsers/searchUsers.component";
-import {CreateGroupComponent} from "./components/createGroup/createGroup.component";
+import {ListUsersComponent} from "./components/users/listUsers/listUsers.component";
+import {CreateGroupComponent} from "./components/groups/createGroup/createGroup.component";
+import {ListGroupsComponent} from "./components/groups/listGroups/listGroups.component";
+import { NgSelectModule } from '@ng-select/ng-select';
+import {DetailGroupComponent} from "./components/groups/detailGroup/detailGroup.component";
+import {DetailUserComponent} from "./components/users/detailUser/detailUser.component";
 
 
 @NgModule({
@@ -21,14 +25,18 @@ import {CreateGroupComponent} from "./components/createGroup/createGroup.compone
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    SearchUsersComponent,
+    ListUsersComponent,
     CreateGroupComponent,
+    ListGroupsComponent,
+    DetailGroupComponent,
+    DetailUserComponent,
     HomeComponent
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     FormsModule,
+    NgSelectModule,
     HttpClientModule,
     NotificationModule,
     BrowserAnimationsModule,

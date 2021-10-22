@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
 	}
 
 	logIn() {
-		this.authenticationService.checkCredentials(this.login, this.password).subscribe((s: any) =>{
+		this.authenticationService.checkCredentials(this.login, this.password).subscribe(( s:any) =>{
 			this.authenticationService.logIn(this.login, this.password, s.headers.get("Authorization"));
 			this.router.navigateByUrl(this.return);
 		});

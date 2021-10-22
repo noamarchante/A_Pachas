@@ -141,7 +141,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(),  this.rUser))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.rUser))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
@@ -151,6 +151,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/usersUsers").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.POST, "/usersUsers").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.POST, "/usersGroups").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/usersGroupsUsers").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated();
     }
 

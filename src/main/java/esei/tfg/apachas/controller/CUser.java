@@ -10,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.util.List;
@@ -32,7 +31,7 @@ public class CUser {
         mUser.setUserPassword(securityConfiguration.passwordEncoder().encode(mUser.getUserPassword()));
         mUser.setRoles("USER");
 
-        boolean flag = sUser.insert(mUser);
+        boolean flag = sUser.insertUser(mUser);
         if (!flag) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
@@ -42,7 +41,42 @@ public class CUser {
         }
     }
 
-    @PutMapping
+    @GetMapping("/{userLogin}")
+    public ResponseEntity<MUser> getUserByLogin(@PathVariable("userLogin") String userLogin) {
+        MUser mUser = sUser.selectUserByUserLogin(userLogin);
+        return new ResponseEntity<>(mUser, HttpStatus.OK);
+    }
+
+    @GetMapping("/pageable/{authId}")
+    public ResponseEntity<List<MUser>> getPageable(@PathVariable("authId") long authId, Pageable pageable) {
+
+        List<MUser> userList = sUser.selectUserPageable(authId, pageable);
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+
+    @GetMapping("/pageable/{userLogin}/{authId}")
+    public ResponseEntity<List<MUser>> getPageableUser( @PathVariable("userLogin") String userLogin,@PathVariable("authId") long authId, Pageable pageable) {
+        List<MUser> userList = sUser.selectUserPageableByUserLogin(userLogin,authId,pageable);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/{authId}")
+    public ResponseEntity<Long> countUsers( @PathVariable("authId") long authId) {
+        long userCount = sUser.countUsers(authId);
+        return new ResponseEntity<>(userCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/{userLogin}/{authId}")
+    public ResponseEntity<Long> countSearchUsers(@PathVariable("userLogin") String userLogin, @PathVariable("authId") long authId) {
+        long userCount = sUser.countSearchUsers(userLogin, authId);
+        return new ResponseEntity<>(userCount, HttpStatus.OK);
+    }
+
+
+
+
+    /*@PutMapping
     public ResponseEntity<MUser> updateUser(@RequestBody @Valid MUser mUser) {
         mUser.setUserPassword(securityConfiguration.passwordEncoder().encode(mUser.getUserPassword()));
 
@@ -70,41 +104,9 @@ public class CUser {
         return new ResponseEntity<>(mUser, HttpStatus.OK);
     }
 
-    @GetMapping("byLogin/{userLogin}")
-    public ResponseEntity<MUser> getUserByLogin(@PathVariable("userLogin") String userLogin) {
-        MUser mUser = sUser.selectByUserLogin(userLogin);
-        return new ResponseEntity<>(mUser, HttpStatus.OK);
-    }
-
     @GetMapping
     public ResponseEntity<List<MUser>> getAllUser() {
         List<MUser> userList = sUser.selectAll();
         return new ResponseEntity<>(userList, HttpStatus.OK);
-    }
-
-    @GetMapping("/pageable/{userLogin}")
-    public ResponseEntity<List<MUser>> getPageable(@PathVariable("userLogin") String userLogin, Pageable pageable) {
-
-        List<MUser> userList = sUser.selectPageable(userLogin, pageable);
-
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-    }
-
-    @GetMapping("/pageableUser/{userLogin}/{authId}")
-    public ResponseEntity<List<MUser>> getPageableUser( @PathVariable("userLogin") String userLogin,@PathVariable("authId") String authLogin, Pageable pageable) {
-        List<MUser> userList = sUser.selectPageableByUserLogin(userLogin,authLogin,pageable);
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-    }
-
-    @GetMapping("/count/{authLogin}")
-    public ResponseEntity<Long> countUsers( @PathVariable("authLogin") String authLogin) {
-        long userCount = sUser.countUsers(authLogin);
-        return new ResponseEntity<>(userCount, HttpStatus.OK);
-    }
-
-    @GetMapping("/searchCount/{userLogin}/{authLogin}")
-    public ResponseEntity<Long> countSearchUsers(@PathVariable("userLogin") String userLogin, @PathVariable("authLogin") String authLogin) {
-        long userCount = sUser.countSearchUsers(userLogin, authLogin);
-        return new ResponseEntity<>(userCount, HttpStatus.OK);
-    }
+    }*/
 }

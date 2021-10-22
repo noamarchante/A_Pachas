@@ -1,18 +1,19 @@
 package esei.tfg.apachas.service;
 
+import esei.tfg.apachas.converter.ConUser;
+import esei.tfg.apachas.converter.ConUserGroup;
+import esei.tfg.apachas.model.MUser;
+import esei.tfg.apachas.model.MUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import esei.tfg.apachas.converter.ConUserGroupUser;
 import esei.tfg.apachas.entity.*;
-import esei.tfg.apachas.entity.id.UserGroupUserId;
 import esei.tfg.apachas.model.MUserGroupUser;
 import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RUserGroup;
 import esei.tfg.apachas.repository.RUserGroupUser;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("SUserGroupUser")
@@ -33,7 +34,11 @@ public class SUserGroupUser {
     @Qualifier("ConUserGroupUser")
     private ConUserGroupUser conUserGroupUser;
 
-    public synchronized boolean insert(MUserGroupUser mUserGroupUser) {
+    @Autowired
+    @Qualifier("ConUser")
+    private ConUser conUser;
+
+    public synchronized boolean insertUserGroupUser(MUserGroupUser mUserGroupUser) {
         UserGroupUser userGroupUser = conUserGroupUser.conMUserGroupUser(mUserGroupUser);
         UserGroupUser existingUserGroupUser = rUserGroupUser.findByUserGroupUserId(userGroupUser.getUserGroupUserId());
         UserGroup existingUserGroup = rUserGroup.findByUserGroupId(userGroupUser.getUserGroupUserId().getUserGroupId());
@@ -48,7 +53,21 @@ public class SUserGroupUser {
         }
     }
 
-    /*public synchronized boolean update(MUserGroupUser mUserGroupUser) {
+    public synchronized Long countUsersGroupsUsersByUserGroupId(long userGroupId){
+        return rUserGroupUser.countByUserGroupUserId_UserGroupIdAndUserGroupUserExitedIsNull(userGroupId);
+    }
+
+    public synchronized List<MUser> selectPageableUserByUserGroupId(long userGroupId, Pageable pageable) {
+        List<User> userList = rUserGroupUser.findByUserGroupUserId_UserGroupIdAAndUserGroupUserExitedIsNull(userGroupId, pageable).getContent();
+        return conUser.conUserList(userList);
+    }
+
+    public synchronized List<MUser> selectUserByUserGroupId(long userGroupId) {
+        List<User> userList = rUserGroupUser.findByUserGroupUserId_UserGroupIdAAndUserGroupUserExitedIsNull(userGroupId);
+        return conUser.conUserList(userList);
+    }
+
+    public synchronized boolean update(MUserGroupUser mUserGroupUser) {
         UserGroupUser userGroupUser = conUserGroupUser.conMUserGroupUser(mUserGroupUser);
         UserGroupUser existingUserGroupUser = rUserGroupUser.findByUserGroupUserId(userGroupUser.getUserGroupUserId());
         UserGroup existingUserGroup = rUserGroup.findByUserGroupId(userGroupUser.getUserGroup().getUserGroupId());
@@ -60,8 +79,8 @@ public class SUserGroupUser {
         } else {
             return false;
         }
-    }*/
-
+    }
+/*
     public synchronized boolean delete(UserGroupUserId userGroupUserId) {
         UserGroupUser existingUserGroupUser = rUserGroupUser.findByUserGroupUserId(userGroupUserId);
         if (existingUserGroupUser != null) {
@@ -85,5 +104,5 @@ public class SUserGroupUser {
     public synchronized MUserGroupUser selectUserGroupUserById(UserGroupUserId userGroupUserId) {
         UserGroupUser userGroupUser = rUserGroupUser.findById(userGroupUserId).get();
         return conUserGroupUser.conUserGroupUser(userGroupUser);
-    }
+    }*/
 }

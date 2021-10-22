@@ -64,11 +64,11 @@ public class SUser implements UserDetailsService {
         return authorities;
     }
 
-
-    public synchronized boolean insert(MUser mUser) {
+    public synchronized boolean insertUser(MUser mUser) {
         User user = conUser.conMUser(mUser);
         User existingUser = rUser.findByUserId(user.getUserId());
-        if (existingUser != null) {
+        if (existingUser != null)
+        {
             return false;
         } else {
             rUser.save(user);
@@ -76,7 +76,30 @@ public class SUser implements UserDetailsService {
         }
     }
 
-    public synchronized boolean update(MUser mUser) {
+    public synchronized MUser selectUserByUserLogin(String userLogin) {
+        User user = rUser.findByUserLogin(userLogin);
+        return conUser.conUser(user);
+    }
+
+    public synchronized List<MUser> selectUserPageable(long authId, Pageable pageable) {
+        return conUser.conUserList(rUser.findUsersByRolesEqualsAndUserIdIsNotOrderByUserLoginAsc("USER", authId,pageable).getContent());
+    }
+
+    public synchronized List<MUser> selectUserPageableByUserLogin(String userLogin, long authId, Pageable pageable) {
+        return conUser.conUserList(rUser.findUsersByUserLoginContainingAndUserIdIsNotAndRolesEqualsOrderByUserLoginAsc(userLogin, authId, "USER", pageable).getContent());
+    }
+
+    public synchronized Long countUsers(long authId){
+        return rUser.countByRolesAndUserIdIsNot("USER",authId);
+    }
+
+    public synchronized Long countSearchUsers(String userLogin, long authId){
+        return rUser.countByRolesAndUserLoginContainingAndUserIdIsNot("USER",userLogin,authId);
+    }
+
+
+
+   /* public synchronized boolean update(MUser mUser) {
         User user = conUser.conMUser(mUser);
         User existingUser = rUser.findByUserId(user.getUserId());
         if (existingUser != null) {
@@ -103,29 +126,10 @@ public class SUser implements UserDetailsService {
         return conUser.conUserList(userList);
     }
 
-    public synchronized List<MUser> selectPageable(String userLogin, Pageable pageable) {
-        return conUser.conUserList(rUser.findUsersByRolesEqualsAndUserLoginIsNotOrderByUserLoginAsc("USER", userLogin,pageable).getContent());
-    }
 
-    public synchronized List<MUser> selectPageableByUserLogin(String userLogin, String authLogin, Pageable pageable) {
-        return conUser.conUserList(rUser.findUsersByUserLoginContainingAndUserLoginIsNotAndRolesEqualsOrderByUserLoginAsc(userLogin, authLogin, "USER", pageable).getContent());
-    }
 
     public synchronized MUser selectById(long userId) {
         User user = rUser.findById(userId).get();
         return conUser.conUser(user);
-    }
-
-    public synchronized MUser selectByUserLogin(String userLogin) {
-        User user = rUser.findByUserLogin(userLogin);
-        return conUser.conUser(user);
-    }
-
-    public synchronized Long countUsers(String authLogin){
-        return rUser.countByRolesAndUserLoginIsNot("USER",authLogin);
-    }
-
-    public synchronized Long countSearchUsers(String userLogin, String authLogin){
-        return rUser.countByRolesAndUserLoginContainingAndUserLoginIsNot("USER",userLogin,authLogin);
-    }
+    }*/
 }

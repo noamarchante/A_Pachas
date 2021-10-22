@@ -1,5 +1,7 @@
 package esei.tfg.apachas.controller;
 
+import esei.tfg.apachas.model.MUser;
+import esei.tfg.apachas.service.SUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +13,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import esei.tfg.apachas.entity.id.UserGroupUserId;
 import esei.tfg.apachas.model.MUserGroupUser;
 import esei.tfg.apachas.service.SUserGroupUser;
-
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -22,10 +24,13 @@ public class CUserGroupUser {
     @Autowired
     @Qualifier("SUserGroupUser")
     SUserGroupUser sUserGroupUser;
+    @Autowired
+    @Qualifier("SUserGroup")
+    SUserGroup sUserGroup;
 
     @PostMapping
     public ResponseEntity<Void> addUserGroupUser(@RequestBody @Valid MUserGroupUser mUserGroupUser, UriComponentsBuilder builder) {
-        boolean flag = sUserGroupUser.insert(mUserGroupUser);
+        boolean flag = sUserGroupUser.insertUserGroupUser(mUserGroupUser);
         if (!flag) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
@@ -35,16 +40,36 @@ public class CUserGroupUser {
         }
     }
 
-    /*@PutMapping("/userGroupUserUpdate")
+    @GetMapping("/count/{userGroupId}")
+    public ResponseEntity<Long> countUsersGroupsUsers( @PathVariable("userGroupId") long userGroupId) {
+        long userGroupUserCount = sUserGroupUser.countUsersGroupsUsersByUserGroupId(userGroupId);
+        return new ResponseEntity<>(userGroupUserCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/pageable/{userGroupId}")
+    public ResponseEntity<List<MUser>> getPageableUsersGroupsUsersByUserGroupId(@PathVariable("userGroupId") long userGroupId, Pageable pageable) {
+        List<MUser> mUserList = sUserGroupUser.selectPageableUserByUserGroupId(userGroupId, pageable);
+        return new ResponseEntity<>(mUserList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userGroupId}")
+    public ResponseEntity<List<MUser>> getUsersGroupsUsersByUserGroupId(@PathVariable("userGroupId") long userGroupId) {
+        List<MUser> mUserList = sUserGroupUser.selectUserByUserGroupId(userGroupId);
+        return new ResponseEntity<>(mUserList, HttpStatus.OK);
+    }
+
+    @PutMapping
     public ResponseEntity<MUserGroupUser> updateUserGroupUser(@RequestBody @Valid MUserGroupUser mUserGroupUser) {
+        mUserGroupUser.setUserGroupUserExited(new Date());
+
         boolean flag = sUserGroupUser.update(mUserGroupUser);
         if (!flag) {
             return new ResponseEntity<>(mUserGroupUser, HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(mUserGroupUser, HttpStatus.OK);
         }
-    }*/
-
+    }
+/*
     @DeleteMapping("/{userGroupId}/{userId}")
     public ResponseEntity<Void> deleteUserGroupUser(@PathVariable("userGroupId") long userGroupId, @PathVariable("userId") long userId) {
         boolean flag = sUserGroupUser.delete(new UserGroupUserId(userGroupId,userId));
@@ -61,6 +86,8 @@ public class CUserGroupUser {
         return new ResponseEntity<>(mUserGroupUser, HttpStatus.OK);
     }
 
+
+
     @GetMapping
     public ResponseEntity<List<MUserGroupUser>> getAllUserGroupUser() {
         List<MUserGroupUser> userGroupUserList = sUserGroupUser.selectAll();
@@ -71,5 +98,6 @@ public class CUserGroupUser {
     public ResponseEntity<List<MUserGroupUser>> getPageableUserGroupUser(Pageable pageable) {
         List<MUserGroupUser> userGroupUserList = sUserGroupUser.selectPageable(pageable);
         return new ResponseEntity<>(userGroupUserList, HttpStatus.OK);
-    }
+    }*/
+
 }
