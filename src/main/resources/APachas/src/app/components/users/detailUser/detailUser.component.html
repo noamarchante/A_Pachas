@@ -105,10 +105,10 @@
                     <div class="modal-footer">
                         <ul class="row paginationUser">
                             <li [ngClass]="previousUser" *ngIf="previous">
-                                <a class="previousUser" (click)="setPageUser(-1);">Anterior</a>
+                                <a class="previousUser" (click)="setPage(-1);">Anterior</a>
                             </li>
                             <li [ngClass]="nextUser" *ngIf="next">
-                                <a class="nextUser" (click)="setPageUser(1);">Siguiente</a>
+                                <a class="nextUser" (click)="setPage(1);">Siguiente</a>
                             </li>
                         </ul>
                     </div>

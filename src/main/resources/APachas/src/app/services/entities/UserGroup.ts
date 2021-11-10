@@ -3,7 +3,7 @@ export class UserGroup {
     userGroupName: string;
     userGroupDescription: string;
     userGroupPhoto: string;
-    userGroupCreation: number;
-    userGroupRemoval: number;
+    userGroupCreation: Date;
+    userGroupRemoval: Date;
     userGroupOwner: number;
 }

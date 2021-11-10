@@ -60,7 +60,7 @@ export class UserUserService {
             userLogin: user.userLogin,
             userPassword: user.userPassword,
             userEmail: user.userEmail,
-            userBirthday: new Date(user.userBirthday),
+            userBirthday: user.userBirthday,
             userPhoto: user.userPhoto,
             roles: user.roles,
             permissions: user.permissions

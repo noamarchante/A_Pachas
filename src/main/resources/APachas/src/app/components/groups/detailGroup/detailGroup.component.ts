@@ -88,8 +88,8 @@ export class DetailGroupComponent implements OnInit {
         if (userGroup != undefined) {
             this._userGroup = userGroup;
             if (this.userGroup.userGroupId != null){
-                this.getUsersGroupsUsers(this.userGroup.userGroupId);
-                this.moreMembers(this.userGroup.userGroupId);
+                this.getMembers(this.userGroup.userGroupId);
+                this.getTotalMembers(this.userGroup.userGroupId);
             }else{
                 this._userGroup = new MUserGroup();
             }
@@ -142,8 +142,7 @@ export class DetailGroupComponent implements OnInit {
         this.eventDetail.emit(number);
     }
 
-
-    getUsersGroupsUsers(userGroupId:number){
+    getMembers(userGroupId:number){
         this.userGroupUserService.getPageableUsersByUserGroupId(userGroupId,this.pageMember, this.sizeMember).subscribe((response) => {
             this.groupMembers.push(...response);
             this.paginationUserGroupClass();
@@ -151,7 +150,7 @@ export class DetailGroupComponent implements OnInit {
         });
     }
 
-    moreMembers(userGroupId:number){
+    getTotalMembers(userGroupId:number){
         this.userGroupUserService.countUsersGroupsUsersByUserGroupId(userGroupId).subscribe((members)=>{
             this.totalMembers = members;
         });
@@ -172,7 +171,7 @@ export class DetailGroupComponent implements OnInit {
         }else{
             if (this.groupMembersStored.length ==0){
                 this.pageMember +=1;
-                this.getUsersGroupsUsers(this.userGroup.userGroupId);
+                this.getMembers(this.userGroup.userGroupId);
             }else{
                 this.groupMembers = this.groupMembersStored;
             }

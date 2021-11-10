@@ -92,8 +92,8 @@ export class UserGroupService {
             userGroupName: userGroup.userGroupName,
             userGroupDescription: userGroup.userGroupDescription,
             userGroupPhoto: userGroup.userGroupPhoto,
-            userGroupCreation: new Date(userGroup.userGroupCreation),
-            userGroupRemoval: new Date(userGroup.userGroupRemoval),
+            userGroupCreation: userGroup.userGroupCreation,
+            userGroupRemoval: userGroup.userGroupRemoval,
             userGroupOwner: userGroup.userGroupOwner
         }
     }

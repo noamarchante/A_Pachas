@@ -5,7 +5,7 @@ export class User {
     userLogin: string;
     userPassword: string;
     userEmail: string;
-    userBirthday: number;
+    userBirthday: Date;
     userPhoto: string;
     roles: string;
     permissions: string;

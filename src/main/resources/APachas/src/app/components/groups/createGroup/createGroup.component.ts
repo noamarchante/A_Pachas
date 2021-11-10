@@ -52,7 +52,6 @@ export class CreateGroupComponent implements OnInit {
         return this._userGroup;
     }
 
-
     @Input() set userGroup(userGroup: MUserGroup){
         if (userGroup.userGroupId != undefined){
             this._userGroup = userGroup;
@@ -61,7 +60,6 @@ export class CreateGroupComponent implements OnInit {
         }else{
             this._userGroup = new MUserGroup();
             this.title = "Crear grupo";
-
         }
         this.groupMembers = [];
         this.getFriends();
@@ -77,7 +75,6 @@ export class CreateGroupComponent implements OnInit {
 
     onCreate() {
             this.userGroup.userGroupOwner = this.authenticationService.getUser().id;
-
             this.groupMembers.push(this.authenticationService.getUser().id);
             this.userGroupService.createUserGroup(this.userGroup).subscribe((response) => {
                 this.groupMembers.forEach((id)=> {
@@ -101,9 +98,7 @@ export class CreateGroupComponent implements OnInit {
             this.closeModal();
             document.getElementById("closeButton").click();
             this.notificationService.success("Grupo editado", "Se ha editado el grupo correctamente.");
-
         });
-
     }
 
     getImage(event): any {

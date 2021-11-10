@@ -2,8 +2,8 @@ export class Event {
     eventId: number;
     eventName:string;
     eventDescription:string;
-    eventStartDate:number;
-    eventEndDate:number;
+    eventStartDate:Date;
+    eventEndDate:Date;
     eventLocation:string;
     eventPhoto:string;
     eventState:boolean;

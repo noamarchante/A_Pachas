@@ -85,9 +85,9 @@ export class DetailUserComponent implements OnInit {
             this._user = user;
             if (this.user.userId != null){
                 this.getMutualUserGroups(this.user.userId);
-                this.moreMutualFriends(this.user.userId);
-                this.moreMutualGroups(this.user.userId);
-                this.moreMutualEvents(this.user.userId);
+                this.getTotalMutualFriends(this.user.userId);
+                this.getTotalMutualGroups(this.user.userId);
+                this.getTotalMutualEvents(this.user.userId);
             }else{
                 this._user = new MUser();
             }
@@ -126,7 +126,7 @@ export class DetailUserComponent implements OnInit {
         this._next = next;
     }
 
-    setPageUser(number: number){
+    setPage(number: number){
         this.eventDetail.emit(number);
     }
 
@@ -198,7 +198,7 @@ export class DetailUserComponent implements OnInit {
         });
     }
 
-    moreMutualGroups(userId:number){
+    getTotalMutualGroups(userId:number){
         this.userGroupService.countMutualGroups(userId, this.authenticationService.getUser().id).subscribe((number)=>{
             this.totalMutualGroups = number;
         });
@@ -237,7 +237,7 @@ export class DetailUserComponent implements OnInit {
         });
     }
 
-    moreMutualFriends(userId:number){
+    getTotalMutualFriends(userId:number){
         this.userService.countMutualFriends(userId, this.authenticationService.getUser().id).subscribe((number)=>{
             this.totalMutualFriends = number;
         });
@@ -274,7 +274,7 @@ export class DetailUserComponent implements OnInit {
         });
     }
 
-    moreMutualEvents(userId:number){
+    getTotalMutualEvents(userId:number){
         this.eventService.countMutualEvents(userId, this.authenticationService.getUser().id).subscribe((number)=>{
             this.totalMutualEvents = number;
         });
