@@ -1,20 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from "../../../services/user.service";
-import {MUser} from "../../../services/entities/MUser";
-import {MUserUser} from "../../../services/entities/MUserUser";
 import {UserUserService} from "../../../services/userUser.service";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {DomSanitizer} from "@angular/platform-browser";
-import {MUserGroup} from "../../../services/entities/MUserGroup";
+import {MUser} from "../../../models/MUser";
 
 
 export enum STATUS {
     REQUEST = 'Solicitar amistad', PENDING = 'Solicitud pendiente', FOLLOW = 'Siguiendo', SENT = 'Solicitud enviada'
-}
-
-export enum MESSAGE{
-    CANCELREQUEST = '¿Cancelar solicitud?', UNFOLLOW = '¿Dejar de seguir?', ALLOWREQUEST = '¿Aceptar solicitud?'
 }
 
 @Component({
@@ -35,7 +29,10 @@ export class ListUsersComponent implements OnInit {
     previous:string;
     next:string;
     selectedUsers: MUser;
-    selectedUsersDetails: [number,number,number, number, MUser[]];
+    pageDirection: number;
+    index:number;
+    status:string="";
+    selectedUser: MUser = new MUser();
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -49,17 +46,36 @@ export class ListUsersComponent implements OnInit {
         this.paginationClass();
     }
 
-    selectUser(index: number){
-        this.selectedUsers = this.users[index];
-        this.selectedUsersDetails = [index, this.page, this.size, this.totalPage, this.users];
+    setUser(){
+        this.selectedUser = new MUser();
     }
 
-    setIndex(index: number){
-        if(index == -1){
-            this.selectedUsersDetails[0] = this.size-1;
-        }else{
-            this.selectedUsersDetails[0] = 0;
+    selectUser(index:number){
+        this.selectedUser = this.users[index];
+        this.index = index;
+        this.status = this.friends[this.selectedUser.userId];
+    }
+
+    setSelectedUserPage(){
+        if (this.pageDirection != undefined){
+            if (this.pageDirection == -1){
+                this.index = this.size-1;
+                this.selectedUser = this.users[this.index];
+            }else if (this.pageDirection == 1){
+                this.index = 0;
+                this.selectedUser = this.users[this.index];
+            }
         }
+    }
+
+    getUsers(){
+        this.userService.getPageableUser(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
+            this.users = response;
+            this.setSelectedUserPage();
+            this.getURL(response);
+            this.getStatus(response);
+            this.totalPages();
+        });
     }
 
     paginationClass(){
@@ -84,53 +100,18 @@ export class ListUsersComponent implements OnInit {
         this.paginationClass();
     }
 
-    searchInput(){
-        this.page=0;
-        this.pagination();
-    }
-
-    setStatus (userId: number){
-        let status: string = this.friends[userId];
-        if (status == STATUS.REQUEST){
-            let mUserUser: MUserUser = new MUserUser();
-            mUserUser.userId = this.authenticationService.getUser().id;
-            mUserUser.friendId = userId;
-            mUserUser.status = false;
-            this.userUserService.createUserUser(mUserUser).subscribe();
-            this.friends[userId] = STATUS.SENT;
-        }else if (status == STATUS.FOLLOW){
-            this.messages[userId] = MESSAGE.UNFOLLOW;
-        }else if (status == STATUS.SENT){
-            this.messages[userId] = MESSAGE.CANCELREQUEST;
-        }else if (status == STATUS.PENDING){
-            this.messages[userId] = MESSAGE.ALLOWREQUEST;
+    private pagination(){
+        if(this.login == ""){
+            this.getUsers();
+        }else{
+            this.searchUsers();
         }
     }
 
-    acceptButton(userId: number){
-        if (this.messages[userId] == MESSAGE.CANCELREQUEST || this.messages[userId] == MESSAGE.UNFOLLOW){
-            this.deleteUserUser(userId);
-        }else if (this.messages[userId] == MESSAGE.ALLOWREQUEST){
-            let mUserUser: MUserUser = new MUserUser();
-            mUserUser.userId = userId
-            mUserUser.friendId = this.authenticationService.getUser().id;
-            mUserUser.status = true;
-            this.userUserService.updateUserUser(mUserUser).subscribe();
-            this.friends[userId] = STATUS.FOLLOW;
-        }
-        this.messages[userId] = null;
-    }
-
-    refuseButton(userId:number){
-       if (this.messages[userId] == MESSAGE.ALLOWREQUEST){
-            this.deleteUserUser(userId);
-        }
-        this.messages[userId] = null;
-    }
-
-    private deleteUserUser(userId: number){
-        this.userUserService.deleteUserUser(userId, this.authenticationService.getUser().id).subscribe();
-        this.friends[userId] = STATUS.REQUEST;
+    private getURL(users: MUser[]){
+        users.forEach((user) => {
+            this.images[user.userId] = this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;png;base64,' + user.userPhoto);
+        });
     }
 
     private searchUsers(){
@@ -142,27 +123,47 @@ export class ListUsersComponent implements OnInit {
         });
     }
 
-    private pagination(){
-        if(this.login == ""){
-            this.getUsers();
+    searchInput(){
+        this.page=0;
+        this.pagination();
+    }
+
+    private totalPages() {
+        this.userService.countUsers(this.authenticationService.getUser().id).subscribe((response) => {
+            this.totalPage = Math.ceil(response/this.size);
+        });
+    }
+
+    private searchTotalPages(){
+        this.userService.countSearchUsers(this.login, this.authenticationService.getUser().id).subscribe((response) => {
+            this.totalPage = Math.ceil(response/this.size);
+        });
+    }
+
+    getNext (): boolean{
+        if (this.page != this.totalPage-1 || this.users[this.index+1] != undefined){
+            return true;
         }else{
-            this.searchUsers();
+            return false;
         }
     }
 
-    getUsers(){
-        this.userService.getPageableUser(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
-            this.users = response;
-            this.getURL(response);
-            this.getStatus(response);
-            this.totalPages();
-        });
+    getPrevious():boolean{
+        if (this.page != 0 || this.users[this.index-1] != undefined){
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    private getURL(users: MUser[]){
-        users.forEach((user) => {
-            this.images[user.userId] = this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;png;base64,' + user.userPhoto);
-        });
+    setSelectedUser(event: number) {
+        this.pageDirection = event.valueOf();
+        if ( this.users[this.index + event.valueOf()] != undefined){
+            this.selectUser(this.index + event.valueOf());
+        }else{
+            this.setPage(event.valueOf());
+
+        }
     }
 
     private statusValue (statusBD: boolean, friend: boolean): string {
@@ -197,17 +198,5 @@ export class ListUsersComponent implements OnInit {
                     this.friends[mUser.userId] = STATUS.REQUEST;
                 }
             });
-    }
-
-    private totalPages() {
-        this.userService.countUsers(this.authenticationService.getUser().id).subscribe((response) => {
-            this.totalPage = Math.ceil(response/this.size);
-        });
-    }
-
-    private searchTotalPages(){
-        this.userService.countSearchUsers(this.login, this.authenticationService.getUser().id).subscribe((response) => {
-            this.totalPage = Math.ceil(response/this.size);
-        });
     }
 }

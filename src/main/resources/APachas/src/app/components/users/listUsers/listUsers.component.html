@@ -4,7 +4,7 @@
                [(ngModel)]="login" required #userLoginForm="ngModel" aria-label="Search">
     </form>
 </div>
-<app-detailUser (eventSave)="setPage($event.valueOf()[1]); setIndex($event.valueOf()[0])" [selectedUsers]="this.selectedUsersDetails"></app-detailUser>
+<app-detailUser (eventDetail)="setSelectedUser($event)" (eventMessage)="getUsers()" [user]="selectedUser" [previous] = "getPrevious()" [next] = "getNext()" [status]="status"></app-detailUser>
 <div class="row row-cols-1 row-cols-xxl-3 row-cols-xl-3 row-cols-lg-2 row-cols-md-2 row-cols-sm-1 g-4">
     <div *ngFor="let user of users">
         <div class="col">

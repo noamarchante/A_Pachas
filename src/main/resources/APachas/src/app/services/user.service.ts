@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {environment} from "../../environments/environment";
 import {APachasError} from "../modules/notification/entities";
-import {MUser} from "./entities/MUser";
+import {User} from "./entities/User";
+import {map} from "rxjs/operators";
+import {MUser} from "../models/MUser";
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +15,15 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getPageableUser(authId: number, page: number, size: number): Observable<MUser[]>{
-    return this.http.get<MUser[]>(`${environment.restApi}/users/pageable/${authId}?page=${page}&size=${size}`);
+    return this.http.get<User[]>(`${environment.restApi}/users/pageable/${authId}?page=${page}&size=${size}`).pipe(
+        map(users => users.map(this.mapUser.bind(this)))
+    );
   }
 
   getPageableUserByLogin(userLogin: string, authId: number, page: number, size: number): Observable<MUser[]>{
-    return this.http.get<MUser[]>(`${environment.restApi}/users/pageable/${userLogin}/${authId}?page=${page}&size=${size}`);
+    return this.http.get<User[]>(`${environment.restApi}/users/pageable/${userLogin}/${authId}?page=${page}&size=${size}`).pipe(
+        map(users => users.map(this.mapUser.bind(this)))
+    );
   }
 
   countUsers(authId: number): Observable<number> {
@@ -29,7 +35,9 @@ export class UserService {
   }
 
   getUserByLogin(login: string): Observable<MUser>{
-    return this.http.get<MUser>(`${environment.restApi}/users/${login}`);
+    return this.http.get<User>(`${environment.restApi}/users/${login}`).pipe(
+        map(this.mapUser.bind(this))
+    );
   }
 
   createUser(mUser: MUser): Observable<void> {
@@ -50,23 +58,29 @@ export class UserService {
       );
   }
 
-  /*update(user: User): Observable<User> {
-    return this.http.put<User>(`${environment.restApi}/users`, user);
+  countMutualFriends(userId: number, authId: number): Observable<number>{
+    return this.http.get<number>(`${environment.restApi}/users/countMutual/${userId}/${authId}`);
   }
 
-  get(id: number): Observable<User> {
-    return this.http.get<User>(`${environment.restApi}/users/${id}`);
+  getPageableMutualFriends(userId: number, authId: number, page: number, size: number): Observable<MUser[]>{
+    return this.http.get<User[]>(`${environment.restApi}/users/pageableMutual/${userId}/${authId}?page=${page}&size=${size}`).pipe(
+        map(this.mapUser.bind(this))
+    );
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${environment.restApi}/users/${id}`);
+  private mapUser(user: User) : MUser {
+    return {
+      userId: user.userId,
+      userName: user.userName,
+      userSurname: user.userSurname,
+      userLogin: user.userLogin,
+      userPassword: user.userPassword,
+      userEmail: user.userEmail,
+      userBirthday: new Date(user.userBirthday),
+      userPhoto: user.userPhoto,
+      roles: user.roles,
+      permissions: user.permissions
+    }
   }
 
-  getAll(): Observable<User[]> {
-    return this.http.get<User[]>(`${environment.restApi}/users`);
-  }
-
-  getImage(userId: number): Observable<any> {
-    return this.http.get<any>(`${environment.restApi}/users/image/${userId}`);
-  }*/
 }
