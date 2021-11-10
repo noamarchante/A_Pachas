@@ -1,17 +1,11 @@
 package esei.tfg.apachas.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import esei.tfg.apachas.model.MUser;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.sql.Blob;
-import java.util.Base64;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,14 +33,10 @@ public class UserGroup implements Serializable {
     private String userGroupPhoto;
 
     @Column(name = "userGroupCreation")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date userGroupCreation;
+    private Timestamp userGroupCreation;
 
-    @Column(name = "userGroupRemoval")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date userGroupRemoval;
+    @Column(name = "userGroupRemoval", columnDefinition = "DATETIME(3)")
+    private Timestamp userGroupRemoval;
 
     @NotNull
     @NotBlank
@@ -67,7 +57,7 @@ public class UserGroup implements Serializable {
         this.userGroupName = userGroupName;
         this.userGroupDescription = userGroupDescription;
         this.userGroupPhoto = userGroupPhoto;
-        this.userGroupCreation = new Date();
+        this.userGroupCreation = new Timestamp(System.currentTimeMillis());
         this.userGroupRemoval = null;
         this.user =user;
     }
@@ -120,19 +110,19 @@ public class UserGroup implements Serializable {
         this.user = user;
     }
 
-    public Date getUserGroupCreation() {
+    public Timestamp getUserGroupCreation() {
         return userGroupCreation;
     }
 
-    public void setUserGroupCreation(Date userGroupCreation) {
+    public void setUserGroupCreation(Timestamp userGroupCreation) {
         this.userGroupCreation = userGroupCreation;
     }
 
-    public Date getUserGroupRemoval() {
+    public Timestamp getUserGroupRemoval() {
         return userGroupRemoval;
     }
 
-    public void setUserGroupRemoval(Date userGroupRemoval) {
+    public void setUserGroupRemoval(Timestamp userGroupRemoval) {
         this.userGroupRemoval = userGroupRemoval;
     }
 }

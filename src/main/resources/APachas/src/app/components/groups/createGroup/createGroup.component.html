@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form (submit)="onCreate()" ngNativeValidate #createUserGroupForm="ngForm">
+                <form (submit)="onSubmit();" ngNativeValidate #createUserGroupForm="ngForm">
                     <div class="col container-fluid">
                         <div class="row">
                             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 file-input imageDiv">
@@ -86,7 +86,7 @@
                                        placeholder="Participantes"
                                        [(ngModel)]="groupMembers">
                                 <ng-template class="text" ng-multi-label-tmp let-items="items" let-clear="clear">
-                                    <div class="ng-value" *ngFor="let item of items">
+                                    <div class="ng-value" *ngFor="let item of items ">
                                         <ng-container *ngIf="item.userPhoto; else userPhotoDiv">
                                             <span class="ng-value-label" title="{{item.userLogin}}"><img
                                                     [src]="item.userPhoto" class="imageSelect"><p
@@ -100,9 +100,6 @@
                                         <span class="ng-value-icon right" (click)="clear(item)"
                                               aria-hidden="true">×</span>
                                     </div>
-                                    <div class="ng-value" *ngIf="items.length > 2">
-                                        <span class="ng-value-label">{{items.length - 2}} más...</span>
-                                    </div>
                                 </ng-template>
                                 <ng-template ng-option-tmp let-item="item">
                                     <ng-container *ngIf="item.userPhoto; else userPhotoDiv">
@@ -113,7 +110,7 @@
                                     <ng-template #userPhotoDiv>
                                         <span class="ng-value-label" title="{{item.userLogin}}"><img
                                                 [src]="defaultUserImage" class="imageSelect"><p
-                                                class="selectedText">{{item.userLogin}} </p></span>
+                                                class="selectedText listSelect">{{item.userLogin}} </p></span>
                                     </ng-template>
                                 </ng-template>
                             </ng-select>

@@ -149,9 +149,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/users").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.GET, "/usersUsers").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET, "/events").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.POST, "/usersUsers").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.POST, "/usersGroups").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.PUT, "/usersGroups").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.POST, "/usersGroupsUsers").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.PUT, "/usersGroupsUsers").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated();
     }
 

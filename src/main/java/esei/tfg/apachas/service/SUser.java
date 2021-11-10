@@ -4,6 +4,7 @@ import esei.tfg.apachas.converter.ConUser;
 import esei.tfg.apachas.converter.ConUserGroupUser;
 import esei.tfg.apachas.entity.User;
 import esei.tfg.apachas.model.MUser;
+import esei.tfg.apachas.model.MUserGroup;
 import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RUserGroup;
 import esei.tfg.apachas.repository.RUserGroupUser;
@@ -95,6 +96,14 @@ public class SUser implements UserDetailsService {
 
     public synchronized Long countSearchUsers(String userLogin, long authId){
         return rUser.countByRolesAndUserLoginContainingAndUserIdIsNot("USER",userLogin,authId);
+    }
+
+    public synchronized Long countMutualFriends( long userId, long authId){
+        return rUser.countMutualFriends(userId, authId);
+    }
+
+    public synchronized List<MUser> selectMutualFriends(long userId, long authId, Pageable pageable) {
+        return conUser.conUserList(rUser.findByMutualFriends(userId, authId, pageable).getContent());
     }
 
 

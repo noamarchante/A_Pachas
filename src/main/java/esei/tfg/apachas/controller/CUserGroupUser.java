@@ -35,7 +35,7 @@ public class CUserGroupUser {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(builder.path("/userGroupUserSelect/{userGroupUserId}").buildAndExpand(new UserGroupUserId(mUserGroupUser.getUserGroupId(), mUserGroupUser.getUserId())).toUri());
+            headers.setLocation(builder.path("/usersGroupsUsers/{userGroupUserId}").buildAndExpand(new UserGroupUserId(mUserGroupUser.getUserGroupId(), mUserGroupUser.getUserId())).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
         }
     }
@@ -59,14 +59,22 @@ public class CUserGroupUser {
     }
 
     @PutMapping
-    public ResponseEntity<MUserGroupUser> updateUserGroupUser(@RequestBody @Valid MUserGroupUser mUserGroupUser) {
-        mUserGroupUser.setUserGroupUserExited(new Date());
-
-        boolean flag = sUserGroupUser.update(mUserGroupUser);
+    public ResponseEntity<Void> deleteUserGroupUser(@RequestBody @Valid MUserGroupUser mUserGroupUser) {
+        boolean flag = sUserGroupUser.delete(mUserGroupUser);
         if (!flag) {
-            return new ResponseEntity<>(mUserGroupUser, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(mUserGroupUser, HttpStatus.OK);
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @PutMapping("/{userGroupId}")
+    public ResponseEntity<Void> updateUserGroupUser(@PathVariable("userGroupId") long userGroupId, @RequestBody @Valid List<Long> userIdList) {
+        boolean flag = sUserGroupUser.update(userGroupId, userIdList);
+        if (!flag) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         }
     }
 /*

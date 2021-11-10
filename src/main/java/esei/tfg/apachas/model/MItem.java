@@ -3,6 +3,7 @@ package esei.tfg.apachas.model;
 
 import esei.tfg.apachas.entity.Item;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class MItem {
@@ -15,7 +16,7 @@ public class MItem {
     private String itemUrl;
     private String itemPhoto;
     private long eventId;
-    private Date itemPurchaseDate;
+    private Timestamp itemPurchaseDate;
 
     public MItem() {
     }
@@ -96,11 +97,11 @@ public class MItem {
         this.eventId = eventId;
     }
 
-    public Date getItemPurchaseDate() {
+    public Timestamp getItemPurchaseDate() {
         return itemPurchaseDate;
     }
 
-    public void setItemPurchaseDate(Date itemPurchaseDate) {
+    public void setItemPurchaseDate(Timestamp itemPurchaseDate) {
         this.itemPurchaseDate = itemPurchaseDate;
     }
 }

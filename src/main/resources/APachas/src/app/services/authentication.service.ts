@@ -1,7 +1,7 @@
  import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {User} from '../models/User';
+import {AuthUser} from '../models/AuthUser';
 import {APachasError} from '../modules/notification/entities';
 import {UserService} from "./user.service";
 
@@ -13,7 +13,7 @@ import {UserService} from "./user.service";
 //ACCEDE A LOS DATOS NECESARIOS PARA LA AUTENTICACION
 export class AuthenticationService {
 
-	private user: User = new User();
+	private user: AuthUser = new AuthUser();
 
 	constructor(private  http: HttpClient,  private userService: UserService) {}
 
@@ -58,7 +58,7 @@ export class AuthenticationService {
 	//CIERRE DE SESION
 	public logOut() {
 		this.user.clear();
-		this.user = new User();
+		this.user = new AuthUser();
 	}
 
 	//CABECERA DE LA AUTORIZACION => TOKEN
@@ -67,7 +67,7 @@ export class AuthenticationService {
 	}
 
 	//DEVUELVE EL USUARIO AUTENTICADO
-	public getUser(): User {
+	public getUser(): AuthUser {
 		return this.user;
 	}
 

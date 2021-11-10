@@ -3,6 +3,7 @@ package esei.tfg.apachas.model;
 import esei.tfg.apachas.entity.User;
 
 import java.sql.Blob;
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -14,7 +15,7 @@ public class MUser {
     private String userLogin;
     private String userPassword;
     private String userEmail;
-    private Date userBirthday;
+    private Timestamp userBirthday;
     private String userPhoto;
     private String roles;
     private String permissions;
@@ -43,7 +44,7 @@ public class MUser {
         return userName;
     }
 
-    public Date getUserBirthday() {
+    public Timestamp getUserBirthday() {
         return userBirthday;
     }
 
@@ -67,7 +68,7 @@ public class MUser {
         return userPhoto;
     }
 
-    public void setUserBirthday(Date userBirthday) {
+    public void setUserBirthday(Timestamp userBirthday) {
         this.userBirthday = userBirthday;
     }
 

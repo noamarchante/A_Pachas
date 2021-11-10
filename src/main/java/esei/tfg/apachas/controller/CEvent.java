@@ -1,5 +1,6 @@
 package esei.tfg.apachas.controller;
 
+import esei.tfg.apachas.model.MUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/events")
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class CEvent {
 
@@ -70,6 +71,18 @@ public class CEvent {
     @GetMapping("/eventPageableSelect")
     public ResponseEntity<List<MEvent>> getPageableEvent(Pageable pageable) {
         List<MEvent> eventList = sEvent.selectPageable(pageable);
+        return new ResponseEntity<>(eventList, HttpStatus.OK);
+    }
+
+    @GetMapping("/countMutual/{userId}/{authId}")
+    public ResponseEntity<Long> countMutualEvents(@PathVariable("userId") long userId, @PathVariable("authId") long authId) {
+        long eventCount = sEvent.countMutualEvents(userId,authId);
+        return new ResponseEntity<>(eventCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/pageableMutual/{userId}/{authId}")
+    public ResponseEntity<List<MEvent>> getPageableMutualEvents(@PathVariable("userId") long userId, @PathVariable("authId") long authId, Pageable pageable) {
+        List<MEvent> eventList = sEvent.selectMutualEvents(userId, authId,pageable);
         return new ResponseEntity<>(eventList, HttpStatus.OK);
     }
 }

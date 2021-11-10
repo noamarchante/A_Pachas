@@ -1,13 +1,12 @@
 package esei.tfg.apachas.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,32 +26,26 @@ public class Event implements Serializable {
     @Size(min = 4, max = 50)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[[:alpha:]áéíóúÁÉÍÓÚñÑ]+(?:[[:space:]][[:alnum:]áéíóúÁÉÍÓÚñÑ]+)*$")
     private String eventName;
 
     //ATRIBUTO: DESCRIPCION_EVENTO
     @Column(name = "eventDescription", length = 155)
     @Size(min=0,max = 155)
     @NotBlank
-    @Pattern(regexp = "^[[:alpha:]áéíóúÁÉÍÓÚñÑ]+(?:[[:space:]][[:alnum:]áéíóúÁÉÍÓÚñÑ]+)*$")
     private String eventDescription;
 
     //ATRIBUTO: FECHA_INICIO_EVENTO
     @Column(name = "eventStartDate", nullable = false, length = 19)
     @Size(min = 16, max = 16)
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm")
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^([0-2][0-9]|3[0-1])(-)(0[1-9]|1[0-2])\\2(\\d{4})(\\s)([0-1][0-9]|2[0-3])(:)([0-5][0-9])$")
-    private Date eventStartDate;
+    private Timestamp eventStartDate;
 
     //ATRIBUTO: LUGAR
     @Column(name = "eventLocation", length = 155, nullable = false)
     @Size(min = 4, max = 155)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[[:alpha:]áéíóúÁÉÍÓÚñÑ]+(?:[[:space:]][[:alnum:]áéíóúÁÉÍÓÚñÑ\\-º.()]+)*")
     private String eventLocation;
 
     //ATRIBUTO: FOTO_EVENTO
@@ -64,25 +57,20 @@ public class Event implements Serializable {
     @Size(min = 1, max = 1)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^(0|1)$")
     private boolean eventState;
 
     //ATRIBUTO: FECHA_FIN_EVENTO NOT NULL
     @Column(name = "eventEndDate", nullable = false, length = 19)
     @Size(min = 16, max = 16)
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm")
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^([0-2][0-9]|3[0-1])(-)(0[1-9]|1[0-2])\\2(\\d{4})(\\s)([0-1][0-9]|2[0-3])(:)([0-5][0-9])$")
-    private Date eventEndDate;
+    private Timestamp eventEndDate;
 
     //ATRIBUTO: IMPORTE_EVENTO
     @Column(name = "eventFinalPrice", nullable = false, length = 12)
     @NotNull
     @NotBlank
     @Size(min = 1, max = 12)
-    @Pattern(regexp = "^[0-9]+([.][0-9]+)?$")
     @ColumnDefault(value = "0")
     private double eventFinalPrice;
 
@@ -106,7 +94,7 @@ public class Event implements Serializable {
     public Event() {
     }
 
-    public Event(long eventId, String eventName, String eventDescription, Date eventStartDate, Date eventEndDate, String eventLocation, String eventPhoto, boolean eventState, Double eventFinalPrice, User user) {
+    public Event(long eventId, String eventName, String eventDescription, Timestamp eventStartDate, Timestamp eventEndDate, String eventLocation, String eventPhoto, boolean eventState, Double eventFinalPrice, User user) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -147,11 +135,11 @@ public class Event implements Serializable {
         this.eventDescription = eventDescription;
     }
 
-    public Date getEventStartDate() {
+    public Timestamp getEventStartDate() {
         return eventStartDate;
     }
 
-    public void setEventStartDate(Date eventStartDate) {
+    public void setEventStartDate(Timestamp eventStartDate) {
         this.eventStartDate = eventStartDate;
     }
 
@@ -187,11 +175,11 @@ public class Event implements Serializable {
         this.user = user;
     }
 
-    public Date getEventEndDate() {
+    public Timestamp getEventEndDate() {
         return eventEndDate;
     }
 
-    public void setEventEndDate(Date eventEndDate) {
+    public void setEventEndDate(Timestamp eventEndDate) {
         this.eventEndDate = eventEndDate;
     }
 

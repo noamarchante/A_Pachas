@@ -34,7 +34,7 @@ public class CUserGroup {
     }
 
     @GetMapping("/pageable/{authId}/{userGroupName}")
-    public ResponseEntity<List<MUserGroup>> getPageableUserGroupUserByUserGroupName(@PathVariable("authId") long authId, @PathVariable("userGroupName") String userGroupName, Pageable pageable) {
+    public ResponseEntity<List<MUserGroup>> getPageableMutualUserGroup(@PathVariable("authId") long authId, @PathVariable("userGroupName") String userGroupName, Pageable pageable) {
         List<MUserGroup> userGroupList = sUserGroup.selectPageableUserGroupByUserGroupName(authId, userGroupName,pageable);
         return new ResponseEntity<>(userGroupList, HttpStatus.OK);
     }
@@ -57,16 +57,37 @@ public class CUserGroup {
         return new ResponseEntity<>(userCount, HttpStatus.OK);
     }
 
-   @PutMapping
-    public ResponseEntity<MUserGroup> deleteUserGroup(@RequestBody @Valid MUserGroup mUserGroup) {
+   @PutMapping("/delete")
+    public ResponseEntity<Void> deleteUserGroup(@RequestBody @Valid MUserGroup mUserGroup) {
         boolean flag = sUserGroup.delete(mUserGroup);
         if (!flag) {
-            return new ResponseEntity<>(mUserGroup, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(mUserGroup, HttpStatus.OK);
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         }
     }
 
+    @PutMapping
+    public ResponseEntity<Void> updateUserGroup(@RequestBody @Valid MUserGroup mUserGroup) {
+        boolean flag = sUserGroup.update(mUserGroup);
+        if (!flag) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/countMutual/{userId}/{authId}")
+    public ResponseEntity<Long> countMutualUserGroups(@PathVariable("userId") long userId, @PathVariable("authId") long authId) {
+        long userGroupCount = sUserGroup.countMutualUserGroups(userId,authId);
+        return new ResponseEntity<>(userGroupCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/pageableMutual/{userId}/{authId}")
+    public ResponseEntity<List<MUserGroup>> getPageableMutualUserGroup(@PathVariable("userId") long userId, @PathVariable("authId") long authId, Pageable pageable) {
+        List<MUserGroup> userGroupList = sUserGroup.selectMutualGroups(userId, authId,pageable);
+        return new ResponseEntity<>(userGroupList, HttpStatus.OK);
+    }
     /*
     @DeleteMapping("/{userGroupId}")
     public ResponseEntity<Void> deleteUserGroup(@PathVariable("userGroupId") long userGroupId) {

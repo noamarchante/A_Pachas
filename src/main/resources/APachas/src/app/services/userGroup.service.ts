@@ -3,10 +3,9 @@ import {HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {environment} from "../../environments/environment";
 import {APachasError} from "../modules/notification/entities";
-import {MUserGroup} from "./entities/MUserGroup";
-import {Format} from "@angular-devkit/build-angular/src/extract-i18n/schema";
-import {Timestamp} from "rxjs/internal-compatibility";
-import {HelperFunction} from "@angular/core/schematics/migrations/renderer-to-renderer2/helpers";
+import {MUserGroup} from "../models/MUserGroup";
+import {UserGroup} from "./entities/UserGroup";
+import {map} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -15,12 +14,11 @@ export class UserGroupService {
 
     constructor(private http: HttpClient) { }
 
-    /*getUserGroup(userGroupId: number): Observable<MUserGroup> {
-        return this.http.get<MUserGroup>(`${environment.restApi}/usersGroups/${userGroupId}`);
-    }*/
 
     getPageableUserGroupByGroupName(userGroupName: string, authId: number, page: number, size: number): Observable<MUserGroup[]>{
-        return this.http.get<MUserGroup[]>(`${environment.restApi}/usersGroups/pageable/${authId}/${userGroupName}?page=${page}&size=${size}`);
+        return this.http.get<UserGroup[]>(`${environment.restApi}/usersGroups/pageable/${authId}/${userGroupName}?page=${page}&size=${size}`).pipe(
+            map(userGroups => userGroups.map(this.mapUserGroup.bind(this)))
+        );
     }
 
     countSearchUsersGroups(userGroupName: string, authId: number): Observable<number> {
@@ -32,7 +30,9 @@ export class UserGroupService {
     }
 
     getPageableUserGroup(userGroupId: number, page: number, size: number): Observable<MUserGroup[]> {
-        return this.http.get<MUserGroup[]>(`${environment.restApi}/usersGroups/pageable/${userGroupId}?page=${page}&size=${size}`);
+        return this.http.get<UserGroup[]>(`${environment.restApi}/usersGroups/pageable/${userGroupId}?page=${page}&size=${size}`).pipe(
+            map(userGroups => userGroups.map(this.mapUserGroup.bind(this)))
+        );
     }
 
     createUserGroup(userGroup: MUserGroup): Observable<number> {
@@ -49,8 +49,8 @@ export class UserGroupService {
             );
     }
 
-    editUserGroup(userGroup: MUserGroup): Observable<number> {
-        return this.http.put<number>(`${environment.restApi}/usersGroups`,{
+    editUserGroup(userGroup: MUserGroup): Observable<void> {
+        return this.http.put<void>(`${environment.restApi}/usersGroups`,{
             "userGroupId":userGroup.userGroupId,
             "userGroupName": userGroup.userGroupName,
             "userGroupDescription": userGroup.userGroupDescription,
@@ -63,16 +63,38 @@ export class UserGroupService {
             );
     }
 
-    deleteUserGroup(userGroup: MUserGroup): Observable<void> {
-        return this.http.put<void>(`${environment.restApi}/usersGroups`, {
-            "userGroupId":userGroup.userGroupId,
-            "userGroupName": userGroup.userGroupName,
-            "userGroupDescription": userGroup.userGroupDescription,
-            "userGroupPhoto": userGroup.userGroupPhoto,
+    deleteUserGroup(mUserGroup: MUserGroup): Observable<void> {
+        return this.http.put<void>(`${environment.restApi}/usersGroups/delete`, {
+            "userGroupId":mUserGroup.userGroupId,
+            "userGroupName": mUserGroup.userGroupName,
+            "userGroupDescription": mUserGroup.userGroupDescription,
+            "userGroupPhoto": mUserGroup.userGroupPhoto,
             "userGroupRemoval": "",
-            "userGroupOwner": userGroup.userGroupOwner
+            "userGroupOwner": mUserGroup.userGroupOwner
         }).pipe(
             APachasError.throwOnError('Fallo al eliminar grupo', `Por favor, inténtelo de nuevo`)
         );
+    }
+
+    countMutualGroups(userId: number, authId: number): Observable<number>{
+        return this.http.get<number>(`${environment.restApi}/usersGroups/countMutual/${userId}/${authId}`);
+    }
+
+    getPageableMutualUserGroups(userId: number, authId: number, page: number, size: number): Observable<MUserGroup[]>{
+        return this.http.get<UserGroup[]>(`${environment.restApi}/usersGroups/pageableMutual/${userId}/${authId}?page=${page}&size=${size}`).pipe(
+            map(userGroups => userGroups.map(this.mapUserGroup.bind(this)))
+        );
+    }
+
+    private mapUserGroup(userGroup: UserGroup) : MUserGroup {
+        return {
+            userGroupId: userGroup.userGroupId,
+            userGroupName: userGroup.userGroupName,
+            userGroupDescription: userGroup.userGroupDescription,
+            userGroupPhoto: userGroup.userGroupPhoto,
+            userGroupCreation: new Date(userGroup.userGroupCreation),
+            userGroupRemoval: new Date(userGroup.userGroupRemoval),
+            userGroupOwner: userGroup.userGroupOwner
+        }
     }
 }

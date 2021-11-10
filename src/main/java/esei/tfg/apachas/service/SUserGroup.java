@@ -1,5 +1,8 @@
 package esei.tfg.apachas.service;
 
+import esei.tfg.apachas.entity.User;
+import esei.tfg.apachas.entity.UserGroupUser;
+import esei.tfg.apachas.model.MUserGroupUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +12,7 @@ import esei.tfg.apachas.entity.UserGroup;
 import esei.tfg.apachas.model.MUserGroup;
 import esei.tfg.apachas.repository.RUserGroup;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -54,12 +58,31 @@ public class SUserGroup {
         UserGroup userGroup = conUserGroup.conMUserGroup(mUserGroup);
         UserGroup existingUserGroup = rUserGroup.findByUserGroupId(userGroup.getUserGroupId());
         if (existingUserGroup != null) {
-            userGroup.setUserGroupRemoval(new Date());
+            userGroup.setUserGroupRemoval(new Timestamp(System.currentTimeMillis()));
             rUserGroup.save(userGroup);
             return true;
         } else {
             return false;
         }
+    }
+
+    public synchronized boolean update(MUserGroup mUserGroup) {
+        UserGroup userGroup = conUserGroup.conMUserGroup(mUserGroup);
+        UserGroup existingUserGroup = rUserGroup.findByUserGroupId(userGroup.getUserGroupId());
+        if (existingUserGroup != null) {
+            rUserGroup.save(userGroup);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized Long countMutualUserGroups( long userId, long authId){
+        return rUserGroup.countMutualGroups(userId, authId);
+    }
+
+    public synchronized List<MUserGroup> selectMutualGroups(long userId, long authId, Pageable pageable) {
+        return conUserGroup.conUserGroupList(rUserGroup.findByMutualGroups(userId, authId, pageable).getContent());
     }
 /*
     public synchronized boolean delete(long userGroupId) {

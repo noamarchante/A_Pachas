@@ -9,6 +9,7 @@ import {CreateGroupComponent} from "./components/groups/createGroup/createGroup.
 import {ListGroupsComponent} from "./components/groups/listGroups/listGroups.component";
 import {DetailGroupComponent} from "./components/groups/detailGroup/detailGroup.component";
 import {DetailUserComponent} from "./components/users/detailUser/detailUser.component";
+import {MessageConfirmComponent} from "./components/confirm/messageConfirm.component";
 
 const routes: Routes = [
 	{
@@ -34,6 +35,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'detailUser', component: DetailUserComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'messageConfirm', component: MessageConfirmComponent, canActivate: [AuthGuard]
 	},
 	{
 		path: '', redirectTo: 'home', pathMatch: 'full'

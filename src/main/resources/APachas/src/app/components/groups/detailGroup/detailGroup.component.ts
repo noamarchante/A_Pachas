@@ -2,10 +2,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserGroupService} from "../../../services/userGroup.service";
 import {UserService} from "../../../services/user.service";
-import {MUser} from "../../../services/entities/MUser";
 import {UserGroupUserService} from "../../../services/userGroupUser.service";
-import {MUserGroup} from "../../../services/entities/MUserGroup";
 import {AuthenticationService} from "../../../services/authentication.service";
+import {NotificationService} from "../../../modules/notification/services/notification.service";
+import {MUser} from "../../../models/MUser";
+import {MUserGroup} from "../../../models/MUserGroup";
 
 @Component({
     selector: 'app-detailGroup',
@@ -16,34 +17,28 @@ export class DetailGroupComponent implements OnInit {
 
     @Output()
     eventDelete = new EventEmitter<boolean>();
+
     @Output()
-    eventDetail = new EventEmitter<[number, number]>();
+    eventDetail = new EventEmitter<number>();
+
     defaultUserImage: string = "./assets/user.png";
     defaultImage: string = "./assets/group.jpg";
+
     groupMembers: MUser[] = [];
-
-
-
-
-    totalPageMember = 0;
-    _totalPagesUserGroup=0;
+    groupMembersStored: MUser[] = [];
     pageMember = 0;
-    private sizeMember = 2;
+    sizeMember = 6;
+    totalMembers: number=0;
+    more: string = "Ver más ...";
+    message: string = "";
 
-    previousMember:string;
-    nextMember:string;
-    itemsMember:string;
-    previousUserGroup: string;
-    nextUserGroup: string;
-    //itemsEditUserGroup:string;
-    //itemsDeleteUserGroup:string;
-    _pageUserGroup: number;
-    _sizeUserGroup: number;
-    _indexUserGroup: number;
-    _userGroups: MUserGroup[];
-    _selectedUserGroups: [number, number, number, number, MUserGroup[]];
-    userGroup: MUserGroup;
-    editing: boolean;
+    previousUserGroup: string="";
+    nextUserGroup: string="";
+
+    _previous: boolean = false;
+    _next: boolean = false;
+    _userGroup: MUserGroup = new MUserGroup();
+
     private return = 'groups';
 
     constructor(private route: ActivatedRoute,
@@ -51,45 +46,74 @@ export class DetailGroupComponent implements OnInit {
                 private userGroupService: UserGroupService,
                 private userService: UserService,
                 private userGroupUserService: UserGroupUserService,
-                private authenticationService: AuthenticationService
+                private authenticationService: AuthenticationService,
+                private notificationService: NotificationService
     ) {
     }
 
     ngOnInit() {
-        this.userGroup = new MUserGroup();
-        this.editing = false;
+        this.paginationUserGroupClass();
     }
 
-    get selectedUserGroups() {
-        return this._selectedUserGroups;
-    }
-
-    @Input() set selectedUserGroups(selectedUserGroups: [number,number, number, number, MUserGroup[]]) {
-        this._selectedUserGroups = selectedUserGroups;
-        if (this._selectedUserGroups != undefined){
-            this._indexUserGroup = this._selectedUserGroups[0];
-            this._pageUserGroup = this._selectedUserGroups[1];
-            this._sizeUserGroup = this._selectedUserGroups[2];
-            this._totalPagesUserGroup = this._selectedUserGroups[3];
-            this._userGroups = this._selectedUserGroups[4];
-            this.userGroup = this._userGroups[this._indexUserGroup];
-            this.paginationUserGroupClass();
-            this.getUsersGroupsUsers(this.userGroup.userGroupId);
-        }
-    }
-
-    delete(){
-        if (this.userGroup.userGroupOwner == this.authenticationService.getUser().id){
-            this.userGroupService.deleteUserGroup(this.userGroup).subscribe(()=>{
-                    this.eventDelete.emit();
-                }
-            );
+    messageValue(){
+        if (this.authenticationService.getUser().id == this.userGroup.userGroupOwner){
+            this.message = "¿Estás seguro de que deseas eliminar el grupo?";
         }else{
-            this.userGroupUserService.deleteUserGroupUser(this.userGroup.userGroupId, this.authenticationService.getUser().id).subscribe(() => {
-                this.eventDelete.emit();
-            });
+            this.message = "¿Estás seguro de que quieres salir del grupo?";
         }
+    }
 
+    get previous(){
+        return this._previous;
+    }
+
+    @Input() set previous( previous: boolean){
+        this._previous = previous;
+    }
+
+    get next(){
+        return this._next;
+    }
+
+    @Input() set next( next: boolean){
+        this._next = next;
+    }
+
+
+    get userGroup(){
+        return this._userGroup;
+    }
+
+    @Input() set userGroup (userGroup: MUserGroup) {
+        if (userGroup != undefined) {
+            this._userGroup = userGroup;
+            if (this.userGroup.userGroupId != null){
+                this.getUsersGroupsUsers(this.userGroup.userGroupId);
+                this.moreMembers(this.userGroup.userGroupId);
+            }else{
+                this._userGroup = new MUserGroup();
+            }
+        }
+        this.groupMembers = [];
+        this.groupMembersStored = [];
+    }
+
+    onDelete($event){
+        if($event.valueOf()){
+            if (this.userGroup.userGroupOwner == this.authenticationService.getUser().id){
+                this.userGroupService.deleteUserGroup(this.userGroup).subscribe(()=>{
+                        this.eventDelete.emit();
+                        this.notificationService.success("Grupo eliminado", "Se ha eliminado el grupo correctamente.");
+
+                    }
+                );
+            }else{
+                this.userGroupUserService.deleteUserGroupUser(this.userGroup.userGroupId, this.authenticationService.getUser().id).subscribe(() => {
+                    this.eventDelete.emit();
+                    this.notificationService.success("Eliminado del grupo", "Ya no eres miembro de este grupo.");
+                });
+            }
+        }
     }
 
     edit(): boolean{
@@ -100,7 +124,7 @@ export class DetailGroupComponent implements OnInit {
         }
     }
 
-    owner(userId:number):string{
+    ownerLabel(userId:number):string{
         let value:string = "";
         if (userId == this.userGroup.userGroupOwner){
             value = "Administrador";
@@ -114,83 +138,57 @@ export class DetailGroupComponent implements OnInit {
         }
     }
 
-    setPageMember(page: number, userGroupId:number){
-        this.pageMember += page;
-        this.getUsersGroupsUsers(userGroupId);
-        //this.paginationMemberClass();
+    setPageUserGroup(number: number){
+        this.eventDetail.emit(number);
     }
 
-    setPageUserGroup(index: number){
-        this.pageMember = 0;
-        this._indexUserGroup += index;
-        if (this._indexUserGroup == this._sizeUserGroup || this._indexUserGroup == -1){
-            //document.getElementById("closeButton").click();
-            if (this._indexUserGroup == this._sizeUserGroup){
-                this._indexUserGroup = 0;
-            }else if (this._indexUserGroup == -1){
-                this._indexUserGroup = this._sizeUserGroup-1;
+
+    getUsersGroupsUsers(userGroupId:number){
+        this.userGroupUserService.getPageableUsersByUserGroupId(userGroupId,this.pageMember, this.sizeMember).subscribe((response) => {
+            this.groupMembers.push(...response);
+            this.paginationUserGroupClass();
+            this.setMoreLabel();
+        });
+    }
+
+    moreMembers(userGroupId:number){
+        this.userGroupUserService.countUsersGroupsUsersByUserGroupId(userGroupId).subscribe((members)=>{
+            this.totalMembers = members;
+        });
+    }
+
+    setMoreLabel(){
+        if (this.groupMembers.length == this.totalMembers){
+            this.more = "... Ver menos";
+        }else{
+            this.more = "Ver más ...";
+        }
+    }
+
+    getMoreMembers(){
+        if (this.groupMembers.length == this.totalMembers){
+            this.groupMembersStored = this.groupMembers;
+            this.groupMembers = this.groupMembers.slice(0,this.sizeMember);
+        }else{
+            if (this.groupMembersStored.length ==0){
+                this.pageMember +=1;
+                this.getUsersGroupsUsers(this.userGroup.userGroupId);
+            }else{
+                this.groupMembers = this.groupMembersStored;
             }
-            this.eventDetail.emit([this._indexUserGroup,index]);
         }
-        if(this._userGroups[this._indexUserGroup] != undefined) {
-            this.userGroup = this._userGroups[this._indexUserGroup];
-            this.getUsersGroupsUsers(this.userGroup.userGroupId);
-
-        }
-        this.paginationUserGroupClass();
+        this.setMoreLabel();
     }
-
-    private getUsersGroupsUsers(userGroupId:number){
-        this.userGroupUserService.getPageableUsersByUserGroupId(userGroupId, this.pageMember, this.sizeMember).subscribe((response) => {
-            this.groupMembers = response;
-            this.totalPagesMember(userGroupId);
-        });
-    }
-
-    private totalPagesMember(userGroupId:number) {
-        this.userGroupUserService.countUsersGroupsUsersByUserGroupId(userGroupId).subscribe((response) => {
-            this.totalPageMember = Math.ceil(response/this.sizeMember);
-            //this.paginationMemberClass();
-        });
-    }
-
-    /*private paginationMemberClass(){
-        if(this.pageMember!=0 && this.pageMember+1<this.totalPageMember && this.groupMembers.length==2){
-            this.previousMember = "col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2";
-            this.itemsMember = "col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4";
-            this.nextMember = "col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2";
-        }else if (this.pageMember==0 && this.pageMember+1<this.totalPageMember && this.groupMembers.length==2){
-            this.previousMember = "";
-            this.itemsMember = "col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-4 itemPosition";
-            this.nextMember = "col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2";
-        }else if(this.pageMember!=0 && this.pageMember+1==this.totalPageMember && this.groupMembers.length==2){
-            this.previousMember = "col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2";
-            this.itemsMember = "col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-4";
-            this.nextMember = "";
-        }else if (this.pageMember==0 && this.pageMember+1==this.totalPageMember && this.groupMembers.length==2){
-            this.previousMember = "";
-            this.itemsMember = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6";
-            this.nextMember = "";
-        }else if (this.pageMember==0 && this.pageMember+1==this.totalPageMember && this.groupMembers.length==1){
-            this.previousMember = "";
-            this.itemsMember = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-8 itemPosition";
-            this.nextMember = "";
-        }else if (this.pageMember!=0 && this.pageMember+1==this.totalPageMember && this.groupMembers.length==1){
-            this.previousMember = "col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2";
-            this.itemsMember = "col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-10 col-6";
-            this.nextMember = "";
-        }
-    }*/
 
     private paginationUserGroupClass(){
-        if((this._pageUserGroup!=0 && this._pageUserGroup+1<this._totalPagesUserGroup) || (this._indexUserGroup > 0 && this._userGroups[this._indexUserGroup+1] != undefined)){
-            this.previousUserGroup = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6";
-            this.nextUserGroup = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6";
-        }else if ((this._pageUserGroup==0 && this._pageUserGroup+1<this._totalPagesUserGroup) || (this._indexUserGroup == 0 && this._userGroups[this._indexUserGroup+1] != undefined)){
+        if(this._previous && this._next){
+            this.previousUserGroup = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6";
+            this.nextUserGroup = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6";
+        }else if (!this._previous && this._next){
             this.previousUserGroup = "";
-            this.nextUserGroup = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
-        }else if((this._pageUserGroup!=0 && this._pageUserGroup+1==this._totalPagesUserGroup) || (this._indexUserGroup > 0 && this._userGroups[this._indexUserGroup+1] == undefined)){
-            this.previousUserGroup = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.nextUserGroup = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
+        }else if(this._previous && !this._next){
+            this.previousUserGroup = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
             this.nextUserGroup = "";
         }else{
             this.previousUserGroup = "";

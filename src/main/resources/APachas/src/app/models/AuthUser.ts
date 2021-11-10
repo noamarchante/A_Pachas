@@ -1,6 +1,6 @@
 //USUARIO AUTENTICADO
 
-export class User {
+export class AuthUser {
   private _authHeader: string;
   private _authenticated: boolean;
   private userLogin: string;
@@ -11,7 +11,7 @@ export class User {
   private userId: number;
 
   constructor() {
-    const user: User = JSON.parse(<string>localStorage.getItem('currentUser'));
+    const user: AuthUser = JSON.parse(<string>localStorage.getItem('currentUser'));
     if (user != null) {
       this.userId = user.userId;
       this.userLogin = user.userLogin;

@@ -1,13 +1,12 @@
 package esei.tfg.apachas.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,14 +33,12 @@ public class Item implements Serializable {
     @Size(min = 4, max = 50)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[[:alpha:]áéíóúÁÉÍÓÚñÑ]+(?:[[:space:]][[:alnum:]áéíóúÁÉÍÓÚñÑ]+)*$")
     private String itemName;
 
     //ATRIBUTO: DESCRIPCION_ELEMENTO
     @Column(name = "itemDescription", length = 155)
     @Size(min=0,max = 155)
     @NotBlank
-    @Pattern(regexp = "^[[:alpha:]áéíóúÁÉÍÓÚñÑ]+(?:[[:space:]][[:alnum:]áéíóúÁÉÍÓÚñÑ]+)*$")
     private String itemDescription;
 
     //ATRIBUTO: COSTE
@@ -49,7 +46,6 @@ public class Item implements Serializable {
     @NotNull
     @NotBlank
     @Size(min = 1, max = 12)
-    @Pattern(regexp = "^[0-9]+([.][0-9]+)?$")
     @ColumnDefault(value = "0")
     private Double itemCost;
 
@@ -58,7 +54,6 @@ public class Item implements Serializable {
     @NotNull
     @NotBlank
     @Size(min = 1, max = 12)
-    @Pattern(regexp = "^[0-9]+$")
     @ColumnDefault(value = "1")
     private int itemQuantity;
 
@@ -66,7 +61,6 @@ public class Item implements Serializable {
     @Column(name = "itemUrl", length = 2083)
     @NotBlank
     @Size(min = 0, max = 2083)
-    @Pattern(regexp = "^((https|http)?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$")
     private String itemUrl;
 
     //ATRIBUTO: FOTO
@@ -76,12 +70,9 @@ public class Item implements Serializable {
     //ATRIBUTO: FECHA_ADQUISICIÓN
     @Column(name = "itemPurchaseDate", nullable = false, length = 19)
     @Size(min = 16, max = 16)
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "dd-MM-yyyy")
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^([0-2][0-9]|3[0-1])(-)(0[1-9]|1[0-2])\\2(\\d{4})$")
-    private Date itemPurchaseDate;
+    private Timestamp itemPurchaseDate;
 
     //N:M ELEMENTO ES PAGADO POR USUARIO
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
@@ -96,7 +87,7 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(long itemId,Event event, String itemName, String itemDescription, Double itemCost, int itemQuantity, String itemUrl, String itemPhoto, Date itemPurchaseDate) {
+    public Item(long itemId,Event event, String itemName, String itemDescription, Double itemCost, int itemQuantity, String itemUrl, String itemPhoto, Timestamp itemPurchaseDate) {
         this.itemId = itemId;
         this.event = event;
         this.itemName = itemName;
@@ -172,11 +163,11 @@ public class Item implements Serializable {
         this.itemPhoto = itemPhoto;
     }
 
-    public Date getItemPurchaseDate() {
+    public Timestamp getItemPurchaseDate() {
         return itemPurchaseDate;
     }
 
-    public void setItemPurchaseDate(Date itemPurchaseDate) {
+    public void setItemPurchaseDate(Timestamp itemPurchaseDate) {
         this.itemPurchaseDate = itemPurchaseDate;
     }
 

@@ -3,12 +3,12 @@ package esei.tfg.apachas.model;
 
 import esei.tfg.apachas.entity.UserGroupUser;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class MUserGroupUser {
     private long userGroupId;
     private long userId;
-    private Date userGroupUserExited;
+    private Timestamp userGroupUserExited;
 
     public MUserGroupUser() {
     }
@@ -35,11 +35,11 @@ public class MUserGroupUser {
         this.userId = userId;
     }
 
-    public Date getUserGroupUserExited() {
+    public Timestamp getUserGroupUserExited() {
         return userGroupUserExited;
     }
 
-    public void setUserGroupUserExited(Date userGroupUserExited) {
+    public void setUserGroupUserExited(Timestamp userGroupUserExited) {
         this.userGroupUserExited = userGroupUserExited;
     }
 }

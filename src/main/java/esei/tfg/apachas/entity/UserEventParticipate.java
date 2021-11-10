@@ -29,14 +29,12 @@ public class UserEventParticipate implements Serializable {
     @Size(min = 1, max = 1)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^(0|1)$")
     private boolean accept;
 
     @Column(name = "totalDebt", length = 12, nullable = false)
     @NotNull
     @NotBlank
     @Size(min = 1, max = 12)
-    @Pattern(regexp = "^[0-9]+([.][0-9]+)?$")
     @ColumnDefault(value = "0")
     private Double totalDebt;
 

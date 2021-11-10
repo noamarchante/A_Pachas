@@ -2,6 +2,7 @@ package esei.tfg.apachas.service;
 
 import esei.tfg.apachas.converter.ConUser;
 import esei.tfg.apachas.converter.ConUserGroup;
+import esei.tfg.apachas.entity.id.UserGroupUserId;
 import esei.tfg.apachas.model.MUser;
 import esei.tfg.apachas.model.MUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,11 @@ import esei.tfg.apachas.model.MUserGroupUser;
 import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RUserGroup;
 import esei.tfg.apachas.repository.RUserGroupUser;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 @Service("SUserGroupUser")
@@ -67,16 +73,36 @@ public class SUserGroupUser {
         return conUser.conUserList(userList);
     }
 
-    public synchronized boolean update(MUserGroupUser mUserGroupUser) {
+    public synchronized boolean delete(MUserGroupUser mUserGroupUser) {
         UserGroupUser userGroupUser = conUserGroupUser.conMUserGroupUser(mUserGroupUser);
         UserGroupUser existingUserGroupUser = rUserGroupUser.findByUserGroupUserId(userGroupUser.getUserGroupUserId());
-        UserGroup existingUserGroup = rUserGroup.findByUserGroupId(userGroupUser.getUserGroup().getUserGroupId());
-        User existingUser = rUser.findByUserId(userGroupUser.getUser().getUserId());
-
+        UserGroup existingUserGroup = rUserGroup.findByUserGroupId(userGroupUser.getUserGroupUserId().getUserGroupId());
+        User existingUser = rUser.findByUserId(userGroupUser.getUserGroupUserId().getUserId());
         if (existingUserGroupUser != null || existingUserGroup != null || existingUser != null) {
+            userGroupUser.setUserGroupUserExited(new Timestamp(new Date().getTime()));
             rUserGroupUser.save(userGroupUser);
             return true;
         } else {
+            return false;
+        }
+    }
+
+    public synchronized boolean update(Long userGroupId, List<Long> userIdList) {
+        UserGroup existingUserGroup = rUserGroup.findByUserGroupId(userGroupId);
+        if (existingUserGroup != null){
+            List<UserGroupUser> existingUserGroupUserList = rUserGroupUser.findByUserGroupUserId_UserGroupId(userGroupId);
+            existingUserGroupUserList.forEach(userGroupUser -> {
+                if (!userIdList.contains(userGroupUser.getUserGroupUserId().getUserId())){
+                   delete(conUserGroupUser.conUserGroupUser(userGroupUser));
+                }
+                userIdList.remove(userGroupUser.getUserGroupUserId().getUserId());
+            });
+
+            userIdList.forEach(userId -> {
+                insertUserGroupUser(new MUserGroupUser(new UserGroupUser(new UserGroupUserId(userGroupId, userId), null)));
+            });
+            return true;
+        }else{
             return false;
         }
     }

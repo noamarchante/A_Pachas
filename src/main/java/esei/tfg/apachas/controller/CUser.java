@@ -2,6 +2,7 @@ package esei.tfg.apachas.controller;
 
 import esei.tfg.apachas.configuration.SecurityConfiguration;
 import esei.tfg.apachas.model.MUser;
+import esei.tfg.apachas.model.MUserGroup;
 import esei.tfg.apachas.service.SUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,6 +74,18 @@ public class CUser {
         return new ResponseEntity<>(userCount, HttpStatus.OK);
     }
 
+
+    @GetMapping("/countMutual/{userId}/{authId}")
+    public ResponseEntity<Long> countMutualFriends(@PathVariable("userId") long userId, @PathVariable("authId") long authId) {
+        long userCount = sUser.countMutualFriends(userId,authId);
+        return new ResponseEntity<>(userCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/pageableMutual/{userId}/{authId}")
+    public ResponseEntity<List<MUser>> getPageableMutualFriends(@PathVariable("userId") long userId, @PathVariable("authId") long authId, Pageable pageable) {
+        List<MUser> userList = sUser.selectMutualFriends(userId, authId,pageable);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
 
 
 

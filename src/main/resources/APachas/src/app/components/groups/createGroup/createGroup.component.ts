@@ -3,11 +3,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserGroupService} from "../../../services/userGroup.service";
 import {UserService} from "../../../services/user.service";
 import {AuthenticationService} from "../../../services/authentication.service";
-import {MUser} from "../../../services/entities/MUser";
+import {MUser} from "../../../models/MUser";
 import {UserGroupUserService} from "../../../services/userGroupUser.service";
 import {UserUserService} from "../../../services/userUser.service";
-import {MUserGroup} from "../../../services/entities/MUserGroup";
 import {DomSanitizer} from "@angular/platform-browser";
+import {NotificationService} from "../../../modules/notification/services/notification.service";
+import {MUserGroup} from "../../../models/MUserGroup";
 
 @Component({
     selector: 'app-createGroup',
@@ -18,13 +19,12 @@ export class CreateGroupComponent implements OnInit {
 
     defaultImage = "./assets/group.jpg";
     defaultUserImage = "./assets/user.png";
-    friends: MUser[] = null;
-    imageFormat: boolean = null;
-    groupMembers: number[] = [];
+    friends: MUser[];
+    imageFormat: boolean;
+    groupMembers: number[];
     imageColor:string="";
     imageText: string;
     title: string = "CREAR GRUPO";
-    userGroup: MUserGroup;
     _userGroup: MUserGroup;
     @Output()
     eventSave = new EventEmitter<boolean>();
@@ -38,52 +38,73 @@ export class CreateGroupComponent implements OnInit {
                 private userGroupUserService: UserGroupUserService,
                 private userUserService: UserUserService,
                 private authenticationService: AuthenticationService,
-                private sanitizer: DomSanitizer
+                private sanitizer: DomSanitizer,
+                private notificationService: NotificationService
     ) {
     }
 
     ngOnInit() {
-        this.getFriends();
+        this.groupMembers = [];
+        this.friends = [];
     }
 
-    get editUserGroup(){
+    get userGroup(){
         return this._userGroup;
     }
 
 
-    @Input() set editUserGroup(userGroup: MUserGroup){
-        this._userGroup = userGroup;
-        if (this._userGroup != undefined){
+    @Input() set userGroup(userGroup: MUserGroup){
+        if (userGroup.userGroupId != undefined){
+            this._userGroup = userGroup;
             this.title = "Editar grupo";
-            this.userGroup = this._userGroup;
+            this.getMembers();
         }else{
-            this.userGroup = new MUserGroup();
+            this._userGroup = new MUserGroup();
+            this.title = "Crear grupo";
+
+        }
+        this.groupMembers = [];
+        this.getFriends();
+    }
+
+    onSubmit(){
+        if (this.userGroup.userGroupId != undefined){
+            this.onEdit();
+        }else{
+            this.onCreate();
         }
     }
 
     onCreate() {
-        this.userGroup.userGroupOwner = this.authenticationService.getUser().id;
-        this.groupMembers.push(this.authenticationService.getUser().id);
-        this.userGroupService.createUserGroup(this.userGroup).subscribe((response) => {
-            this.groupMembers.forEach((id)=> {
-                this.userGroupUserService.createUserGroupUser(response,id).subscribe(() =>{
-                    this.eventSave.emit();
+            this.userGroup.userGroupOwner = this.authenticationService.getUser().id;
+
+            this.groupMembers.push(this.authenticationService.getUser().id);
+            this.userGroupService.createUserGroup(this.userGroup).subscribe((response) => {
+                this.groupMembers.forEach((id)=> {
+                    this.userGroupUserService.createUserGroupUser(response,id).subscribe(() =>{
+                        this.eventSave.emit();
+                    });
                 });
+                this.closeModal();
+                document.getElementById("closeButton").click();
+                this.notificationService.success("Nuevo grupo creado", "Se ha creado el grupo correctamente.");
             });
-            document.getElementById("closeButton").click();
-        });
+
+
     }
 
-    /*onEdit(){
-        this.userGroupService.editUserGroup(this.userGroup).subscribe((response) => {
-            this.groupMembers.forEach((id)=> {
-                this.userGroupUserService.editUserGroupUser(response,id).subscribe(() =>{
-                    this.eventSave.emit();
-                });
-            });
+    onEdit(){
+        this.groupMembers.push(this.authenticationService.getUser().id);
+        this.userGroupService.editUserGroup(this.userGroup).subscribe(() => {
+            this.userGroupUserService.editUserGroupUser(this.userGroup.userGroupId, this.groupMembers).subscribe();
+            this.eventSave.emit();
             this.closeModal();
+            document.getElementById("closeButton").click();
+            this.notificationService.success("Grupo editado", "Se ha editado el grupo correctamente.");
+
         });
-    }*/
+
+    }
 
     getImage(event): any {
         const file = event.target.files[0];
@@ -152,11 +173,15 @@ export class CreateGroupComponent implements OnInit {
         });
     }
 
-   /* private getMembers(){
-        this.userGroupUserService.getUsersByUserGroupId(this._editUserGroup.userGroupId).subscribe((response) =>{
+    private getMembers(){
+        this.userGroupUserService.getUsersByUserGroupId(this.userGroup.userGroupId).subscribe((response) =>{
             response.forEach((user)=>{
-                this.groupMembers.push(user.userId);
+                if(user.userId != this.userGroup.userGroupOwner){
+                    this.groupMembers.push(user.userId);
+                }
             });
+            this.groupMembers = [... this.groupMembers];
         });
-    }*/
+
+    }
 }

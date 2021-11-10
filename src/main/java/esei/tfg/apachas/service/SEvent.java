@@ -4,6 +4,7 @@ import esei.tfg.apachas.converter.ConEvent;
 import esei.tfg.apachas.entity.Event;
 import esei.tfg.apachas.entity.User;
 import esei.tfg.apachas.model.MEvent;
+import esei.tfg.apachas.model.MUserGroup;
 import esei.tfg.apachas.repository.REvent;
 import esei.tfg.apachas.repository.RUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,4 +78,13 @@ public class SEvent {
         Event event = rEvent.findById(eventId).get();
         return conEvent.conEvent(event);
     }
+
+    public synchronized Long countMutualEvents( long userId, long authId){
+        return rEvent.countMutualEvents(userId, authId);
+    }
+
+    public synchronized List<MEvent> selectMutualEvents(long userId, long authId, Pageable pageable) {
+        return conEvent.conEventList(rEvent.findByMutualEvents(userId, authId, pageable).getContent());
+    }
+
 }

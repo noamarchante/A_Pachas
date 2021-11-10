@@ -18,6 +18,7 @@ import {ListGroupsComponent} from "./components/groups/listGroups/listGroups.com
 import { NgSelectModule } from '@ng-select/ng-select';
 import {DetailGroupComponent} from "./components/groups/detailGroup/detailGroup.component";
 import {DetailUserComponent} from "./components/users/detailUser/detailUser.component";
+import {MessageConfirmComponent} from "./components/confirm/messageConfirm.component";
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import {DetailUserComponent} from "./components/users/detailUser/detailUser.comp
     ListGroupsComponent,
     DetailGroupComponent,
     DetailUserComponent,
+    MessageConfirmComponent,
     HomeComponent
   ],
   imports: [

@@ -2,6 +2,7 @@ package esei.tfg.apachas.model;
 
 import esei.tfg.apachas.entity.Event;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class MEvent {
@@ -9,8 +10,8 @@ public class MEvent {
     private long eventId;
     private String eventName;
     private String eventDescription;
-    private Date eventStartDate;
-    private Date eventEndDate;
+    private Timestamp eventStartDate;
+    private Timestamp eventEndDate;
     private String eventLocation;
     private String eventPhoto;
     private boolean eventState;
@@ -57,11 +58,11 @@ public class MEvent {
         this.eventDescription = eventDescription;
     }
 
-    public Date getEventStartDate() {
+    public Timestamp getEventStartDate() {
         return eventStartDate;
     }
 
-    public void setEventStartDate(Date eventStartDate) {
+    public void setEventStartDate(Timestamp eventStartDate) {
         this.eventStartDate = eventStartDate;
     }
 
@@ -98,11 +99,11 @@ public class MEvent {
         this.userId = userId;
     }
 
-    public Date getEventEndDate() {
+    public Timestamp getEventEndDate() {
         return eventEndDate;
     }
 
-    public void setEventEndDate(Date eventEndDate) {
+    public void setEventEndDate(Timestamp eventEndDate) {
         this.eventEndDate = eventEndDate;
     }
 

@@ -1,9 +1,9 @@
 package esei.tfg.apachas.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Entity(name = "user")
@@ -52,9 +52,7 @@ public class User implements Serializable {
 
     //ATRIBUTO: FECHA_NACIMIENTO
     @Column(name = "userBirthday")
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date userBirthday;
+    private Timestamp userBirthday;
 
     //ATRIBUTO: FOTO_USUARIO
     @Lob
@@ -105,7 +103,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(long userId, String userName, String userSurname, String userLogin, String userPassword, String userEmail, Date userBirthday, String userPhoto, String roles, String permissions) {
+    public User(long userId, String userName, String userSurname, String userLogin, String userPassword, String userEmail, Timestamp userBirthday, String userPhoto, String roles, String permissions) {
         this.userId = userId;
         this.setUserName(userName);
         this.setUserSurname(userSurname);
@@ -147,7 +145,7 @@ public class User implements Serializable {
         return userEmail;
     }
 
-    public Date getUserBirthday() {
+    public Timestamp getUserBirthday() {
         return userBirthday;
     }
 
@@ -183,7 +181,7 @@ public class User implements Serializable {
         this.userEmail = userEmail;
     }
 
-    public void setUserBirthday(Date userBirthday) { this.userBirthday = userBirthday; }
+    public void setUserBirthday(Timestamp userBirthday) { this.userBirthday = userBirthday; }
 
     public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;

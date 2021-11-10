@@ -6,16 +6,16 @@
         </form>
     </div>
     <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-4 col-sm-4 col-4 createDiv">
-        <button type="button" class="button" data-bs-toggle="modal" data-bs-target="#createGroupModal" (click)="this.selectedUserGroups = null"></button>
+        <button type="button" class="button" data-bs-toggle="modal" data-bs-target="#createGroupModal" (click)="setGroup();"></button>
     </div>
 </div>
-<app-createGroup (eventSave)="getGroups()" [editUserGroup]="this.selectedUserGroups"></app-createGroup>
-<app-detailGroup (eventDelete)="getGroups()" (eventDetail)="eventDetail($event)" [selectedUserGroups]="this.selectedUserGroupsDetails"></app-detailGroup>
+<app-createGroup (eventSave)="getGroups();" [userGroup]="this.selectedUserGroup"></app-createGroup>
+<app-detailGroup (eventDelete)="getGroups();" (eventDetail)="setSelectedUserGroup($event)" [userGroup]="selectedUserGroup" [previous] = "getPrevious()" [next] = "getNext()"></app-detailGroup>
 <div class="row row-cols-1 row-cols-xxl-3 row-cols-xl-3 row-cols-lg-2 row-cols-md-2 row-cols-sm-1 g-4 divAligment">
-    <div *ngFor="let group of groups">
+    <div *ngFor="let group of groups;let i=index">
         <div class="col">
             <div class="card mb-3 color" id="detailGroupCard" data-bs-toggle="modal" data-bs-target="#detailGroupModal"
-                 (click)="selectUserGroup(groups.indexOf(group))">
+                 (click)="selectUserGroup(i)">
                 <div class="row g-0">
                     <div class="col-xxl-5 col-xl-12 col-lg-5 col-md-12 col-sm-5 divAligment">
                         <ng-container *ngIf="group.userGroupPhoto != null; else imagesDiv">
@@ -37,9 +37,9 @@
 </div>
 <div class="paginationDiv">
     <ul class="row pagination">
-        <li class="page-item" [ngClass]="previous" *ngIf="page!=0"><a class="page-link previous" (click)="setPage(-1)">Anterior</a>
+        <li class="page-item" [ngClass]="previousClass" *ngIf="page!=0"><a class="page-link previous" (click)="setPage(-1)">Anterior</a>
         </li>
-        <li class="page-item" [ngClass]="next" *ngIf="page+1<totalPage"><a class="page-link next" (click)="setPage(1)">Siguiente</a>
+        <li class="page-item" [ngClass]="nextClass" *ngIf="page+1<totalPage"><a class="page-link next" (click)="setPage(1)">Siguiente</a>
         </li>
     </ul>
 </div>

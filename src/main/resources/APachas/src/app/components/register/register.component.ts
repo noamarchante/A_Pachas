@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from "../../services/user.service";
-import {MUser} from "../../services/entities/MUser";
+import {MUser} from "../../models/MUser";
 
 @Component({
   selector: 'app-register',

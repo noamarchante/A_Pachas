@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import esei.tfg.apachas.entity.id.UserGroupUserId;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Table(name = "UserGroupUser")
@@ -24,22 +25,18 @@ public class UserGroupUser implements Serializable {
     private User user;
 
     @Column(name = "userGroupUserAdded")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date userGroupUserAdded;
+    private Timestamp userGroupUserAdded;
 
     @Column(name = "userGroupUserExited")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date userGroupUserExited;
+    private Timestamp userGroupUserExited;
 
     public UserGroupUser() {
 
     }
 
-    public UserGroupUser(UserGroupUserId userGroupUserId, Date userGroupUserExited) {
+    public UserGroupUser(UserGroupUserId userGroupUserId, Timestamp userGroupUserExited) {
         this.userGroupUserId = userGroupUserId;
-        this.userGroupUserAdded = new Date();
+        this.userGroupUserAdded = new Timestamp(new Date().getTime());
         this.userGroupUserExited = userGroupUserExited;
     }
 
@@ -67,19 +64,19 @@ public class UserGroupUser implements Serializable {
         this.user = user;
     }
 
-    public Date getUserGroupUserAdded() {
+    public Timestamp getUserGroupUserAdded() {
         return userGroupUserAdded;
     }
 
-    public void setUserGroupUserAdded(Date userGroupUserAdded) {
+    public void setUserGroupUserAdded(Timestamp userGroupUserAdded) {
         this.userGroupUserAdded = userGroupUserAdded;
     }
 
-    public Date getUserGroupUserExited() {
+    public Timestamp getUserGroupUserExited() {
         return userGroupUserExited;
     }
 
-    public void setUserGroupUserExited(Date userGroupUserExited) {
+    public void setUserGroupUserExited(Timestamp userGroupUserExited) {
         this.userGroupUserExited = userGroupUserExited;
     }
 }

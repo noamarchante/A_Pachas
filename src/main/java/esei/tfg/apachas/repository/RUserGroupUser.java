@@ -16,6 +16,7 @@ import java.util.List;
 public interface RUserGroupUser extends CrudRepository<UserGroupUser, UserGroupUserId>, PagingAndSortingRepository<UserGroupUser, UserGroupUserId> {
     UserGroupUser findByUserGroupUserId(UserGroupUserId userGroupUserId);
     List<UserGroupUser> findByUserGroupUserId_UserId(Long userId);
+    List<UserGroupUser> findByUserGroupUserId_UserGroupId(Long userGroupId);
 
     Long countByUserGroupUserId_UserGroupIdAndUserGroupUserExitedIsNull(Long userGroupId);
 
@@ -24,5 +25,7 @@ public interface RUserGroupUser extends CrudRepository<UserGroupUser, UserGroupU
 
     @Query("SELECT distinct uGu.user FROM UserGroupUser uGu where uGu.userGroupUserId.userGroupId = :userGroupId AND uGu.userGroupUserExited IS NULL ORDER BY uGu.user.userLogin ASC")
     List<User> findByUserGroupUserId_UserGroupIdAAndUserGroupUserExitedIsNull(@Param("userGroupId") Long userGroupId);
+
+
 
 }

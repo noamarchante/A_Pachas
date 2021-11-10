@@ -1,11 +1,9 @@
-
-
-export class MUserGroup {
+export class UserGroup {
     userGroupId: number;
     userGroupName: string;
     userGroupDescription: string;
     userGroupPhoto: string;
-    userGroupCreation: Date;
-    userGroupRemoval: Date;
+    userGroupCreation: number;
+    userGroupRemoval: number;
     userGroupOwner: number;
 }

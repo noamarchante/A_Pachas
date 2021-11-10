@@ -3,8 +3,7 @@ package esei.tfg.apachas.model;
 
 import esei.tfg.apachas.entity.UserGroup;
 
-import java.sql.Blob;
-import java.util.Base64;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class MUserGroup {
@@ -14,8 +13,8 @@ public class MUserGroup {
     private String userGroupDescription;
     private String userGroupPhoto;
     private long userGroupOwner;
-    private Date userGroupCreation;
-    private Date userGroupRemoval;
+    private Timestamp userGroupCreation;
+    private Timestamp userGroupRemoval;
 
     public MUserGroup(){
 
@@ -71,19 +70,19 @@ public class MUserGroup {
         this.userGroupOwner = userGroupOwner;
     }
 
-    public Date getUserGroupRemoval() {
+    public Timestamp getUserGroupRemoval() {
         return userGroupRemoval;
     }
 
-    public void setUserGroupRemoval(Date userGroupRemoval) {
+    public void setUserGroupRemoval(Timestamp userGroupRemoval) {
         this.userGroupRemoval = userGroupRemoval;
     }
 
-    public Date getUserGroupCreation() {
+    public Timestamp getUserGroupCreation() {
         return userGroupCreation;
     }
 
-    public void setUserGroupCreation(Date userGroupCreation) {
+    public void setUserGroupCreation(Timestamp userGroupCreation) {
         this.userGroupCreation = userGroupCreation;
     }
 }

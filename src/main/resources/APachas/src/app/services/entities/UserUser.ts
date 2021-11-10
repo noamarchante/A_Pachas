@@ -1,4 +1,4 @@
-export class MUserUser {
+export class UserUser {
      userId: number;
      friendId: number;
      status: boolean;
