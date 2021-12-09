@@ -18,8 +18,8 @@
                  (click)="selectUserGroup(i)">
                 <div class="row g-0">
                     <div class="col-xxl-5 col-xl-12 col-lg-5 col-md-12 col-sm-5 divAligment">
-                        <ng-container *ngIf="group.userGroupPhoto != null; else imagesDiv">
-                            <img class="image" [src]="images[group.userGroupId]">
+                        <ng-container *ngIf="group.groupPhoto != null; else imagesDiv">
+                            <img class="image" [src]="images[group.groupId]">
                         </ng-container>
                         <ng-template #imagesDiv>
                             <img class="image" [src]="defaultImage">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-xxl-7 col-xl-12 col-lg-7 col-md-12 col-sm-7 divAligment">
                         <div class="card-body-xxl-7 card-body-xl-12 card-body-lg-7 card-body-md-12 card-body-sm-7 divAligment">
-                            <h5 class="title">{{group.userGroupName}}</h5>
+                            <h5 class="title">{{group.groupName}}</h5>
                         </div>
                     </div>
                 </div>

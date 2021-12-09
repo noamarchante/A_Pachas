@@ -10,6 +10,9 @@ import {ListGroupsComponent} from "./components/groups/listGroups/listGroups.com
 import {DetailGroupComponent} from "./components/groups/detailGroup/detailGroup.component";
 import {DetailUserComponent} from "./components/users/detailUser/detailUser.component";
 import {MessageConfirmComponent} from "./components/confirm/messageConfirm.component";
+import {ListEventsComponent} from "./components/events/listEvents/listEvents.component";
+import {DetailEventComponent} from "./components/events/detailEvent/detailEvent.component";
+import {CreateEventComponent} from "./components/events/createEvent/createEvent.component";
 
 const routes: Routes = [
 	{
@@ -38,6 +41,15 @@ const routes: Routes = [
 	},
 	{
 		path: 'messageConfirm', component: MessageConfirmComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'listEvents', component: ListEventsComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'detailEvent', component: DetailEventComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'createEvent', component: CreateEventComponent, canActivate: [AuthGuard]
 	},
 	{
 		path: '', redirectTo: 'home', pathMatch: 'full'

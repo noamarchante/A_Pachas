@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title title">{{userGroup.userGroupName}}</h5>
+                <h5 class="modal-title title">{{userGroup.groupName}}</h5>
                 <div class="editDiv">
                     <button type="button" *ngIf="edit()" class="editButton" title="Editar grupo"
                             data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#createGroupModal"
@@ -23,19 +23,19 @@
                     <div class="row">
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="imageGroupDiv">
-                                <ng-container *ngIf="userGroup.userGroupPhoto; else imagesDiv">
-                                    <img class="imageGroup" [src]="userGroup.userGroupPhoto" alt=""
+                                <ng-container *ngIf="userGroup.groupPhoto; else imagesDiv">
+                                    <img class="imageGroup" [src]="userGroup.groupPhoto" alt=""
                                          id="detailUserGroup_photo">
                                 </ng-container>
                                 <ng-template #imagesDiv>
                                     <img class="imageGroup" [src]="defaultImage">
                                 </ng-template>
                                 <div class="date text">
-                                    Creación: {{userGroup.userGroupCreation | date: 'dd-MM-yyyy'}}</div>
+                                    Creación: {{userGroup.groupCreation | date: 'dd-MM-yyyy'}}</div>
                                 <div class="description-row text"
                                      name="userGroupDescription"
                                      id="detailUserGroup_userGroupDescription">
-                                    {{userGroup.userGroupDescription}}
+                                    {{userGroup.groupDescription}}
 
                                 </div>
                             </div>

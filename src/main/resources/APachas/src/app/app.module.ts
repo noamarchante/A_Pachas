@@ -19,6 +19,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import {DetailGroupComponent} from "./components/groups/detailGroup/detailGroup.component";
 import {DetailUserComponent} from "./components/users/detailUser/detailUser.component";
 import {MessageConfirmComponent} from "./components/confirm/messageConfirm.component";
+import {ListEventsComponent} from "./components/events/listEvents/listEvents.component";
+import {DetailEventComponent} from "./components/events/detailEvent/detailEvent.component";
+import {CreateEventComponent} from "./components/events/createEvent/createEvent.component";
+import {Daterangepicker} from "ng2-daterangepicker";
 
 
 @NgModule({
@@ -32,23 +36,27 @@ import {MessageConfirmComponent} from "./components/confirm/messageConfirm.compo
     DetailGroupComponent,
     DetailUserComponent,
     MessageConfirmComponent,
+    ListEventsComponent,
+    DetailEventComponent,
+    CreateEventComponent,
     HomeComponent
   ],
-  imports: [
-    AppRoutingModule,
-    BrowserModule,
-    FormsModule,
-    NgSelectModule,
-    HttpClientModule,
-    NotificationModule,
-    BrowserAnimationsModule,
-    SimpleNotificationsModule.forRoot({
-      timeOut: 10000,
-      preventDuplicates: true,
-      pauseOnHover: true,
-      clickToClose: true
-    })
-  ],
+    imports: [
+        AppRoutingModule,
+        BrowserModule,
+        FormsModule,
+        NgSelectModule,
+        HttpClientModule,
+        NotificationModule,
+        BrowserAnimationsModule,
+        SimpleNotificationsModule.forRoot({
+            timeOut: 10000,
+            preventDuplicates: true,
+            pauseOnHover: true,
+            clickToClose: true
+        }),
+        Daterangepicker
+    ],
 
   providers: [
     {

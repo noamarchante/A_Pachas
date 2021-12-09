@@ -1,12 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UserGroupService} from "../../../services/userGroup.service";
+import {GroupService} from "../../../services/group.service";
 import {UserService} from "../../../services/user.service";
-import {UserGroupUserService} from "../../../services/userGroupUser.service";
+import {GroupUserService} from "../../../services/groupUser.service";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {NotificationService} from "../../../modules/notification/services/notification.service";
 import {MUser} from "../../../models/MUser";
-import {MUserGroup} from "../../../models/MUserGroup";
+import {MGroup} from "../../../models/MGroup";
 
 @Component({
     selector: 'app-detailGroup',
@@ -37,15 +37,15 @@ export class DetailGroupComponent implements OnInit {
 
     _previous: boolean = false;
     _next: boolean = false;
-    _userGroup: MUserGroup = new MUserGroup();
+    _userGroup: MGroup = new MGroup();
 
     private return = 'groups';
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
-                private userGroupService: UserGroupService,
+                private groupService: GroupService,
                 private userService: UserService,
-                private userGroupUserService: UserGroupUserService,
+                private groupUserService: GroupUserService,
                 private authenticationService: AuthenticationService,
                 private notificationService: NotificationService
     ) {
@@ -56,7 +56,7 @@ export class DetailGroupComponent implements OnInit {
     }
 
     messageValue(){
-        if (this.authenticationService.getUser().id == this.userGroup.userGroupOwner){
+        if (this.authenticationService.getUser().id == this.userGroup.groupOwner){
             this.message = "¿Estás seguro de que deseas eliminar el grupo?";
         }else{
             this.message = "¿Estás seguro de que quieres salir del grupo?";
@@ -84,14 +84,14 @@ export class DetailGroupComponent implements OnInit {
         return this._userGroup;
     }
 
-    @Input() set userGroup (userGroup: MUserGroup) {
+    @Input() set userGroup (userGroup: MGroup) {
         if (userGroup != undefined) {
             this._userGroup = userGroup;
-            if (this.userGroup.userGroupId != null){
-                this.getMembers(this.userGroup.userGroupId);
-                this.getTotalMembers(this.userGroup.userGroupId);
+            if (this.userGroup.groupId != null){
+                this.getMembers(this.userGroup.groupId);
+                this.getTotalMembers(this.userGroup.groupId);
             }else{
-                this._userGroup = new MUserGroup();
+                this._userGroup = new MGroup();
             }
         }
         this.groupMembers = [];
@@ -100,15 +100,15 @@ export class DetailGroupComponent implements OnInit {
 
     onDelete($event){
         if($event.valueOf()){
-            if (this.userGroup.userGroupOwner == this.authenticationService.getUser().id){
-                this.userGroupService.deleteUserGroup(this.userGroup).subscribe(()=>{
+            if (this.userGroup.groupOwner == this.authenticationService.getUser().id){
+                this.groupService.deleteGroup(this.userGroup.groupId).subscribe(()=>{
                         this.eventDelete.emit();
                         this.notificationService.success("Grupo eliminado", "Se ha eliminado el grupo correctamente.");
 
                     }
                 );
             }else{
-                this.userGroupUserService.deleteUserGroupUser(this.userGroup.userGroupId, this.authenticationService.getUser().id).subscribe(() => {
+                this.groupUserService.deleteGroupUser(this.userGroup.groupId, this.authenticationService.getUser().id).subscribe(() => {
                     this.eventDelete.emit();
                     this.notificationService.success("Eliminado del grupo", "Ya no eres miembro de este grupo.");
                 });
@@ -117,7 +117,7 @@ export class DetailGroupComponent implements OnInit {
     }
 
     edit(): boolean{
-        if (this.userGroup.userGroupOwner == this.authenticationService.getUser().id){
+        if (this.userGroup.groupOwner == this.authenticationService.getUser().id){
             return true;
         }else{
             return false;
@@ -126,14 +126,14 @@ export class DetailGroupComponent implements OnInit {
 
     ownerLabel(userId:number):string{
         let value:string = "";
-        if (userId == this.userGroup.userGroupOwner){
+        if (userId == this.userGroup.groupOwner){
             value = "Administrador";
         }
         return value;
     }
 
     ownerBorder(userId: number):string{
-        if(userId == this.userGroup.userGroupOwner){
+        if(userId == this.userGroup.groupOwner){
             return "owner";
         }
     }
@@ -143,7 +143,7 @@ export class DetailGroupComponent implements OnInit {
     }
 
     getMembers(userGroupId:number){
-        this.userGroupUserService.getPageableUsersByUserGroupId(userGroupId,this.pageMember, this.sizeMember).subscribe((response) => {
+        this.groupUserService.getPageableMembers(userGroupId,this.pageMember, this.sizeMember).subscribe((response) => {
             this.groupMembers.push(...response);
             this.paginationUserGroupClass();
             this.setMoreLabel();
@@ -151,7 +151,7 @@ export class DetailGroupComponent implements OnInit {
     }
 
     getTotalMembers(userGroupId:number){
-        this.userGroupUserService.countUsersGroupsUsersByUserGroupId(userGroupId).subscribe((members)=>{
+        this.groupUserService.countMembers(userGroupId).subscribe((members)=>{
             this.totalMembers = members;
         });
     }
@@ -171,7 +171,7 @@ export class DetailGroupComponent implements OnInit {
         }else{
             if (this.groupMembersStored.length ==0){
                 this.pageMember +=1;
-                this.getMembers(this.userGroup.userGroupId);
+                this.getMembers(this.userGroup.groupId);
             }else{
                 this.groupMembers = this.groupMembersStored;
             }

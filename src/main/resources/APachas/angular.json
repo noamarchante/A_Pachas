@@ -32,11 +32,13 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "src/styles.css",
-              "@ng-select/ng-select/themes/default.theme.css"
+              "@ng-select/ng-select/themes/default.theme.css",
+              "node_modules/ng2-daterangepicker/assets/daterangepicker.css"
             ],
             "scripts": [
               "node_modules/@popperjs/core/dist/umd/popper.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/jquery/dist/jquery.min.js"
             ]
           },
           "configurations": {

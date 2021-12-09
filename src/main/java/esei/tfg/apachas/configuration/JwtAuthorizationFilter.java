@@ -52,7 +52,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     .getSubject();
 
             if (userLogin != null) {
-                User user = rUser.findByUserLogin(userLogin);
+                User user = rUser.findByUserLoginAndUserActiveTrue(userLogin);
                 UserPrincipal principal = new UserPrincipal(user);
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userLogin, null, principal.getAuthorities());
                 return auth;

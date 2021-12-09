@@ -4,6 +4,9 @@ import {environment} from '../../environments/environment';
 import {AuthUser} from '../models/AuthUser';
 import {APachasError} from '../modules/notification/entities';
 import {UserService} from "./user.service";
+ import {MUser} from "../models/MUser";
+ import {User} from "./entities/User";
+ import {map} from "rxjs/operators";
 
 //SERVICE -> Se encarga de acceder a los datos para entregarlos a los componentes
 @Injectable({
@@ -45,7 +48,7 @@ export class AuthenticationService {
 
 	//RECOGER OTROS DATOS DEL USUARIO AUTENTICADO
 	public setAuthUser(login: string){
-		this.userService.getUserByLogin(login).subscribe((response) => {
+		this.userService.getUser(login).subscribe((response) => {
 			this.user.id = response.userId;
 			this.user.email = response.userEmail;
 			this.user.permission = response.permissions;
@@ -75,4 +78,5 @@ export class AuthenticationService {
 	public isGuest(): boolean {
 		return !this.user.authenticated;
 	}
+
 }

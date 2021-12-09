@@ -3,8 +3,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {DomSanitizer} from "@angular/platform-browser";
 import {UserService} from "../../../services/user.service";
 import {AuthenticationService} from "../../../services/authentication.service";
-import {UserGroupService} from "../../../services/userGroup.service";
-import {MUserGroup} from "../../../models/MUserGroup";
+import {GroupService} from "../../../services/group.service";
+import {MGroup} from "../../../models/MGroup";
+import {GroupUserService} from "../../../services/groupUser.service";
 
 @Component({
     selector: 'app-groups',
@@ -13,13 +14,13 @@ import {MUserGroup} from "../../../models/MUserGroup";
 })
 export class ListGroupsComponent implements OnInit {
     groupName = "";
-    groups: MUserGroup[] = [];
+    groups: MGroup[] = [];
     images: {[index:number]: any;} = {};
     defaultImage = "./assets/group.jpg";
     totalPage:number= 0;
     page: number= 0;
     edit: boolean = false;
-    selectedUserGroup: MUserGroup = new MUserGroup();
+    selectedUserGroup: MGroup = new MGroup();
     size: number= 6;
     index: number;
     previous: boolean;
@@ -31,7 +32,8 @@ export class ListGroupsComponent implements OnInit {
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private userService: UserService,
-                private userGroupService: UserGroupService,
+                private groupService: GroupService,
+                private groupUserService: GroupUserService,
                 private authenticationService: AuthenticationService,
                 private sanitizer: DomSanitizer) {}
 
@@ -41,7 +43,7 @@ export class ListGroupsComponent implements OnInit {
     }
 
     setGroup(){
-        this.selectedUserGroup = new MUserGroup();
+        this.selectedUserGroup = new MGroup();
     }
 
     selectUserGroup(index:number){
@@ -62,7 +64,7 @@ export class ListGroupsComponent implements OnInit {
     }
 
     getGroups(){
-        this.userGroupService.getPageableUserGroup(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
+        this.groupUserService.getPageableGroups(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
             this.groups = response;
             this.setSelectedUserGroupPage();
             this.getURL(response);
@@ -100,14 +102,14 @@ export class ListGroupsComponent implements OnInit {
         }
     }
 
-    private getURL(groups: MUserGroup[]){
+    private getURL(groups: MGroup[]){
         groups.forEach((group) => {
-            this.images[group.userGroupId] = this.sanitizer.bypassSecurityTrustUrl(group.userGroupPhoto);
+            this.images[group.groupId] = this.sanitizer.bypassSecurityTrustUrl(group.groupPhoto);
         });
     }
 
     private search(){
-        this.userGroupService.getPageableUserGroupByGroupName(this.groupName, this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
+        this.groupUserService.getPageableSearchGroups(this.groupName, this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
             this.groups = response;
             this.setSelectedUserGroupPage();
             this.searchTotalPages();
@@ -121,13 +123,13 @@ export class ListGroupsComponent implements OnInit {
     }
 
     private totalPages() {
-        this.userGroupService.countUsersGroups(this.authenticationService.getUser().id).subscribe((response) => {
+        this.groupUserService.countGroups(this.authenticationService.getUser().id).subscribe((response) => {
             this.totalPage = Math.ceil(response/this.size);
         });
     }
 
     private searchTotalPages(){
-        this.userGroupService.countSearchUsersGroups(this.groupName, this.authenticationService.getUser().id).subscribe((response) => {
+        this.groupUserService.countSearchGroups(this.groupName, this.authenticationService.getUser().id).subscribe((response) => {
             this.totalPage = Math.ceil(response/this.size);
         });
     }

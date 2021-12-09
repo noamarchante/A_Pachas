@@ -46,7 +46,9 @@ public class DbInit implements CommandLineRunner {
 
         User admin = new User(0, "admin", "admin", "admin", securityConfiguration.passwordEncoder().encode("abc123."), "admin@admin.com",new Timestamp(12) , null, "ADMIN", "");
 
-        List<User> users = Arrays.asList(noa, laura, juanma, marcos, jony, marcus, millan, cris, miguel, aaron, brais, admin);
+        User otro = new User(0, "otro", "otro", "otro", securityConfiguration.passwordEncoder().encode("abc123."), "otro@otro.com",new Timestamp(12) , null, "USER", "");
+
+        List<User> users = Arrays.asList(noa, laura, juanma, marcos, jony, marcus, millan, cris, miguel, aaron, brais, admin, otro);
 
 
         this.rUser.saveAll(users);

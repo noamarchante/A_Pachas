@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UserGroupService} from "../../../services/userGroup.service";
+import {GroupService} from "../../../services/group.service";
 import {UserService} from "../../../services/user.service";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {MUser} from "../../../models/MUser";
-import {UserGroupUserService} from "../../../services/userGroupUser.service";
+import {GroupUserService} from "../../../services/groupUser.service";
 import {UserUserService} from "../../../services/userUser.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {NotificationService} from "../../../modules/notification/services/notification.service";
-import {MUserGroup} from "../../../models/MUserGroup";
+import {MGroup} from "../../../models/MGroup";
 
 @Component({
     selector: 'app-createGroup',
@@ -25,7 +25,7 @@ export class CreateGroupComponent implements OnInit {
     imageColor:string="";
     imageText: string;
     title: string = "CREAR GRUPO";
-    _userGroup: MUserGroup;
+    _userGroup: MGroup;
     @Output()
     eventSave = new EventEmitter<boolean>();
     private return = 'groups';
@@ -33,9 +33,9 @@ export class CreateGroupComponent implements OnInit {
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
-                private userGroupService: UserGroupService,
+                private groupService: GroupService,
                 private userService: UserService,
-                private userGroupUserService: UserGroupUserService,
+                private groupUserService: GroupUserService,
                 private userUserService: UserUserService,
                 private authenticationService: AuthenticationService,
                 private sanitizer: DomSanitizer,
@@ -52,13 +52,13 @@ export class CreateGroupComponent implements OnInit {
         return this._userGroup;
     }
 
-    @Input() set userGroup(userGroup: MUserGroup){
-        if (userGroup.userGroupId != undefined){
+    @Input() set userGroup(userGroup: MGroup){
+        if (userGroup.groupId != undefined){
             this._userGroup = userGroup;
             this.title = "Editar grupo";
             this.getMembers();
         }else{
-            this._userGroup = new MUserGroup();
+            this._userGroup = new MGroup();
             this.title = "Crear grupo";
         }
         this.groupMembers = [];
@@ -66,7 +66,7 @@ export class CreateGroupComponent implements OnInit {
     }
 
     onSubmit(){
-        if (this.userGroup.userGroupId != undefined){
+        if (this.userGroup.groupId != undefined){
             this.onEdit();
         }else{
             this.onCreate();
@@ -74,11 +74,11 @@ export class CreateGroupComponent implements OnInit {
     }
 
     onCreate() {
-            this.userGroup.userGroupOwner = this.authenticationService.getUser().id;
+            this.userGroup.groupOwner = this.authenticationService.getUser().id;
             this.groupMembers.push(this.authenticationService.getUser().id);
-            this.userGroupService.createUserGroup(this.userGroup).subscribe((response) => {
+            this.groupService.createGroup(this.userGroup).subscribe((response) => {
                 this.groupMembers.forEach((id)=> {
-                    this.userGroupUserService.createUserGroupUser(response,id).subscribe(() =>{
+                    this.groupUserService.createGroupUser(response,id).subscribe(() =>{
                         this.eventSave.emit();
                     });
                 });
@@ -92,8 +92,8 @@ export class CreateGroupComponent implements OnInit {
 
     onEdit(){
         this.groupMembers.push(this.authenticationService.getUser().id);
-        this.userGroupService.editUserGroup(this.userGroup).subscribe(() => {
-            this.userGroupUserService.editUserGroupUser(this.userGroup.userGroupId, this.groupMembers).subscribe();
+        this.groupService.editGroup(this.userGroup).subscribe(() => {
+            this.groupUserService.editGroupUser(this.userGroup.groupId, this.groupMembers).subscribe();
             this.eventSave.emit();
             this.closeModal();
             document.getElementById("closeButton").click();
@@ -105,7 +105,7 @@ export class CreateGroupComponent implements OnInit {
         const file = event.target.files[0];
         if (this.imageFormatTest(file)){
             this.getBase64(file).then((image: any) => {
-                this.userGroup.userGroupPhoto = image.base;
+                this.userGroup.groupPhoto = image.base;
             });
             this.imageFormat = true;
         }else{
@@ -114,7 +114,7 @@ export class CreateGroupComponent implements OnInit {
     }
 
     closeModal(){
-        this.userGroup = new MUserGroup();
+        this.userGroup = new MGroup();
         this.groupMembers = [];
         this.imageFormat = null;
     }
@@ -169,9 +169,9 @@ export class CreateGroupComponent implements OnInit {
     }
 
     private getMembers(){
-        this.userGroupUserService.getUsersByUserGroupId(this.userGroup.userGroupId).subscribe((response) =>{
+        this.groupUserService.getMembers(this.userGroup.groupId).subscribe((response) =>{
             response.forEach((user)=>{
-                if(user.userId != this.userGroup.userGroupOwner){
+                if(user.userId != this.userGroup.groupOwner){
                     this.groupMembers.push(user.userId);
                 }
             });

@@ -38,6 +38,51 @@
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked{
-     background-color: #f5f5f5 !important;
+     background-color: rgba(102, 187, 106, 0.1) !important;
 }
 
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup {
+     text-align: center !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-marked {
+     background-color: rgba(102, 187, 106, 0.1) !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-disabled {
+     background-color: rgba(102, 187, 106, 0.1) !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected.ng-option-marked {
+     background-color: white !important;
+     font-weight: 500;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected.ng-option-marked {
+     background-color: white !important;
+     font-weight: 600;
+}
+
+/*fondo hover*/
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected:hover, .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected.ng-option-marked:hover {
+     background-color: red !important;
+     /*background-color: rgba(102, 187, 106, 0.1) !important;*/
+     font-weight: 600;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected  {
+     background-color: white !important;
+     font-weight: 500 !important;
+}
+
+
+
+/*.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected.ng-option-marked {
+     background-color: rgba(102, 187, 106, 0.1) !important;
+
+}*/
+
+/*.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected.ng-option-marked {
+     background-color: #ebf5ff !important;
+     font-weight: 600;
+}*/
