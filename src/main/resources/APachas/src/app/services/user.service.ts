@@ -14,13 +14,13 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getPageableUser(authId: number, page: number, size: number): Observable<MUser[]>{
+  getPageableUsers(authId: number, page: number, size: number): Observable<MUser[]>{
     return this.http.get<User[]>(`${environment.restApi}/users/pageable/${authId}?page=${page}&size=${size}`).pipe(
         map(users => users.map(this.mapUser.bind(this)))
     );
   }
 
-  getPageableUserByLogin(userLogin: string, authId: number, page: number, size: number): Observable<MUser[]>{
+  getPageableSearchUsers(userLogin: string, authId: number, page: number, size: number): Observable<MUser[]>{
     return this.http.get<User[]>(`${environment.restApi}/users/pageable/${userLogin}/${authId}?page=${page}&size=${size}`).pipe(
         map(users => users.map(this.mapUser.bind(this)))
     );
@@ -34,8 +34,8 @@ export class UserService {
     return this.http.get<number>(`${environment.restApi}/users/count/${userLogin}/${authId}`);
   }
 
-  getUserByLogin(login: string): Observable<MUser>{
-    return this.http.get<User>(`${environment.restApi}/users/${login}`).pipe(
+  getUser(userLogin: string): Observable<MUser>{
+    return this.http.get<User>(`${environment.restApi}/users/${userLogin}`).pipe(
         map(this.mapUser.bind(this))
     );
   }
@@ -51,22 +51,17 @@ export class UserService {
       "userBirthday": "",
       "userPhoto": null,
       "roles": "USER",
-      "permissions": ""
+      "permissions": "",
+      "userCreation": "",
+      "userRemoval": "",
+      "userActive": true
     })
       .pipe(
         APachasError.throwOnError('Fallo en el registro', `Los datos del formulario son incorrectos o el usuario ya existe. Por favor, inténtelo de nuevo`)
       );
   }
 
-  countMutualFriends(userId: number, authId: number): Observable<number>{
-    return this.http.get<number>(`${environment.restApi}/users/countMutual/${userId}/${authId}`);
-  }
 
-  getPageableMutualFriends(userId: number, authId: number, page: number, size: number): Observable<MUser[]>{
-    return this.http.get<User[]>(`${environment.restApi}/users/pageableMutual/${userId}/${authId}?page=${page}&size=${size}`).pipe(
-        map(this.mapUser.bind(this))
-    );
-  }
 
   private mapUser(user: User) : MUser {
     return {
@@ -79,7 +74,10 @@ export class UserService {
       userBirthday: user.userBirthday,
       userPhoto: user.userPhoto,
       roles: user.roles,
-      permissions: user.permissions
+      permissions: user.permissions,
+      userActive: user.userActive,
+      userRemoval: user.userRemoval,
+      userCreation: user.userCreation
     }
   }
 

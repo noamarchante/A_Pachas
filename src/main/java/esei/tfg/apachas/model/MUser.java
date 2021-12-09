@@ -19,6 +19,9 @@ public class MUser {
     private String userPhoto;
     private String roles;
     private String permissions;
+    private Timestamp userCreation;
+    private Timestamp userRemoval;
+    private boolean userActive;
 
     public MUser() {
     }
@@ -34,6 +37,9 @@ public class MUser {
         this.userPhoto = user.getUserPhoto();
         this.roles = user.getRoles();
         this.permissions = user.getPermissions();
+        this.userCreation = user.getUserCreation();
+        this.userRemoval = user.getUserRemoval();
+        this.userActive = user.isUserActive();
     }
 
     public long getUserId() {
@@ -114,5 +120,29 @@ public class MUser {
 
     public void setPermissions(String permissions) {
         this.permissions = permissions;
+    }
+
+    public Timestamp getUserCreation() {
+        return userCreation;
+    }
+
+    public void setUserCreation(Timestamp userCreation) {
+        this.userCreation = userCreation;
+    }
+
+    public Timestamp getUserRemoval() {
+        return userRemoval;
+    }
+
+    public void setUserRemoval(Timestamp userRemoval) {
+        this.userRemoval = userRemoval;
+    }
+
+    public boolean isUserActive() {
+        return userActive;
+    }
+
+    public void setUserActive(boolean userActive) {
+        this.userActive = userActive;
     }
 }

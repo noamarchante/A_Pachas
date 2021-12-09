@@ -3,18 +3,27 @@ package esei.tfg.apachas.model;
 
 import esei.tfg.apachas.entity.UserUser;
 
+import java.sql.Timestamp;
+
 public class MUserUser {
 
     private long userId;
     private long friendId;
-    private boolean status;
+    private boolean accept;
+
+    private Timestamp userUserCreation;
+    private Timestamp userUserRemoval;
+    private boolean userUserActive;
 
     public MUserUser (){}
 
     public MUserUser (UserUser userUser){
         this.userId = userUser.getUserUserId().getUserId();
         this.friendId = userUser.getUserUserId().getFriendId();
-        this.status = userUser.getStatus();
+        this.accept = userUser.isAccept();
+        this.userUserActive = userUser.isUserUserActive();
+        this.userUserCreation = userUser.getUserUserCreation();
+        this.userUserRemoval = userUser.getUserUserRemoval();
     }
 
     public long getUserId() {
@@ -33,11 +42,35 @@ public class MUserUser {
         this.friendId = friendId;
     }
 
-    public boolean getStatus() {
-        return status;
+    public boolean getAccept() {
+        return accept;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setAccept(boolean accept) {
+        this.accept = accept;
+    }
+
+    public Timestamp getUserUserCreation() {
+        return userUserCreation;
+    }
+
+    public void setUserUserCreation(Timestamp userUserCreation) {
+        this.userUserCreation = userUserCreation;
+    }
+
+    public Timestamp getUserUserRemoval() {
+        return userUserRemoval;
+    }
+
+    public void setUserUserRemoval(Timestamp userUserRemoval) {
+        this.userUserRemoval = userUserRemoval;
+    }
+
+    public boolean isUserUserActive() {
+        return userUserActive;
+    }
+
+    public void setUserUserActive(boolean userUserActive) {
+        this.userUserActive = userUserActive;
     }
 }

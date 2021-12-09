@@ -17,31 +17,44 @@ export class UserUserService {
     constructor(private http: HttpClient) { }
 
     getUserUser(friendId: number, userId: number): Observable<MUserUser> {
-        return this.http.get<UserUser>(`${environment.restApi}/usersUsers/${friendId}/${userId}`);
+        return this.http.get<UserUser>(`${environment.restApi}/usersUsers/${friendId}/${userId}`).pipe(
+            map(this.mapUserUser.bind(this))
+        );
     }
 
-    getFriends(friendId: number): Observable<MUser[]> {
-        return this.http.get<User[]>(`${environment.restApi}/usersUsers/${friendId}`).pipe(
+    getDeletedUserUser(friendId: number, userId: number): Observable<MUserUser> {
+        return this.http.get<UserUser>(`${environment.restApi}/usersUsers/deleted/${friendId}/${userId}`).pipe(
+            map(this.mapUserUser.bind(this))
+        );
+    }
+
+    getFriends(userId: number): Observable<MUser[]> {
+        return this.http.get<User[]>(`${environment.restApi}/usersUsers/${userId}`).pipe(
             map(users => users.map(this.mapUser.bind(this)))
         );
     }
 
-    createUserUser(userUser: MUserUser): Observable<void> {
+    createUserUser(mUserUser: MUserUser): Observable<void> {
         return this.http.post<void>(`${environment.restApi}/usersUsers`,{
-            "friendId":userUser.friendId,
-            "userId": userUser.userId,
-            "status": userUser.status
+            "friendId":mUserUser.friendId,
+            "userId": mUserUser.userId,
+            "accept": false,
+            "userUserCreation": "",
+            "userUserRemoval": ""
         })
             .pipe(
                 APachasError.throwOnError('Fallo en la solicitud de amistad o solicitud ya enviada', `Por favor, inténtelo de nuevo`)
             );
     }
 
-    editUserUser(userUser: MUserUser): Observable<void> {
+    editUserUser(mUserUser: MUserUser): Observable<void> {
         return this.http.put<void>(`${environment.restApi}/usersUsers`,{
-            "friendId":userUser.friendId,
-            "userId": userUser.userId,
-            "status": userUser.status
+            "friendId":mUserUser.friendId,
+            "userId": mUserUser.userId,
+            "accept": mUserUser.accept,
+            "userUserActive": true,
+            "userUserCreation": "",
+            "userUserRemoval": ""
         })
             .pipe(
                 APachasError.throwOnError('Fallo al aceptar la solicitud', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo`)
@@ -50,6 +63,16 @@ export class UserUserService {
 
     deleteUserUser(friendId: number, userId: number): Observable<void> {
         return this.http.delete<void>(`${environment.restApi}/usersUsers/${friendId}/${userId}`);
+    }
+
+    countMutualFriends(userId: number, authId: number): Observable<number>{
+        return this.http.get<number>(`${environment.restApi}/usersUsers/count/mutual/${userId}/${authId}`);
+    }
+
+    getPageableMutualFriends(userId: number, authId: number, page: number, size: number): Observable<MUser[]>{
+        return this.http.get<User[]>(`${environment.restApi}/usersUsers/pageable/mutual/${userId}/${authId}?page=${page}&size=${size}`).pipe(
+            map(users => users.map(this.mapUser.bind(this)))
+        );
     }
 
     private mapUser(user: User) : MUser {
@@ -63,7 +86,26 @@ export class UserUserService {
             userBirthday: user.userBirthday,
             userPhoto: user.userPhoto,
             roles: user.roles,
-            permissions: user.permissions
+            permissions: user.permissions,
+            userCreation: user.userCreation,
+            userRemoval: user.userRemoval,
+            userActive: user.userActive
         }
+    }
+
+    private mapUserUser(userUser: UserUser) : MUserUser {
+        if (userUser != null){
+            return {
+                userId: userUser.userId,
+                friendId: userUser.friendId,
+                userUserActive: userUser.userUserActive,
+                userUserCreation: userUser.userUserCreation,
+                userUserRemoval: userUser.userUserRemoval,
+                accept: userUser.accept
+            }
+        }else{
+            return null;
+        }
+
     }
 }

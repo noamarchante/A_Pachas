@@ -9,4 +9,7 @@ export class MUser {
     userPhoto: string;
     roles: string;
     permissions: string;
+    userActive: boolean;
+    userCreation: Date;
+    userRemoval: Date;
 }

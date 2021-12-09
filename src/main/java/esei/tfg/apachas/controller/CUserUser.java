@@ -3,6 +3,7 @@ package esei.tfg.apachas.controller;
 import esei.tfg.apachas.model.MUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class CUserUser {
     SUserUser sUserUser;
 
     @PostMapping
-    public ResponseEntity<Void> addUserUser(@RequestBody @Valid MUserUser mUserUser, UriComponentsBuilder builder) {
+    public ResponseEntity<Void> createUserUser(@RequestBody @Valid MUserUser mUserUser, UriComponentsBuilder builder) {
         boolean flag = sUserUser.insertUserUser(mUserUser);
         if (!flag) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -36,7 +37,7 @@ public class CUserUser {
     }
 
     @PutMapping
-    public ResponseEntity<MUserUser> updateUserUser(@RequestBody @Valid MUserUser mUserUser) {
+    public ResponseEntity<MUserUser> editUserUser(@RequestBody @Valid MUserUser mUserUser) {
         boolean flag = sUserUser.updateUserUser(mUserUser);
         if (!flag) {
             return new ResponseEntity<>(mUserUser, HttpStatus.NOT_FOUND);
@@ -47,9 +48,9 @@ public class CUserUser {
 
     @DeleteMapping("/{friendId}/{userId}")
     public ResponseEntity<Void> deleteUserUser(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
-        boolean flag = sUserUser.deleteUserUser(new UserUserId(friendId,userId));
+        boolean flag = sUserUser.deleteUserUser(friendId,userId);
         if (!flag) {
-            boolean flag2 = sUserUser.deleteUserUser(new UserUserId(userId, friendId));
+            boolean flag2 = sUserUser.deleteUserUser(userId, friendId);
             if (!flag2) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }else{
@@ -60,52 +61,64 @@ public class CUserUser {
         }
     }
 
+    @GetMapping("/count/mutual/{userId}/{authId}")
+    public ResponseEntity<Long> countMutualFriends(@PathVariable("userId") long userId, @PathVariable("authId") long authId) {
+        long userCount = sUserUser.countMutualFriends(userId,authId);
+        return new ResponseEntity<>(userCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/pageable/mutual/{userId}/{authId}")
+    public ResponseEntity<List<MUser>> getPageableMutualFriends(@PathVariable("userId") long userId, @PathVariable("authId") long authId, Pageable pageable) {
+        List<MUser> userList = sUserUser.selectPageableMutualFriends(userId, authId,pageable);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+
     @GetMapping("/{friendId}/{userId}")
-    public ResponseEntity<MUserUser> getUserUserById(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
+    public ResponseEntity<MUserUser> getUserUser(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
+
         try {
-            MUserUser mUserUser = sUserUser.selectUserUserById(new UserUserId(friendId, userId));
-           if (mUserUser == null){
-                 mUserUser = sUserUser.selectUserUserById(new UserUserId(userId, friendId));
+            MUserUser mUserUser = sUserUser.selectUserUser(new UserUserId(friendId, userId));
+
+            if (mUserUser == null){
+                 mUserUser = sUserUser.selectUserUser(new UserUserId(userId, friendId));
             }
-            return new ResponseEntity<>(mUserUser, HttpStatus.OK);
+            if (mUserUser.isUserUserActive()) {
+                return new ResponseEntity<>(mUserUser, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            }
         }catch (NoSuchElementException e){
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<MUser>> getFriends(@PathVariable("id") long id) {
+    @GetMapping("/deleted/{friendId}/{userId}")
+    public ResponseEntity<MUserUser> getDeletedUserUser(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
+
         try {
-            List<MUser> mUserUser = sUserUser.selectFriendsByFriendId(id);
-            mUserUser.addAll(sUserUser.selectFriendsByUserId(id));
-            return new ResponseEntity<>(mUserUser, HttpStatus.OK);
-        }catch ( NoSuchElementException e){
+            MUserUser mUserUser = sUserUser.selectUserUser(new UserUserId(friendId, userId));
+
+            if (mUserUser == null){
+                mUserUser = sUserUser.selectUserUser(new UserUserId(userId, friendId));
+            }
+            if (!mUserUser.isUserUserActive()) {
+                return new ResponseEntity<>(mUserUser, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            }
+        }catch (NoSuchElementException e){
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
 
-
-   /* @GetMapping("/{authId}")
-    public ResponseEntity<List<MUserUser>> getAllUserUserByAuthUser(@PathVariable("authId") long authId) {
-        List<MUserUser> userUserList = sUserUser.selectAllByAuthUser(authId);
-        return new ResponseEntity<>(userUserList, HttpStatus.OK);
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<MUser>> getFriends(@PathVariable("userId") long userId) {
+        try {
+            List<MUser> mUserUserList = sUserUser.selectFriendsByFriendId(userId);
+            mUserUserList.addAll(sUserUser.selectFriendsByUserId(userId));
+            return new ResponseEntity<>(mUserUserList, HttpStatus.OK);
+        }catch ( NoSuchElementException e){
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
     }
-
-    @GetMapping
-    public ResponseEntity<List<MUserUser>> getAllUserUser() {
-        List<MUserUser> userUserList = sUserUser.selectAll();
-        return new ResponseEntity<>(userUserList, HttpStatus.OK);
-    }
-
-    @GetMapping("/pageable")
-    public ResponseEntity<List<MUserUser>> getPageableUserUser(Pageable pageable) {
-        List<MUserUser> userUserList = sUserUser.selectPageable(pageable);
-        return new ResponseEntity<>(userUserList, HttpStatus.OK);
-    }
-
-    @GetMapping("/count/{authId}")
-    public ResponseEntity<Long> countUsersUsersByAuthUser( @PathVariable("authId") Long authId) {
-        long userCount = sUserUser.countByAuthUser(authId);
-        return new ResponseEntity<>(userCount, HttpStatus.OK);
-    }*/
 }

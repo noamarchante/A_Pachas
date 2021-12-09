@@ -21,7 +21,6 @@ export class ListUsersComponent implements OnInit {
     users: MUser[] = [];
     images: {[index:number]: any;} = {};
     defaultImage = "./assets/user.png";
-    messages: {[index: number]: any;} = {};
     friends: {[index: number]: any;} = {};
     totalPage = 0;
     page = 0;
@@ -69,7 +68,7 @@ export class ListUsersComponent implements OnInit {
     }
 
     getUsers(){
-        this.userService.getPageableUser(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
+        this.userService.getPageableUsers(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
             this.users = response;
             this.setSelectedUserPage();
             this.getURL(response);
@@ -115,7 +114,7 @@ export class ListUsersComponent implements OnInit {
     }
 
     private searchUsers(){
-        this.userService.getPageableUserByLogin(this.login, this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
+        this.userService.getPageableSearchUsers(this.login, this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
             this.users = response;
             this.getStatus(response);
             this.searchTotalPages();
@@ -172,17 +171,19 @@ export class ListUsersComponent implements OnInit {
             status = STATUS.FOLLOW;
         } else if (friend) {
             status = STATUS.PENDING;
-        }else{
+        }else if (!statusBD){
             status = STATUS.SENT;
+        }else{
+            status = STATUS.REQUEST;
         }
         return status;
     }
 
-    private getStatus (mUser: MUser[]) {
-        mUser.forEach((mUser) => {
+    private getStatus (mUsers: MUser[]) {
+        mUsers.forEach((mUser) => {
             this.userUserService.getUserUser(mUser.userId, this.authenticationService.getUser().id).subscribe((response) => {
                 if (response != null) {
-                    this.friends[mUser.userId] = this.statusValue(response.status,false);
+                    this.friends[mUser.userId] = this.statusValue(response.accept,false);
                 } else {
                     this.friendStatus(mUser);
                 }
@@ -191,9 +192,9 @@ export class ListUsersComponent implements OnInit {
     }
 
     private friendStatus(mUser: MUser){
-            this.userUserService.getUserUser(this.authenticationService.getUser().id,mUser.userId).subscribe((response) => {
+        this.userUserService.getUserUser(this.authenticationService.getUser().id,mUser.userId).subscribe((response) => {
                 if (response != null) {
-                    this.friends[mUser.userId] = this.statusValue(response.status, true);
+                    this.friends[mUser.userId] = this.statusValue(response.accept, true);
                 }else{
                     this.friends[mUser.userId] = STATUS.REQUEST;
                 }

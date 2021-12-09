@@ -1,5 +1,8 @@
 export class UserUser {
      userId: number;
      friendId: number;
-     status: boolean;
+     userUserActive: boolean;
+     userUserCreation: Date;
+     userUserRemoval: Date;
+     accept: boolean;
 }

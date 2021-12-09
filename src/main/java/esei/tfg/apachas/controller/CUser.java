@@ -2,7 +2,6 @@ package esei.tfg.apachas.controller;
 
 import esei.tfg.apachas.configuration.SecurityConfiguration;
 import esei.tfg.apachas.model.MUser;
-import esei.tfg.apachas.model.MUserGroup;
 import esei.tfg.apachas.service.SUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,7 +27,7 @@ public class CUser {
     SecurityConfiguration securityConfiguration;
 
     @PostMapping
-    public ResponseEntity<Void> addUser(@RequestBody @Valid MUser mUser, UriComponentsBuilder builder) {
+    public ResponseEntity<Void> createUser(@RequestBody @Valid MUser mUser, UriComponentsBuilder builder) {
         mUser.setUserPassword(securityConfiguration.passwordEncoder().encode(mUser.getUserPassword()));
         mUser.setRoles("USER");
 
@@ -40,26 +39,6 @@ public class CUser {
             headers.setLocation(builder.path("/{userId}").buildAndExpand(mUser.getUserId()).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
         }
-    }
-
-    @GetMapping("/{userLogin}")
-    public ResponseEntity<MUser> getUserByLogin(@PathVariable("userLogin") String userLogin) {
-        MUser mUser = sUser.selectUserByUserLogin(userLogin);
-        return new ResponseEntity<>(mUser, HttpStatus.OK);
-    }
-
-    @GetMapping("/pageable/{authId}")
-    public ResponseEntity<List<MUser>> getPageable(@PathVariable("authId") long authId, Pageable pageable) {
-
-        List<MUser> userList = sUser.selectUserPageable(authId, pageable);
-
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-    }
-
-    @GetMapping("/pageable/{userLogin}/{authId}")
-    public ResponseEntity<List<MUser>> getPageableUser( @PathVariable("userLogin") String userLogin,@PathVariable("authId") long authId, Pageable pageable) {
-        List<MUser> userList = sUser.selectUserPageableByUserLogin(userLogin,authId,pageable);
-        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     @GetMapping("/count/{authId}")
@@ -74,52 +53,23 @@ public class CUser {
         return new ResponseEntity<>(userCount, HttpStatus.OK);
     }
 
+    @GetMapping("/pageable/{authId}")
+    public ResponseEntity<List<MUser>> getPageableUsers(@PathVariable("authId") long authId, Pageable pageable) {
 
-    @GetMapping("/countMutual/{userId}/{authId}")
-    public ResponseEntity<Long> countMutualFriends(@PathVariable("userId") long userId, @PathVariable("authId") long authId) {
-        long userCount = sUser.countMutualFriends(userId,authId);
-        return new ResponseEntity<>(userCount, HttpStatus.OK);
-    }
+        List<MUser> userList = sUser.selectPageableUsers(authId, pageable);
 
-    @GetMapping("/pageableMutual/{userId}/{authId}")
-    public ResponseEntity<List<MUser>> getPageableMutualFriends(@PathVariable("userId") long userId, @PathVariable("authId") long authId, Pageable pageable) {
-        List<MUser> userList = sUser.selectMutualFriends(userId, authId,pageable);
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-
-
-    /*@PutMapping
-    public ResponseEntity<MUser> updateUser(@RequestBody @Valid MUser mUser) {
-        mUser.setUserPassword(securityConfiguration.passwordEncoder().encode(mUser.getUserPassword()));
-
-        boolean flag = sUser.update(mUser);
-        if (!flag) {
-            return new ResponseEntity<>(mUser, HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(mUser, HttpStatus.OK);
-        }
+    @GetMapping("/pageable/{userLogin}/{authId}")
+    public ResponseEntity<List<MUser>> getPageableSearchUsers(@PathVariable("userLogin") String userLogin, @PathVariable("authId") long authId, Pageable pageable) {
+        List<MUser> userList = sUser.selectPageableSearchUsers(userLogin,authId,pageable);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("userId") long userId) {
-        boolean flag = sUser.delete(userId);
-        if (!flag) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<MUser> getUserById(@PathVariable("userId") long userId) {
-        MUser mUser = sUser.selectById(userId);
+    @GetMapping("/{userLogin}")
+    public ResponseEntity<MUser> getUser(@PathVariable("userLogin") String userLogin) {
+        MUser mUser = sUser.selectUser(userLogin);
         return new ResponseEntity<>(mUser, HttpStatus.OK);
     }
-
-    @GetMapping
-    public ResponseEntity<List<MUser>> getAllUser() {
-        List<MUser> userList = sUser.selectAll();
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-    }*/
 }

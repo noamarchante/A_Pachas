@@ -9,4 +9,7 @@ export class User {
     userPhoto: string;
     roles: string;
     permissions: string;
+    userActive: boolean;
+    userCreation: Date;
+    userRemoval: Date;
 }

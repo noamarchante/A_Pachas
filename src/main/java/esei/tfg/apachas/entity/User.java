@@ -65,6 +65,17 @@ public class User implements Serializable {
     @Column(name = "permissions")
     private String permissions = "";
 
+    @Column(name = "userCreation")
+    private Timestamp userCreation;
+
+    @Column(name = "userRemoval")
+    private Timestamp userRemoval;
+
+    //ATRIBUTO: USUARIO ACTIVO (SI SE HA ELIMINADO O NO)
+    @Column(name = "userActive", length = 1)
+    @Size(min = 1, max = 1)
+    private boolean userActive;
+
     //N:M USUARIO RELACIONADO CON USUARIO
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Transient
@@ -78,7 +89,7 @@ public class User implements Serializable {
     //N:M USUARIO PARTICIPA EN EVENTO
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Transient
-    private Set<UserEventParticipate> userEventParticipateSet = new HashSet<>();
+    private Set<UserEvent> userEventSet = new HashSet<>();
 
     //1:N USUARIO CREA EVENTO
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -98,7 +109,7 @@ public class User implements Serializable {
     //N:M USUARIO INTEGRADO EN GRUPO
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Transient
-    private Set<UserGroupUser> userGroupUserSet = new HashSet<>();
+    private Set<GroupUser> groupUserSet = new HashSet<>();
 
     public User() {
     }
@@ -114,7 +125,9 @@ public class User implements Serializable {
         this.setUserPhoto(userPhoto);
         this.setPermissions(permissions);
         this.setRoles(roles);
-
+        this.setUserCreation(new Timestamp(System.currentTimeMillis()));
+        this.setUserRemoval(null);
+        this.setUserActive(true);
     }
 
     public User(long userId){
@@ -195,12 +208,12 @@ public class User implements Serializable {
         this.userFriendSet = userFriendSet;
     }
 
-    public Set<UserEventParticipate> getUserEventSet() {
-        return userEventParticipateSet;
+    public Set<UserEvent> getUserEventSet() {
+        return userEventSet;
     }
 
-    public void setUserEventSet(Set<UserEventParticipate> userEventParticipateSet) {
-        this.userEventParticipateSet = userEventParticipateSet;
+    public void setUserEventSet(Set<UserEvent> userEventSet) {
+        this.userEventSet = userEventSet;
     }
 
     public Set<Event> getEventSet() {
@@ -227,12 +240,12 @@ public class User implements Serializable {
         this.userItemDebtSet = userItemDebtSet;
     }
 
-    public Set<UserGroupUser> getUserGroupUserSet() {
-        return userGroupUserSet;
+    public Set<GroupUser> getUserGroupUserSet() {
+        return groupUserSet;
     }
 
-    public void setUserGroupUserSet(Set<UserGroupUser> userGroupUserSet) {
-        this.userGroupUserSet = userGroupUserSet;
+    public void setUserGroupUserSet(Set<GroupUser> groupUserSet) {
+        this.groupUserSet = groupUserSet;
     }
 
     public String getRoles() {
@@ -263,5 +276,41 @@ public class User implements Serializable {
             return Arrays.asList(this.permissions.split(","));
         }
         return new ArrayList<>();
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public Timestamp getUserCreation() {
+        return userCreation;
+    }
+
+    public void setUserCreation(Timestamp userCreation) {
+        this.userCreation = userCreation;
+    }
+
+    public Timestamp getUserRemoval() {
+        return userRemoval;
+    }
+
+    public void setUserRemoval(Timestamp userRemoval) {
+        this.userRemoval = userRemoval;
+    }
+
+    public boolean isUserActive() {
+        return userActive;
+    }
+
+    public void setUserActive(boolean userActive) {
+        this.userActive = userActive;
+    }
+
+    public Set<GroupUser> getGroupUserSet() {
+        return groupUserSet;
+    }
+
+    public void setGroupUserSet(Set<GroupUser> groupUserSet) {
+        this.groupUserSet = groupUserSet;
     }
 }

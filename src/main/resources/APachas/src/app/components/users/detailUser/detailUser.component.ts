@@ -3,13 +3,15 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {EventService} from "../../../services/event.service";
 import {AuthenticationService} from "../../../services/authentication.service";
-import {UserGroupService} from "../../../services/userGroup.service";
+import {GroupService} from "../../../services/group.service";
 import {STATUS} from "../listUsers/listUsers.component";
 import {UserUserService} from "../../../services/userUser.service";
 import {MUser} from "../../../models/MUser";
-import {MUserGroup} from "../../../models/MUserGroup";
+import {MGroup} from "../../../models/MGroup";
 import {MUserUser} from "../../../models/MUserUser";
 import {MEvent} from "../../../models/MEvent";
+import {GroupUserService} from "../../../services/groupUser.service";
+import {UserEventService} from "../../../services/userEvent.service";
 
 
 export enum MESSAGE{
@@ -24,34 +26,31 @@ export enum MESSAGE{
 
 export class DetailUserComponent implements OnInit {
 
-
     @Output()
     eventMessage = new EventEmitter<number>();
+    defaultEventImage: string = "./assets/event.jpg";
     defaultGroupImage: string = "./assets/group.jpg";
     defaultImage: string = "./assets/user.png";
     previousUser: string;
     nextUser: string;
 
-    mutualGroups: MUserGroup[] = [];
-    mutualGroupsStored: MUserGroup[] = [];
+    mutualGroups: MGroup[] = [];
+    mutualGroupsStored: MGroup[] = [];
     pageMutualGroups = 0;
-    sizeMutualGroups = 6;
+    sizeMutualGroups = 2;
     totalMutualGroups: number=0;
-    moreGroups: string = "Ver más ...";
 
     mutualFriends: MUser[] = [];
     mutualFriendsStored: MUser[] = [];
     pageMutualFriends = 0;
-    sizeMutualFriends = 6;
+    sizeMutualFriends = 4;
     totalMutualFriends: number=0;
-    moreFriends: string = "Ver más ...";
 
     mutualEvents: MEvent[] = [];
     mutualEventsStored: MEvent[] = [];
     pageMutualEvents = 0;
-    sizeMutualEvents = 6;
+    sizeMutualEvents = 4;
     totalMutualEvents: number=0;
-    moreEvents: string = "Ver más ...";
 
     message:string="";
     _status:string="";
@@ -68,7 +67,9 @@ export class DetailUserComponent implements OnInit {
                 private authenticationService: AuthenticationService,
                 private userUserService: UserUserService,
                 private eventService: EventService,
-                private userGroupService: UserGroupService
+                private userEventService: UserEventService,
+                private groupService: GroupService,
+                private groupUserService: GroupUserService
     ) {
     }
 
@@ -83,8 +84,12 @@ export class DetailUserComponent implements OnInit {
     @Input() set user (user: MUser) {
         if (user != undefined) {
             this._user = user;
+            this.mutualReset();
             if (this.user.userId != null){
                 this.getMutualUserGroups(this.user.userId);
+                this.getMutualFriends(this.user.userId);
+                this.getMutualEvents(this.user.userId);
+
                 this.getTotalMutualFriends(this.user.userId);
                 this.getTotalMutualGroups(this.user.userId);
                 this.getTotalMutualEvents(this.user.userId);
@@ -92,12 +97,21 @@ export class DetailUserComponent implements OnInit {
                 this._user = new MUser();
             }
         }
+        this.paginationUserClass();
+    }
+
+    mutualReset(){
         this.mutualGroups = [];
         this.mutualFriends = [];
         this.mutualEvents = [];
+
         this.mutualGroupsStored = [];
         this.mutualFriendsStored = [];
         this.mutualEventsStored = [];
+
+        this.pageMutualGroups = 0;
+        this.pageMutualFriends = 0;
+        this.pageMutualEvents = 0;
     }
 
 
@@ -107,6 +121,8 @@ export class DetailUserComponent implements OnInit {
 
     @Input() set previous( previous: boolean){
         this._previous = previous;
+        this.paginationUserClass();
+
     }
 
     get status(){
@@ -124,6 +140,8 @@ export class DetailUserComponent implements OnInit {
 
     @Input() set next( next: boolean){
         this._next = next;
+        this.paginationUserClass();
+
     }
 
     setPage(number: number){
@@ -173,15 +191,22 @@ export class DetailUserComponent implements OnInit {
             let mUserUser: MUserUser = new MUserUser();
             mUserUser.userId = this.authenticationService.getUser().id;
             mUserUser.friendId = this.user.userId;
-            mUserUser.status = false;
-            this.userUserService.createUserUser(mUserUser).subscribe();
+            this.userUserService.getDeletedUserUser(this.user.userId,this.authenticationService.getUser().id).subscribe((response)=>{
+                if (response != null && !response.userUserActive){
+                    mUserUser.userUserActive = true;
+                    mUserUser.accept = false;
+                    this.userUserService.editUserUser(mUserUser).subscribe();
+                }else{
+                    this.userUserService.createUserUser(mUserUser).subscribe();
+                }
+            });
         }else if (this.status == STATUS.FOLLOW || this.status == STATUS.SENT) {
             this.deleteUserUser();
         }else if (this.status == STATUS.PENDING){
             let mUserUser: MUserUser = new MUserUser();
             mUserUser.userId = this.user.userId;
             mUserUser.friendId = this.authenticationService.getUser().id;
-            mUserUser.status = true;
+            mUserUser.accept = true;
             this.userUserService.editUserUser(mUserUser).subscribe();
         }
     }
@@ -191,116 +216,97 @@ export class DetailUserComponent implements OnInit {
     }
 
     getMutualUserGroups(userId:number){
-        this.userGroupService.getPageableMutualUserGroups(userId, this.authenticationService.getUser().id,this.pageMutualGroups, this.sizeMutualGroups).subscribe((response) => {
+        this.groupUserService.getPageableMutualGroups(userId, this.authenticationService.getUser().id,this.pageMutualGroups, this.sizeMutualGroups).subscribe((response) => {
             this.mutualGroups.push(...response);
-            this.paginationUserClass();
-            this.setMoreMutualGroupsLabel();
         });
     }
 
     getTotalMutualGroups(userId:number){
-        this.userGroupService.countMutualGroups(userId, this.authenticationService.getUser().id).subscribe((number)=>{
+        this.groupUserService.countMutualGroups(userId, this.authenticationService.getUser().id).subscribe((number)=>{
             this.totalMutualGroups = number;
         });
     }
 
-    setMoreMutualGroupsLabel(){
-        if (this.mutualGroups.length == this.totalMutualGroups){
-            this.moreGroups = "... Ver menos";
-        }else{
-            this.moreGroups = "Ver más ...";
-        }
-    }
-
     getMoreMutualGroups(){
-        if (this.mutualGroups.length == this.totalMutualGroups){
-            this.mutualGroupsStored = this.mutualGroups;
-            this.mutualGroups = this.mutualGroups.slice(0,this.sizeMutualGroups);
+        this.pageMutualGroups +=1;
+        if (this.mutualGroups.length < this.mutualGroupsStored.length){
+            this.mutualGroups = this.mutualGroupsStored.slice(0,this.sizeMutualGroups*(this.pageMutualGroups+1));
         }else{
-            if (this.mutualGroupsStored.length ==0){
-                this.pageMutualGroups +=1;
-                this.getMutualUserGroups(this.user.userId);
-            }else{
-                this.mutualGroups = this.mutualGroupsStored;
-            }
+            this.getMutualUserGroups(this.user.userId);
         }
-        this.setMoreMutualGroupsLabel();
     }
 
-
+    getLessMutualGroups(){
+        if (this.mutualGroupsStored.length != this.totalMutualGroups){
+            this.mutualGroupsStored = this.mutualGroups;
+            this.mutualGroups = this.mutualGroups.slice(0,this.sizeMutualGroups*this.pageMutualGroups);
+        }else{
+            this.mutualGroups = this.mutualGroupsStored.slice(0, this.sizeMutualGroups*this.pageMutualGroups);
+        }
+        this.pageMutualGroups -=1;
+    }
 
     getMutualFriends(userId:number){
-        this.userService.getPageableMutualFriends(userId, this.authenticationService.getUser().id,this.pageMutualFriends, this.sizeMutualFriends).subscribe((response) => {
+        this.userUserService.getPageableMutualFriends(userId, this.authenticationService.getUser().id,this.pageMutualFriends, this.sizeMutualFriends).subscribe((response) => {
             this.mutualFriends.push(...response);
-            this.paginationUserClass();
-            this.setMoreMutualFriendsLabel();
         });
     }
 
     getTotalMutualFriends(userId:number){
-        this.userService.countMutualFriends(userId, this.authenticationService.getUser().id).subscribe((number)=>{
+        this.userUserService.countMutualFriends(userId, this.authenticationService.getUser().id).subscribe((number)=>{
             this.totalMutualFriends = number;
         });
     }
 
-    setMoreMutualFriendsLabel(){
-        if (this.mutualFriends.length == this.totalMutualFriends){
-            this.moreFriends = "... Ver menos";
+    getMoreMutualFriends(){
+        this.pageMutualFriends +=1;
+        if (this.mutualFriends.length < this.mutualFriendsStored.length){
+            this.mutualFriends = this.mutualFriendsStored.slice(0,this.sizeMutualFriends*(this.pageMutualFriends+1));
         }else{
-            this.moreFriends = "Ver más ...";
+            this.getMutualFriends(this.user.userId);
         }
     }
 
-    getMoreMutualFriends(){
-        if (this.mutualFriends.length == this.totalMutualFriends){
+    getLessMutualFriends(){
+        if (this.mutualFriendsStored.length != this.totalMutualFriends){
             this.mutualFriendsStored = this.mutualFriends;
-            this.mutualFriends = this.mutualFriends.slice(0,this.sizeMutualFriends);
+            this.mutualFriends = this.mutualFriends.slice(0,this.sizeMutualFriends*this.pageMutualFriends);
         }else{
-            if (this.mutualFriendsStored.length ==0){
-                this.pageMutualFriends +=1;
-                this.getMutualFriends(this.user.userId);
-            }else{
-                this.mutualFriends = this.mutualFriendsStored;
-            }
+            this.mutualFriends = this.mutualFriendsStored.slice(0, this.sizeMutualFriends*this.pageMutualFriends);
         }
-        this.setMoreMutualFriendsLabel();
+        this.pageMutualFriends -=1;
     }
 
     getMutualEvents(userId:number){
-        this.eventService.getPageableMutualEvents(userId, this.authenticationService.getUser().id,this.pageMutualEvents, this.sizeMutualEvents).subscribe((response) => {
+        this.userEventService.getPageableMutualEvents(userId, this.authenticationService.getUser().id,this.pageMutualEvents, this.sizeMutualEvents).subscribe((response) => {
             this.mutualEvents.push(...response);
-            this.paginationUserClass();
-            this.setMoreMutualEventsLabel();
         });
     }
 
     getTotalMutualEvents(userId:number){
-        this.eventService.countMutualEvents(userId, this.authenticationService.getUser().id).subscribe((number)=>{
+        this.userEventService.countMutualEvents(userId, this.authenticationService.getUser().id).subscribe((number)=>{
+            console.log(number);
             this.totalMutualEvents = number;
         });
     }
 
-    setMoreMutualEventsLabel(){
-        if (this.mutualEvents.length == this.totalMutualEvents){
-            this.moreEvents = "... Ver menos";
+    getMoreMutualEvents(){
+        this.pageMutualEvents +=1;
+        if (this.mutualEvents.length < this.mutualEventsStored.length){
+            this.mutualEvents = this.mutualEventsStored.slice(0,this.sizeMutualEvents*(this.pageMutualEvents+1));
         }else{
-            this.moreEvents = "Ver más ...";
+            this.getMutualEvents(this.user.userId);
         }
     }
 
-    getMoreMutualEvents(){
-        if (this.mutualEvents.length == this.totalMutualEvents){
+    getLessMutualEvents(){
+        if (this.mutualEventsStored.length != this.totalMutualEvents){
             this.mutualEventsStored = this.mutualEvents;
-            this.mutualEvents = this.mutualEvents.slice(0,this.sizeMutualEvents);
+            this.mutualEvents = this.mutualEvents.slice(0,this.sizeMutualEvents*this.pageMutualEvents);
         }else{
-            if (this.mutualEventsStored.length ==0){
-                this.pageMutualEvents +=1;
-                this.getMutualEvents(this.user.userId);
-            }else{
-                this.mutualEvents = this.mutualEventsStored;
-            }
+            this.mutualEvents = this.mutualEventsStored.slice(0, this.sizeMutualEvents*this.pageMutualEvents);
         }
-        this.setMoreMutualEventsLabel();
+        this.pageMutualEvents -=1;
     }
 }
 

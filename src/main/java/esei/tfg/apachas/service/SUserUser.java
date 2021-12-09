@@ -4,6 +4,7 @@ import esei.tfg.apachas.converter.ConUser;
 import esei.tfg.apachas.model.MUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import esei.tfg.apachas.converter.ConUserUser;
 import esei.tfg.apachas.entity.User;
@@ -12,6 +13,8 @@ import esei.tfg.apachas.entity.id.UserUserId;
 import esei.tfg.apachas.model.MUserUser;
 import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RUserUser;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service("SUserUser")
@@ -40,6 +43,10 @@ public class SUserUser {
         if (existingUserUser != null || existingUser == null || existingFriend == null) {
             return false;
         } else {
+            userUser.setAccept(false);
+            userUser.setUserUserActive(true);
+            userUser.setUserUserCreation(new Timestamp(System.currentTimeMillis()));
+            userUser.setUserUserRemoval(null);
             userUser.setUser(existingUser);
             userUser.setFriend(existingFriend);
             rUserUser.save(userUser);
@@ -54,55 +61,69 @@ public class SUserUser {
         User existingFriend = rUser.findByUserId(userUser.getUserUserId().getFriendId());
 
         if (existingUserUser != null || existingUser != null || existingFriend != null) {
-            rUserUser.save(userUser);
+            existingUserUser = activeUseruser(userUser, existingUserUser);
+            existingUserUser = acceptUserUser(existingUserUser);
+            rUserUser.save(existingUserUser);
             return true;
         } else {
             return false;
         }
     }
 
-    public synchronized boolean deleteUserUser(UserUserId userUserId) {
-        UserUser existingUserUser = rUserUser.findByUserUserId(userUserId);
-        if (existingUserUser != null) {
-            rUserUser.delete(existingUserUser);
+    private UserUser activeUseruser(UserUser userUser, UserUser existingUserUser){
+        if (!existingUserUser.isUserUserActive() && userUser.isUserUserActive()) {
+            existingUserUser.setUserUserActive(true);
+            existingUserUser.setUserUserRemoval(null);
+        }
+        return existingUserUser;
+    }
+
+    private UserUser acceptUserUser(UserUser existingUserUser){
+        if (existingUserUser.isUserUserActive()){
+            existingUserUser.setAccept(true);
+        }
+        return existingUserUser;
+    }
+
+
+    public synchronized boolean deleteUserUser(long friendId, long userId) {
+        UserUser existingUserUser = rUserUser.findByUserUserId(new UserUserId(friendId, userId));
+        if (existingUserUser == null){
+            existingUserUser = rUserUser.findByUserUserId(new UserUserId(userId, friendId));
+        }
+        User existingFriend = rUser.findByUserId(friendId);
+        User existingUser = rUser.findByUserId(userId);
+        if (existingUserUser != null && existingFriend != null && existingUser != null) {
+            existingUserUser.setAccept(false);
+            existingUserUser.setUserUserActive(false);
+            existingUserUser.setUserUserRemoval(new Timestamp(System.currentTimeMillis()));
+            rUserUser.save(existingUserUser);
             return true;
         } else {
             return false;
         }
     }
 
-    public synchronized MUserUser selectUserUserById(UserUserId userUserId) {
+    public synchronized Long countMutualFriends( long userId, long authId){
+        return rUserUser.countMutualFriends(userId, authId);
+    }
+
+    public synchronized List<MUser> selectPageableMutualFriends(long userId, long authId, Pageable pageable) {
+        return conUser.conUserList(rUserUser.findPageableMutualFriends(userId, authId, pageable).getContent());
+    }
+
+    public synchronized MUserUser selectUserUser(UserUserId userUserId) {
         UserUser userUser = rUserUser.findById(userUserId).get();
         return conUserUser.conUserUser(userUser);
     }
 
     public synchronized List<MUser> selectFriendsByFriendId(long friendId) {
-        List<User> userList = rUserUser.findUserByUserUserId_FriendId(friendId);
+        List<User> userList = rUserUser.findFriendsByFriendId(friendId);
         return conUser.conUserList(userList);
     }
 
     public synchronized List<MUser> selectFriendsByUserId(long userId) {
-        List<User> userList = rUserUser.findFriendByUserUserId_UserId(userId);
+        List<User> userList = rUserUser.findFriendsByUserId(userId);
         return conUser.conUserList(userList);
     }
-
-    /*public synchronized Long countByAuthUser(Long authId) {
-        return rUserUser.countByUserUserId_FriendId(authId);
-    }
-
-    public synchronized List<MUserUser> selectAll() {
-        List<UserUser> userUserList = new ArrayList<>();
-        rUserUser.findAll().forEach(e -> userUserList.add(e));
-        return conUserUser.conUserUserList(userUserList);
-    }
-
-    public synchronized List<MUserUser> selectAllByAuthUser(Long authId) {
-        List<UserUser> userUserList = new ArrayList<>();
-        rUserUser.findByUserUserId_FriendIdAAndStatus(authId,false).forEach(e -> userUserList.add(e));
-        return conUserUser.conUserUserList(userUserList);
-    }
-
-    public synchronized List<MUserUser> selectPageable(Pageable pageable) {
-        return conUserUser.conUserUserList(rUserUser.findAll(pageable).getContent());
-    }*/
 }
