@@ -1,0 +1,98 @@
+<div class="modal fade" id="detailEventModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="detailEventLabel" aria-hidden="true">
+    <app-messageConfirm (eventMessageConfirm)="onRequest($event)" [message]=message></app-messageConfirm>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title">{{event.eventName}}</h5>
+                <div class="statusDiv">
+                    <button type="button" class="button" title="Cambiar de estado"
+                            data-bs-toggle="modal" data-bs-target="#messageConfirmModal" (click)="messageValue(true);">{{status}}</button>
+                </div>
+                <div class="editDiv" *ngIf="editDelete()">
+                    <button type="button" class="editButton" title="Editar evento"
+                            data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#createEventModal"
+                            (click)="pagePartaker=0"></button>
+                </div>
+                <div class="deleteDiv" *ngIf="editDelete()">
+                    <button type="button" class="deleteButton" title="Eliminar evento"  data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
+                            (click)="messageValue(false);pagePartaker=0"></button>
+                </div>
+
+                <button type="button" id="closeButton" class="btn-close closeButton" data-bs-dismiss="modal"
+                        aria-label="Close"
+                        (click)="pagePartaker=0"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col container-fluid">
+                    <div class="row">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="imageEventDiv">
+                                <ng-container *ngIf="event.eventPhoto; else imagesDiv">
+                                    <img class="imageEvent" [src]="event.eventPhoto" alt=""
+                                         id="detailUserEvent_photo">
+                                </ng-container>
+                                <ng-template #imagesDiv>
+                                    <img class="imageEvent" [src]="defaultImage">
+                                </ng-template>
+                                <div class="date text">
+                                    {{event.eventStart | date: 'dd-MM-yyyy HH:mm'}}
+                                    -
+                                    {{event.eventEnd | date: 'dd-MM-yyyy HH:mm'}}</div>
+                                <div class="description-row text"
+                                     name="eventDescription"
+                                     id="detailEvent_eventDescription">
+                                    {{event.eventDescription}}
+                                </div>
+                                <div class="description-row text"
+                                     name="eventLocation"
+                                     id="detailEvent_eventLocation">
+                                    {{event.eventLocation}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="paginationPartakerDiv col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="row">
+                                <div *ngFor="let user of eventPartakers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                    <ng-container *ngIf="user.userPhoto; else userImagesDiv">
+                                        <p title="{{ownerLabel(user.userId)}}" class="imageP">
+                                            <img class="imagePartaker" [ngClass]="ownerBorder(user.userId)"
+                                                 [src]="user.userPhoto" alt="" id="detailUser_photo">
+                                        </p>
+                                        <p title="{{ownerLabel(user.userId)}}" class="member">
+                                            {{user.userLogin}}
+                                        </p>
+                                    </ng-container>
+                                    <ng-template #userImagesDiv>
+                                        <p title="{{ownerLabel(user.userId)}}" class="imageP">
+                                            <img class="imagePartaker" [ngClass]="ownerBorder(user.userId)" [src]="defaultUserImage">
+                                        </p>
+                                        <p title="{{ownerLabel(user.userId)}}" class="partaker">
+                                            {{user.userLogin}}
+                                        </p>
+                                    </ng-template>
+                                </div>
+                                <div *ngIf="totalPartaker > sizePartaker" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMorePartakers();"><a>
+                                    {{more}}</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="manageDiv">
+                        <button type="button" class="button" title="Gestion evento" (click)="openDetailsEvent()">Productos</button>
+                    </div>
+                    <div class="modal-footer">
+                        <ul class="row paginationEvent">
+                            <li [ngClass]="previousEvent" *ngIf="previous">
+                                <a class="previousEvent" (click)="setPageEvent(-1); pagePartaker=0">Anterior</a>
+                            </li>
+                            <li [ngClass]="nextEvent" *ngIf="next">
+                                <a class="nextEvent" (click)="setPageEvent(1); pagePartaker=0">Siguiente</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<simple-notifications></simple-notifications>
