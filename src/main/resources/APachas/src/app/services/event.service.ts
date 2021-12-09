@@ -3,10 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import {Observable} from "rxjs";
 import {environment} from "../../environments/environment";
 import {MEvent} from "../models/MEvent";
-import {Event} from "./entities/Event";
-import {map} from "rxjs/operators";
-
-
+import {APachasError} from "../modules/notification/entities";
+import {DatePipe} from "@angular/common";
 
 @Injectable({
     providedIn: 'root'
@@ -15,29 +13,53 @@ export class EventService {
 
     constructor(private http: HttpClient) { }
 
-    countMutualEvents(userId: number, authId: number): Observable<number>{
-        return this.http.get<number>(`${environment.restApi}/events/countMutual/${userId}/${authId}`);
+
+
+    createEvent(mEvent: MEvent): Observable<number> {
+        console.log(mEvent.eventStart.toJSON());
+        console.log(mEvent.eventEnd.toJSON());
+        return this.http.post<number>(`${environment.restApi}/events`,{
+            "eventId": mEvent.eventId,
+            "eventName":mEvent.eventName,
+            "eventDescription":mEvent.eventDescription,
+            "eventStart": mEvent.eventStart.toJSON().replace("T", " ").replace("Z", ""),
+            "eventEnd": mEvent.eventEnd.toJSON().replace("T", " ").replace("Z", ""),
+            "eventLocation":mEvent.eventLocation,
+            "eventPhoto":mEvent.eventPhoto,
+            "eventOpen": "",
+            "eventOwner":mEvent.eventOwner,
+            "eventActive": "",
+            "eventCreation": "",
+            "eventRemoval": ""
+        })
+            .pipe(
+                APachasError.throwOnError('Fallo al crear el evento', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo`)
+            );
     }
 
-    getPageableMutualEvents(userId: number, authId: number, page: number, size: number): Observable<MEvent[]>{
-        return this.http.get<Event[]>(`${environment.restApi}/events/pageableMutual/${userId}/${authId}?page=${page}&size=${size}`).pipe(
-            map(events => events.map(this.mapEvent.bind(this)))
+    editEvent(mEvent: MEvent): Observable<void> {
+        return this.http.put<void>(`${environment.restApi}/events`,{
+            "eventId": mEvent.eventId,
+            "eventName":mEvent.eventName,
+            "eventDescription":mEvent.eventDescription,
+            "eventStart": mEvent.eventStart,
+            "eventEnd": mEvent.eventEnd,
+            "eventLocation":mEvent.eventLocation,
+            "eventPhoto":mEvent.eventPhoto,
+            "eventOpen":mEvent.eventOpen,
+            "eventOwner":mEvent.eventOwner,
+            "eventActive": mEvent.eventActive,
+            "eventCreation": "",
+            "eventRemoval": ""
+        })
+            .pipe(
+                APachasError.throwOnError('Fallo al editar el evento', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo`)
+            );
+    }
+
+    deleteEvent(eventId: number): Observable<void> {
+        return this.http.delete<void>(`${environment.restApi}/events/${eventId}`).pipe(
+            APachasError.throwOnError('Fallo al eliminar evento', `Por favor, inténtelo de nuevo`)
         );
     }
-
-    private mapEvent(event: Event) : MEvent {
-        return {
-                eventId: event.eventId,
-                eventName:event.eventName,
-                eventDescription:event.eventDescription,
-                eventStartDate: event.eventStartDate,
-                eventEndDate: event.eventEndDate,
-                eventLocation:event.eventLocation,
-                eventPhoto:event.eventPhoto,
-                eventState:event.eventState,
-                userId:event.userId,
-                eventFinalPrice:event.eventFinalPrice
-        }
-    }
-
 }

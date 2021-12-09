@@ -1,26 +1,34 @@
 package esei.tfg.apachas.model;
 
 
-import esei.tfg.apachas.entity.UserEventParticipate;
+import esei.tfg.apachas.entity.UserEvent;
 
-public class MUserEventParticipate {
+import java.sql.Timestamp;
+
+public class MUserEvent {
     private long eventId;
     private long userId;
     private boolean accept;
-    private Double totalDebt;
+    private Double totalExpense;
+    private Timestamp userEventCreation;
+    private Timestamp userEventRemoval;
+    private boolean userEventActive;
 
-    public MUserEventParticipate() {
+    public MUserEvent() {
     }
 
-    public MUserEventParticipate(UserEventParticipate userEventParticipate) {
-        this.eventId = userEventParticipate.getUserEventId().getEventId();
-        this.userId = userEventParticipate.getUserEventId().getUserId();
-        this.accept = userEventParticipate.getAccept();
-        this.totalDebt = userEventParticipate.getTotalDebt();
+    public MUserEvent(UserEvent userEvent) {
+        this.eventId = userEvent.getUserEventId().getEventId();
+        this.userId = userEvent.getUserEventId().getUserId();
+        this.accept = userEvent.isAccept();
+        this.totalExpense = userEvent.getTotalExpense();
+        this.userEventActive = userEvent.isUserEventActive();
+        this.userEventCreation = userEvent.getUserEventCreation();
+        this.userEventRemoval = userEvent.getUserEventRemoval();
     }
 
 
-    public boolean getAccept() {
+    public boolean getStatus() {
         return accept;
     }
 
@@ -28,12 +36,12 @@ public class MUserEventParticipate {
         this.accept = accept;
     }
 
-    public Double getTotalDebt() {
-        return totalDebt;
+    public Double getTotalExpense() {
+        return totalExpense;
     }
 
-    public void setTotalDebt(Double totalDebt) {
-        this.totalDebt = totalDebt;
+    public void setTotalExpense(Double totalExpense) {
+        this.totalExpense = totalExpense;
     }
 
     public long getEventId() {
@@ -50,5 +58,33 @@ public class MUserEventParticipate {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public boolean isAccept() {
+        return accept;
+    }
+
+    public Timestamp getUserEventCreation() {
+        return userEventCreation;
+    }
+
+    public void setUserEventCreation(Timestamp userEventCreation) {
+        this.userEventCreation = userEventCreation;
+    }
+
+    public Timestamp getUserEventRemoval() {
+        return userEventRemoval;
+    }
+
+    public void setUserEventRemoval(Timestamp userEventRemoval) {
+        this.userEventRemoval = userEventRemoval;
+    }
+
+    public boolean isUserEventActive() {
+        return userEventActive;
+    }
+
+    public void setUserEventActive(boolean userEventActive) {
+        this.userEventActive = userEventActive;
     }
 }

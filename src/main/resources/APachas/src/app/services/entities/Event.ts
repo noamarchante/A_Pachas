@@ -2,11 +2,13 @@ export class Event {
     eventId: number;
     eventName:string;
     eventDescription:string;
-    eventStartDate:Date;
-    eventEndDate:Date;
+    eventStart:Date;
+    eventEnd:Date;
     eventLocation:string;
     eventPhoto:string;
-    eventState:boolean;
-    userId:number;
-    eventFinalPrice:number;
+    eventOpen:boolean;
+    eventOwner:number;
+    eventActive: boolean;
+    eventCreation: Date;
+    eventRemoval: Date;
 }

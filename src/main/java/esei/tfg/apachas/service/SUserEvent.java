@@ -1,28 +1,32 @@
 package esei.tfg.apachas.service;
 
+import esei.tfg.apachas.converter.ConEvent;
+import esei.tfg.apachas.converter.ConUser;
+import esei.tfg.apachas.entity.*;
+import esei.tfg.apachas.entity.id.GroupUserId;
+import esei.tfg.apachas.model.MEvent;
+import esei.tfg.apachas.model.MGroupUser;
+import esei.tfg.apachas.model.MUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import esei.tfg.apachas.converter.ConUserEventParticipate;
-import esei.tfg.apachas.entity.Event;
-import esei.tfg.apachas.entity.User;
-import esei.tfg.apachas.entity.UserEventParticipate;
+import esei.tfg.apachas.converter.ConUserEvent;
 import esei.tfg.apachas.entity.id.UserEventId;
-import esei.tfg.apachas.model.MUserEventParticipate;
+import esei.tfg.apachas.model.MUserEvent;
 import esei.tfg.apachas.repository.REvent;
 import esei.tfg.apachas.repository.RUser;
-import esei.tfg.apachas.repository.RUserEventParticipate;
+import esei.tfg.apachas.repository.RUserEvent;
 
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
 
-@Service("SUserEventParticipate")
-public class SUserEventParticipate {
+@Service("SUserEvent")
+public class SUserEvent {
 
     @Autowired
-    @Qualifier("RUserEventParticipate")
-    private RUserEventParticipate rUserEventParticipate;
+    @Qualifier("RUserEvent")
+    private RUserEvent rUserEvent;
 
     @Autowired
     @Qualifier("REvent")
@@ -33,60 +37,123 @@ public class SUserEventParticipate {
     private RUser rUser;
 
     @Autowired
-    @Qualifier("ConUserEventParticipate")
-    private ConUserEventParticipate conUserEventParticipate;
+    @Qualifier("ConUserEvent")
+    private ConUserEvent conUserEvent;
 
-    public synchronized boolean insert(MUserEventParticipate mUserEventParticipate) {
-        UserEventParticipate userEventParticipate = conUserEventParticipate.conMUserEvent(mUserEventParticipate);
-        UserEventParticipate existingUserEventParticipate = rUserEventParticipate.findByUserEventId(userEventParticipate.getUserEventId());
-        Event existingEvent = rEvent.findByEventId(userEventParticipate.getUserEventId().getEventId());
-        User existingUser = rUser.findByUserId(userEventParticipate.getUserEventId().getUserId());
-        if (existingUserEventParticipate != null || existingEvent == null || existingUser == null) {
+    @Autowired
+    @Qualifier("ConEvent")
+    private ConEvent conEvent;
+
+    @Autowired
+    @Qualifier("ConUser")
+    private ConUser conUser;
+
+    public synchronized boolean insertUserEvent(MUserEvent mUserEvent) {
+        UserEvent userEvent = conUserEvent.conMUserEvent(mUserEvent);
+        UserEvent existingUserEvent = rUserEvent.findByUserEventId(userEvent.getUserEventId());
+        Event existingEvent = rEvent.findByEventId(userEvent.getUserEventId().getEventId());
+        User existingUser = rUser.findByUserId(userEvent.getUserEventId().getUserId());
+        if (existingUserEvent != null || existingEvent == null || existingUser == null) {
             return false;
         } else {
-            userEventParticipate.setEvent(existingEvent);
-            userEventParticipate.setUser(existingUser);
-            rUserEventParticipate.save(userEventParticipate);
+            userEvent.setAccept(false);
+            userEvent.setUserEventActive(true);
+            userEvent.setUserEventRemoval(null);
+            userEvent.setUserEventCreation(new Timestamp(System.currentTimeMillis()));
+            userEvent.setEvent(existingEvent);
+            userEvent.setUser(existingUser);
+            rUserEvent.save(userEvent);
             return true;
         }
     }
 
-    public synchronized boolean update(MUserEventParticipate mUserEventParticipate) {
-        UserEventParticipate userEventParticipate = conUserEventParticipate.conMUserEvent(mUserEventParticipate);
-        UserEventParticipate existingUserEventParticipate = rUserEventParticipate.findByUserEventId(userEventParticipate.getUserEventId());
-        Event existingEvent = rEvent.findByEventId(userEventParticipate.getUserEventId().getEventId());
-        User existingUser = rUser.findByUserId(userEventParticipate.getUserEventId().getUserId());
-        if (existingUserEventParticipate != null || existingEvent != null || existingUser != null) {
-            rUserEventParticipate.save(userEventParticipate);
+    public synchronized boolean updateUserEvent(Long eventId, List<Long> userIdList) {
+        Event existingEvent = rEvent.findByEventId(eventId);
+        if (existingEvent != null){
+            List<UserEvent> existingUserEventList = rUserEvent.findByUserEventId_EventId(eventId);
+            existingUserEventList.forEach(userEvent -> {
+                if (!userIdList.contains(userEvent.getUserEventId().getUserId())){
+                    deleteUserEvent(userEvent.getUserEventId().getEventId(), userEvent.getUserEventId().getUserId());
+                }
+                userIdList.remove(userEvent.getUserEventId().getUserId());
+            });
+
+            userIdList.forEach(userId -> {
+                insertUserEvent(new MUserEvent(new UserEvent(new UserEventId(eventId, userId), 0.0, false)));
+            });
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public synchronized boolean updateStatus(Long eventId, long authId) {
+        Event existingEvent = rEvent.findByEventId(eventId);
+        UserEvent existingUserEvent = rUserEvent.findByUserEventId(new UserEventId(eventId, authId));
+        User existingUser = rUser.findByUserId(authId);
+
+        if (existingEvent != null || existingUser != null || existingUserEvent != null){
+            existingUserEvent.setAccept(true);
+            rUserEvent.save(existingUserEvent);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public synchronized boolean deleteUserEvent(long eventId, long userId) {
+        UserEvent existingUserEvent = rUserEvent.findByUserEventId(new UserEventId(eventId, userId));
+        Event existingEvent = rEvent.findByEventId(eventId);
+        User existingUser = rUser.findByUserId(userId);
+        if (existingUserEvent != null || existingEvent != null || existingUser != null) {
+            existingUserEvent.setUserEventActive(false);
+            existingUserEvent.setUserEventRemoval(new Timestamp(System.currentTimeMillis()));
+            rUserEvent.save(existingUserEvent);
             return true;
         } else {
             return false;
         }
     }
 
-    public synchronized boolean delete(UserEventId userEventId) {
-        UserEventParticipate existingUserEventParticipate = rUserEventParticipate.findByUserEventId(userEventId);
-        if (existingUserEventParticipate != null) {
-            rUserEventParticipate.delete(existingUserEventParticipate);
-            return true;
-        } else {
-            return false;
-        }
+    public synchronized Long countEvents(long authId){
+        return rUserEvent.countEvents(authId);
     }
 
-    public synchronized List<MUserEventParticipate> selectAll() {
-        List<UserEventParticipate> userEventParticipateList = new ArrayList<>();
-        rUserEventParticipate.findAll().forEach(e -> userEventParticipateList.add(e));
-            return conUserEventParticipate.conUserEventList(userEventParticipateList);
+    public synchronized Long countSearchEvents(String eventName, long authId){
+        return rUserEvent.countSearchEvents(authId, eventName);
     }
 
-    public synchronized List<MUserEventParticipate> selectPageable(Pageable pageable) {
-        return conUserEventParticipate.conUserEventList(rUserEventParticipate.findAll(pageable).getContent());
+    public synchronized Long countMutualEvents( long userId, long authId){
+        return rUserEvent.countMutualEvents(userId, authId);
     }
 
-    public synchronized MUserEventParticipate selectUserEventById(UserEventId userEventId) {
-        UserEventParticipate userEventParticipate = rUserEventParticipate.findById(userEventId).get();
-        return conUserEventParticipate.conUserEvent(userEventParticipate);
+    public synchronized Long countPartakers(long eventId){
+        return rUserEvent.countPartakers(eventId);
     }
 
+    public synchronized List<MEvent> selectPageableEvents(Long userId, Pageable pageable) {
+        List<Event> eventList = rUserEvent.findPageableEvents(userId, pageable).getContent();
+        return conEvent.conEventList(eventList);
+    }
+
+    public synchronized List<MEvent> selectPageableSearchEvents(String eventName, long authId, Pageable pageable) {
+        return conEvent.conEventList(rUserEvent.findPageableSearchEvents(authId, eventName, pageable).getContent());
+    }
+
+    public synchronized List<MEvent> selectPageableMutualEvents(long userId, long authId, Pageable pageable) {
+        return conEvent.conEventList(rUserEvent.findPageableMutualEvents(userId, authId, pageable).getContent());
+    }
+
+    public synchronized List<MUser> selectPageablePartakers(long eventId, Pageable pageable) {
+        return conUser.conUserList(rUserEvent.findPageablePartakers(eventId, pageable).getContent());
+    }
+
+    public synchronized List<MUser> selectPartakers(long eventId) {
+        List<User> userList = rUserEvent.findPartakers(eventId);
+        return conUser.conUserList(userList);
+    }
+
+    public synchronized MUserEvent selectUserEvent(long eventId, long authId) {
+        return conUserEvent.conUserEvent(rUserEvent.findUserEventByUserEventId_EventIdAndUserEventId_UserId(eventId, authId));
+    }
 }

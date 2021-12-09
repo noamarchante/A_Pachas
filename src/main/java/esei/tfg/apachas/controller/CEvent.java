@@ -1,19 +1,15 @@
 package esei.tfg.apachas.controller;
 
-import esei.tfg.apachas.model.MUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import esei.tfg.apachas.model.MEvent;
 import esei.tfg.apachas.service.SEvent;
-
+import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/events")
@@ -24,65 +20,37 @@ public class CEvent {
     @Qualifier("SEvent")
     SEvent sEvent;
 
-    @PostMapping("/eventAdd")
-    public ResponseEntity<Void> addEvent(@RequestBody @Valid MEvent mEvent, UriComponentsBuilder builder) {
-        boolean flag = sEvent.insert(mEvent);
-        if (!flag) {
+    @PostMapping
+    public ResponseEntity<Long> createEvent(@RequestBody @Valid MEvent mEvent, UriComponentsBuilder builder) {
+        Long eventId = sEvent.insertEvent(mEvent);
+        if (eventId ==0) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(builder.path("/eventSelect/{eventId}").buildAndExpand(mEvent.getEventId()).toUri());
-            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+            headers.setLocation(builder.path("/events/{eventId}").buildAndExpand(mEvent.getEventId()).toUri());
+            return new ResponseEntity<>(eventId, HttpStatus.CREATED);
         }
     }
 
-    @PutMapping("/eventUpdate")
-    public ResponseEntity<MEvent> updateEvent(@RequestBody @Valid MEvent mEvent) {
-        boolean flag = sEvent.update(mEvent);
+    @PutMapping
+    public ResponseEntity<Void> editEvent(@RequestBody @Valid MEvent mEvent) {
+        boolean flag = sEvent.updateEvent(mEvent);
         if (!flag) {
-            return new ResponseEntity<>(mEvent, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            return new ResponseEntity<>(mEvent, HttpStatus.OK);
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         }
     }
 
-    @DeleteMapping("/eventDelete/{eventId}")
+    @DeleteMapping("/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable("eventId") long eventId) {
-        boolean flag = sEvent.delete(eventId);
+        boolean flag = sEvent.deleteEvent(eventId);
         if (!flag) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         }
     }
 
-    @GetMapping("/eventSelect/{eventId}")
-    public ResponseEntity<MEvent> getEventById(@PathVariable("eventId") long eventId) {
-        MEvent mEvent = sEvent.selectEventById(eventId);
-        return new ResponseEntity<>(mEvent, HttpStatus.OK);
-    }
 
-    @GetMapping("/eventSelect")
-    public ResponseEntity<List<MEvent>> getAllEvent() {
-        List<MEvent> eventList = sEvent.selectAll();
-        return new ResponseEntity<>(eventList, HttpStatus.OK);
-    }
-
-    @GetMapping("/eventPageableSelect")
-    public ResponseEntity<List<MEvent>> getPageableEvent(Pageable pageable) {
-        List<MEvent> eventList = sEvent.selectPageable(pageable);
-        return new ResponseEntity<>(eventList, HttpStatus.OK);
-    }
-
-    @GetMapping("/countMutual/{userId}/{authId}")
-    public ResponseEntity<Long> countMutualEvents(@PathVariable("userId") long userId, @PathVariable("authId") long authId) {
-        long eventCount = sEvent.countMutualEvents(userId,authId);
-        return new ResponseEntity<>(eventCount, HttpStatus.OK);
-    }
-
-    @GetMapping("/pageableMutual/{userId}/{authId}")
-    public ResponseEntity<List<MEvent>> getPageableMutualEvents(@PathVariable("userId") long userId, @PathVariable("authId") long authId, Pageable pageable) {
-        List<MEvent> eventList = sEvent.selectMutualEvents(userId, authId,pageable);
-        return new ResponseEntity<>(eventList, HttpStatus.OK);
-    }
 }

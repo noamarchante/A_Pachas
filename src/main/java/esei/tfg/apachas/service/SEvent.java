@@ -2,18 +2,16 @@ package esei.tfg.apachas.service;
 
 import esei.tfg.apachas.converter.ConEvent;
 import esei.tfg.apachas.entity.Event;
+import esei.tfg.apachas.entity.Group;
 import esei.tfg.apachas.entity.User;
 import esei.tfg.apachas.model.MEvent;
-import esei.tfg.apachas.model.MUserGroup;
+import esei.tfg.apachas.model.MUser;
 import esei.tfg.apachas.repository.REvent;
-import esei.tfg.apachas.repository.RUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 
 @Service("SEvent")
 public class SEvent {
@@ -23,30 +21,27 @@ public class SEvent {
     private REvent rEvent;
 
     @Autowired
-    @Qualifier("RUser")
-    private RUser rUser;
-
-    @Autowired
     @Qualifier("ConEvent")
     private ConEvent conEvent;
 
-    public synchronized boolean insert(MEvent mEvent) {
+    public synchronized Long insertEvent(MEvent mEvent) {
         Event event = conEvent.conMEvent(mEvent);
         Event existingEvent = rEvent.findByEventId(event.getEventId());
-        User existingUser = rUser.findByUserId(event.getUser().getUserId());
-        if (existingEvent != null || existingUser == null) {
-            return false;
+        if (existingEvent != null) {
+            return 0L;
         } else {
-            rEvent.save(event);
-            return true;
+            event.setEventOpen(true);
+            event.setEventActive(true);
+            event.setEventCreation(new Timestamp(System.currentTimeMillis()));
+            event.setEventRemoval(null);
+            return rEvent.save(event).getEventId();
         }
     }
 
-    public synchronized boolean update(MEvent mEvent) {
+    public synchronized boolean updateEvent(MEvent mEvent) {
         Event event = conEvent.conMEvent(mEvent);
         Event existingEvent = rEvent.findByEventId(event.getEventId());
-        User existingUser = rUser.findByUserId(event.getUser().getUserId());
-        if (existingEvent != null || existingUser != null) {
+        if (existingEvent != null) {
             rEvent.save(event);
             return true;
         } else {
@@ -54,37 +49,15 @@ public class SEvent {
         }
     }
 
-    public synchronized boolean delete(long eventId) {
+    public synchronized boolean deleteEvent(long eventId) {
         Event existingEvent = rEvent.findByEventId(eventId);
         if (existingEvent != null) {
-            rEvent.delete(existingEvent);
+            existingEvent.setEventActive(false);
+            existingEvent.setEventRemoval(new Timestamp(System.currentTimeMillis()));
+            rEvent.save(existingEvent);
             return true;
         } else {
             return false;
         }
     }
-
-    public synchronized List<MEvent> selectAll() {
-        List<Event> eventList = new ArrayList<>();
-        rEvent.findAll().forEach(e -> eventList.add(e));
-        return conEvent.conEventList(eventList);
-    }
-
-    public synchronized List<MEvent> selectPageable(Pageable pageable) {
-        return conEvent.conEventList(rEvent.findAll(pageable).getContent());
-    }
-
-    public synchronized MEvent selectEventById(long eventId) {
-        Event event = rEvent.findById(eventId).get();
-        return conEvent.conEvent(event);
-    }
-
-    public synchronized Long countMutualEvents( long userId, long authId){
-        return rEvent.countMutualEvents(userId, authId);
-    }
-
-    public synchronized List<MEvent> selectMutualEvents(long userId, long authId, Pageable pageable) {
-        return conEvent.conEventList(rEvent.findByMutualEvents(userId, authId, pageable).getContent());
-    }
-
 }

@@ -1,22 +1,22 @@
 package esei.tfg.apachas.model;
 
 import esei.tfg.apachas.entity.Event;
-
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class MEvent {
 
     private long eventId;
     private String eventName;
     private String eventDescription;
-    private Timestamp eventStartDate;
-    private Timestamp eventEndDate;
+    private Timestamp eventStart;
+    private Timestamp eventEnd;
     private String eventLocation;
     private String eventPhoto;
-    private boolean eventState;
-    private long userId;
-    private Double eventFinalPrice;
+    private boolean eventOpen;
+    private long eventOwner;
+    private boolean eventActive;
+    private Timestamp eventCreation;
+    private Timestamp eventRemoval;
 
     public MEvent() {
     }
@@ -25,13 +25,15 @@ public class MEvent {
         this.eventId = event.getEventId();
         this.eventName = event.getEventName();
         this.eventDescription = event.getEventDescription();
-        this.eventStartDate = event.getEventStartDate();
-        this.eventEndDate = event.getEventEndDate();
+        this.eventStart = event.getEventStart();
+        this.eventEnd = event.getEventEnd();
         this.eventLocation = event.getEventLocation();
         this.eventPhoto = event.getEventPhoto();
-        this.eventState = event.getEventState();
-        this.eventFinalPrice = event.getEventFinalPrice();
-        this.userId = event.getUser().getUserId();
+        this.eventOpen = event.isEventOpen();
+        this.eventOwner = event.getUser().getUserId();
+        this.eventActive = event.isEventActive();
+        this.eventCreation = event.getEventCreation();
+        this.eventRemoval = event.getEventRemoval();
     }
 
     public long getEventId() {
@@ -58,12 +60,12 @@ public class MEvent {
         this.eventDescription = eventDescription;
     }
 
-    public Timestamp getEventStartDate() {
-        return eventStartDate;
+    public Timestamp getEventStart() {
+        return eventStart;
     }
 
-    public void setEventStartDate(Timestamp eventStartDate) {
-        this.eventStartDate = eventStartDate;
+    public void setEventStart(Timestamp eventStart) {
+        this.eventStart = eventStart;
     }
 
     public String getEventLocation() {
@@ -82,36 +84,56 @@ public class MEvent {
         this.eventPhoto = eventPhoto;
     }
 
-    public boolean getEventState() {
-        return eventState;
+    public boolean getEventOpen() {
+        return eventOpen;
     }
 
 
-    public void setEventState(boolean eventState) {
-        this.eventState = eventState;
+    public void setEventOpen(boolean eventOpen) {
+        this.eventOpen = eventOpen;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getEventOwner() {
+        return eventOwner;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setEventOwner(long eventOwner) {
+        this.eventOwner = eventOwner;
     }
 
-    public Timestamp getEventEndDate() {
-        return eventEndDate;
+    public Timestamp getEventEnd() {
+        return eventEnd;
     }
 
-    public void setEventEndDate(Timestamp eventEndDate) {
-        this.eventEndDate = eventEndDate;
+    public void setEventEnd(Timestamp eventEnd) {
+        this.eventEnd = eventEnd;
     }
 
-    public Double getEventFinalPrice() {
-        return eventFinalPrice;
+    public boolean isEventOpen() {
+        return eventOpen;
     }
 
-    public void setEventFinalPrice(Double eventFinalPrice) {
-        this.eventFinalPrice = eventFinalPrice;
+    public boolean isEventActive() {
+        return eventActive;
+    }
+
+    public void setEventActive(boolean eventActive) {
+        this.eventActive = eventActive;
+    }
+
+    public Timestamp getEventCreation() {
+        return eventCreation;
+    }
+
+    public void setEventCreation(Timestamp eventCreation) {
+        this.eventCreation = eventCreation;
+    }
+
+    public Timestamp getEventRemoval() {
+        return eventRemoval;
+    }
+
+    public void setEventRemoval(Timestamp eventRemoval) {
+        this.eventRemoval = eventRemoval;
     }
 }

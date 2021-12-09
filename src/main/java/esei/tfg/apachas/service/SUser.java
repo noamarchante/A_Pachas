@@ -1,13 +1,11 @@
 package esei.tfg.apachas.service;
 
 import esei.tfg.apachas.converter.ConUser;
-import esei.tfg.apachas.converter.ConUserGroupUser;
 import esei.tfg.apachas.entity.User;
 import esei.tfg.apachas.model.MUser;
-import esei.tfg.apachas.model.MUserGroup;
 import esei.tfg.apachas.repository.RUser;
-import esei.tfg.apachas.repository.RUserGroup;
-import esei.tfg.apachas.repository.RUserGroupUser;
+import esei.tfg.apachas.repository.RGroup;
+import esei.tfg.apachas.repository.RGroupUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +14,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -34,21 +33,18 @@ public class SUser implements UserDetailsService {
     private ConUser conUser;
 
     @Autowired
-    @Qualifier("RUserGroup")
-    private RUserGroup rUserGroup;
+    @Qualifier("RGroup")
+    private RGroup rGroup;
 
     @Autowired
-    private PasswordEncoder bcryptEncoder;
-
-    @Autowired
-    @Qualifier("RUserGroupUser")
-    private RUserGroupUser rUserGroupUser;
+    @Qualifier("RGroupUser")
+    private RGroupUser rGroupUser;
 
 
     //JWT: ESTE MÉTODO BUSCAR UN USUARIO CON EL NOMBRE PASADO POR PARÁMETRO Y DEVUELVE UN OBJETO DE TIPO USERDETAILS CON LOGIN + CONTRASEÑA + LISTA DE PERMISOS VACÍA
     @Override
     public UserDetails loadUserByUsername(String userLogin) throws UsernameNotFoundException {
-        User user = rUser.findByUserLogin(userLogin);
+        User user = rUser.findByUserLoginAndUserActiveTrue(userLogin);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with userLogin: " + userLogin);
         }else {
@@ -58,8 +54,8 @@ public class SUser implements UserDetailsService {
 
     protected Collection<? extends GrantedAuthority> getAuthorities (User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        rUserGroupUser.findByUserGroupUserId_UserId(user.getUserId()).forEach(p -> {
-            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"+rUserGroup.findByUserGroupId(p.getUserGroupUserId().getUserGroupId()).getUserGroupName());
+        rGroupUser.findByGroupUserId_UserId(user.getUserId()).forEach(p -> {
+            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"+ rGroup.findByGroupId(p.getGroupUserId().getGroupId()).getGroupName());
             authorities.add(authority);
         });
         return authorities;
@@ -72,41 +68,34 @@ public class SUser implements UserDetailsService {
         {
             return false;
         } else {
+            user.setUserCreation(new Timestamp(System.currentTimeMillis()));
+            user.setUserRemoval(null);
+            user.setUserActive(true);
             rUser.save(user);
             return true;
         }
     }
 
-    public synchronized MUser selectUserByUserLogin(String userLogin) {
-        User user = rUser.findByUserLogin(userLogin);
-        return conUser.conUser(user);
-    }
-
-    public synchronized List<MUser> selectUserPageable(long authId, Pageable pageable) {
-        return conUser.conUserList(rUser.findUsersByRolesEqualsAndUserIdIsNotOrderByUserLoginAsc("USER", authId,pageable).getContent());
-    }
-
-    public synchronized List<MUser> selectUserPageableByUserLogin(String userLogin, long authId, Pageable pageable) {
-        return conUser.conUserList(rUser.findUsersByUserLoginContainingAndUserIdIsNotAndRolesEqualsOrderByUserLoginAsc(userLogin, authId, "USER", pageable).getContent());
-    }
-
     public synchronized Long countUsers(long authId){
-        return rUser.countByRolesAndUserIdIsNot("USER",authId);
+        return rUser.countByRolesAndUserIdIsNotAndUserActiveTrue("USER",authId);
     }
 
     public synchronized Long countSearchUsers(String userLogin, long authId){
-        return rUser.countByRolesAndUserLoginContainingAndUserIdIsNot("USER",userLogin,authId);
+        return rUser.countByRolesAndUserLoginContainingAndUserIdIsNotAndUserActiveTrue("USER",userLogin,authId);
     }
 
-    public synchronized Long countMutualFriends( long userId, long authId){
-        return rUser.countMutualFriends(userId, authId);
+    public synchronized List<MUser> selectPageableUsers(long authId, Pageable pageable) {
+        return conUser.conUserList(rUser.findUsersByRolesEqualsAndUserIdIsNotAndUserActiveTrueOrderByUserLoginAsc("USER", authId,pageable).getContent());
     }
 
-    public synchronized List<MUser> selectMutualFriends(long userId, long authId, Pageable pageable) {
-        return conUser.conUserList(rUser.findByMutualFriends(userId, authId, pageable).getContent());
+    public synchronized List<MUser> selectPageableSearchUsers(String userLogin, long authId, Pageable pageable) {
+        return conUser.conUserList(rUser.findUsersByUserLoginContainingAndUserIdIsNotAndRolesEqualsAndUserActiveTrueOrderByUserLoginAsc(userLogin, authId, "USER", pageable).getContent());
     }
 
-
+    public synchronized MUser selectUser(String userLogin) {
+        User user = rUser.findByUserLoginAndUserActiveTrue(userLogin);
+        return conUser.conUser(user);
+    }
 
    /* public synchronized boolean update(MUser mUser) {
         User user = conUser.conMUser(mUser);
@@ -127,18 +116,5 @@ public class SUser implements UserDetailsService {
         } else {
             return false;
         }
-    }
-
-    public synchronized List<MUser> selectAll() {
-        List<User> userList = new ArrayList<>();
-        rUser.findAll().forEach(e -> userList.add(e));
-        return conUser.conUserList(userList);
-    }
-
-
-
-    public synchronized MUser selectById(long userId) {
-        User user = rUser.findById(userId).get();
-        return conUser.conUser(user);
     }*/
 }

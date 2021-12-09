@@ -22,7 +22,7 @@ public class ConEvent {
     }
 
     public Event conMEvent(MEvent mEvent) {
-        return new Event(mEvent.getEventId(), mEvent.getEventName(), mEvent.getEventDescription(), mEvent.getEventStartDate(), mEvent.getEventEndDate(), mEvent.getEventLocation(), mEvent.getEventPhoto(), mEvent.getEventState(), mEvent.getEventFinalPrice(), new User(mEvent.getUserId()));
+        return new Event(mEvent.getEventId(), mEvent.getEventName(), mEvent.getEventDescription(), mEvent.getEventStart(), mEvent.getEventEnd(), mEvent.getEventLocation(), mEvent.getEventPhoto(), new User(mEvent.getEventOwner()));
     }
 
 }

@@ -5,13 +5,13 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
-@Entity(name = "userEventParticipate")
-@Table(name = "userEventParticipate")
-public class UserEventParticipate implements Serializable {
+@Entity(name = "userEvent")
+@Table(name = "userEvent")
+public class UserEvent implements Serializable {
     @EmbeddedId
     private UserEventId userEventId;
 
@@ -25,26 +25,38 @@ public class UserEventParticipate implements Serializable {
     @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     private User user;
 
-    @Column(name = "accept", length = 1, nullable = false)
+    @Column(name = "accept", length = 1)
     @Size(min = 1, max = 1)
-    @NotNull
-    @NotBlank
     private boolean accept;
 
-    @Column(name = "totalDebt", length = 12, nullable = false)
+    @Column(name = "totalExpense", length = 12, nullable = false)
     @NotNull
     @NotBlank
     @Size(min = 1, max = 12)
     @ColumnDefault(value = "0")
-    private Double totalDebt;
+    private Double totalExpense;
 
-    public UserEventParticipate() {
+    @Column(name = "userEventCreation")
+    private Timestamp userEventCreation;
+
+    @Column(name = "userEventRemoval")
+    private Timestamp userEventRemoval;
+
+    //ATRIBUTO: USUARIO DE EVENTO ACTIVO (SI SE HA ELIMINADO O NO)
+    @Column(name = "userEventActive", length = 1)
+    @Size(min = 1, max = 1)
+    private boolean userEventActive;
+
+    public UserEvent() {
     }
 
-    public UserEventParticipate(UserEventId userEventId, boolean accept, Double totalDebt) {
+    public UserEvent(UserEventId userEventId, Double totalExpense, boolean accept) {
         this.userEventId = userEventId;
-        this.accept = accept;
-        this.totalDebt = totalDebt;
+        this.setTotalExpense(totalExpense);
+        this.setAccept(accept);
+        this.setUserEventActive(false);
+        this.setUserEventRemoval(null);
+        this.setUserEventCreation(new Timestamp(System.currentTimeMillis()));
     }
 
     public UserEventId getUserEventId() {
@@ -71,19 +83,43 @@ public class UserEventParticipate implements Serializable {
         this.user = user;
     }
 
-    public boolean getAccept() {
-        return accept;
-    }
-
     public void setAccept(boolean accept) {
         this.accept = accept;
     }
 
-    public Double getTotalDebt() {
-        return totalDebt;
+    public Double getTotalExpense() {
+        return totalExpense;
     }
 
-    public void setTotalDebt(Double totalDebt) {
-        this.totalDebt = totalDebt;
+    public void setTotalExpense(Double totalDebt) {
+        this.totalExpense = totalDebt;
+    }
+
+    public boolean isAccept() {
+        return accept;
+    }
+
+    public Timestamp getUserEventCreation() {
+        return userEventCreation;
+    }
+
+    public void setUserEventCreation(Timestamp userEventCreation) {
+        this.userEventCreation = userEventCreation;
+    }
+
+    public Timestamp getUserEventRemoval() {
+        return userEventRemoval;
+    }
+
+    public void setUserEventRemoval(Timestamp userEventRemoval) {
+        this.userEventRemoval = userEventRemoval;
+    }
+
+    public boolean isUserEventActive() {
+        return userEventActive;
+    }
+
+    public void setUserEventActive(boolean userEventActive) {
+        this.userEventActive = userEventActive;
     }
 }

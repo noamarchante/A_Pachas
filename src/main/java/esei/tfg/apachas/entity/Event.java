@@ -1,13 +1,13 @@
 package esei.tfg.apachas.entity;
 
-import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,13 +35,10 @@ public class Event implements Serializable {
     private String eventDescription;
 
     //ATRIBUTO: FECHA_INICIO_EVENTO
-    @Column(name = "eventStartDate", nullable = false, length = 19)
-    @Size(min = 16, max = 16)
-    @NotNull
-    @NotBlank
-    private Timestamp eventStartDate;
+    @Column(name = "eventStart", nullable = false, length = 19)
+    private Timestamp eventStart;
 
-    //ATRIBUTO: LUGAR
+    //ATRIBUTO: LUGAR-EVENTO
     @Column(name = "eventLocation", length = 155, nullable = false)
     @Size(min = 4, max = 155)
     @NotNull
@@ -49,34 +46,37 @@ public class Event implements Serializable {
     private String eventLocation;
 
     //ATRIBUTO: FOTO_EVENTO
-    @Column(name = "eventPhoto")
+    @Column(name = "eventPhoto", length = 100000)
     private String eventPhoto;
 
-    //ATRIBUTO: ESTADO
-    @Column(name = "eventState", length = 1, nullable = false)
+    //ATRIBUTO: EVENTO ABIERTO (POR ESTAR DENTRO DE FECHA O PAGOS PENDIENTES)
+    @Column(name = "eventOpen", length = 1)
     @Size(min = 1, max = 1)
-    @NotNull
-    @NotBlank
-    private boolean eventState;
 
-    //ATRIBUTO: FECHA_FIN_EVENTO NOT NULL
-    @Column(name = "eventEndDate", nullable = false, length = 19)
-    @Size(min = 16, max = 16)
-    @NotNull
-    @NotBlank
-    private Timestamp eventEndDate;
+    private boolean eventOpen;
 
-    //ATRIBUTO: IMPORTE_EVENTO
-    @Column(name = "eventFinalPrice", nullable = false, length = 12)
-    @NotNull
-    @NotBlank
-    @Size(min = 1, max = 12)
-    @ColumnDefault(value = "0")
-    private double eventFinalPrice;
+    //ATRIBUTO: FECHA_FIN_EVENTO
+    @Column(name = "eventEnd", nullable = false, length = 19)
+    private Timestamp eventEnd;
+
+
+    //ATRIBUTO: EVENTO ACTIVO (SI SE HA ELIMINADO O NO)
+    @Column(name = "eventActive", length = 1)
+    @Size(min = 1, max = 1)
+    private boolean eventActive;
+
+    //ATRIBUTO: FECHA_CREACIÓN_EVENTO
+    @Column(name = "eventCreation", length = 19)
+    private Timestamp eventCreation;
+
+    //ATRIBUTO: FECHA_BORRADO_EVENTO
+    @Column(name = "eventRemoval", length = 19)
+    private Timestamp eventRemoval;
+
 
     //N:1 EVENTO ES CREADO POR USUARIO
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
+    @JoinColumn(name = "eventOwner", referencedColumnName = "userId", nullable = false)
     @NotNull
     @NotBlank
     private User user;
@@ -89,22 +89,26 @@ public class Event implements Serializable {
     //N:M EVENTO PARTICIPA USUARIO
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     @Transient
-    private Set<UserEventParticipate> userEventParticipateSet = new HashSet<>();
+    private Set<UserEvent> userEventSet = new HashSet<>();
 
     public Event() {
     }
 
-    public Event(long eventId, String eventName, String eventDescription, Timestamp eventStartDate, Timestamp eventEndDate, String eventLocation, String eventPhoto, boolean eventState, Double eventFinalPrice, User user) {
+    public Event(long eventId, String eventName, String eventDescription, Timestamp eventStart, Timestamp eventEnd, String eventLocation, String eventPhoto, User user) {
         this.eventId = eventId;
-        this.eventName = eventName;
-        this.eventDescription = eventDescription;
-        this.eventStartDate = eventStartDate;
-        this.eventEndDate = eventEndDate;
-        this.eventLocation = eventLocation;
-        this.eventPhoto = eventPhoto;
-        this.eventState = eventState;
-        this.eventFinalPrice = eventFinalPrice;
-        this.user = user;
+        this.setEventName(eventName);
+        this.setEventDescription(eventDescription);
+        this.setEventStart(eventStart);
+        this.setEventEnd(eventEnd);
+        this.setEventLocation(eventLocation);
+        this.setEventPhoto(eventPhoto);
+        this.setUser(user);
+        this.setEventOpen(true);
+        this.setEventActive(true);
+        this.setEventCreation(new Timestamp(System.currentTimeMillis()));
+        this.setEventRemoval(null);
+
+
     }
 
     public Event (long eventId){
@@ -135,12 +139,12 @@ public class Event implements Serializable {
         this.eventDescription = eventDescription;
     }
 
-    public Timestamp getEventStartDate() {
-        return eventStartDate;
+    public Timestamp getEventStart() {
+        return eventStart;
     }
 
-    public void setEventStartDate(Timestamp eventStartDate) {
-        this.eventStartDate = eventStartDate;
+    public void setEventStart(Timestamp eventStart) {
+        this.eventStart = eventStart;
     }
 
     public String getEventLocation() {
@@ -159,14 +163,6 @@ public class Event implements Serializable {
         this.eventPhoto = eventPhoto;
     }
 
-    public boolean getEventState() {
-        return eventState;
-    }
-
-    public void setEventState(boolean eventState) {
-        this.eventState = eventState;
-    }
-
     public User getUser() {
         return user;
     }
@@ -175,20 +171,12 @@ public class Event implements Serializable {
         this.user = user;
     }
 
-    public Timestamp getEventEndDate() {
-        return eventEndDate;
+    public Timestamp getEventEnd() {
+        return eventEnd;
     }
 
-    public void setEventEndDate(Timestamp eventEndDate) {
-        this.eventEndDate = eventEndDate;
-    }
-
-    public double getEventFinalPrice() {
-        return eventFinalPrice;
-    }
-
-    public void setEventFinalPrice(double eventFinalPrice) {
-        this.eventFinalPrice = eventFinalPrice;
+    public void setEventEnd(Timestamp eventEnd) {
+        this.eventEnd = eventEnd;
     }
 
     public Set<Item> getProductSet() {
@@ -207,11 +195,43 @@ public class Event implements Serializable {
         this.itemSet = itemSet;
     }
 
-    public Set<UserEventParticipate> getUserEventSet() {
-        return userEventParticipateSet;
+    public Set<UserEvent> getUserEventSet() {
+        return userEventSet;
     }
 
-    public void setUserEventSet(Set<UserEventParticipate> userEventParticipateSet) {
-        this.userEventParticipateSet = userEventParticipateSet;
+    public void setUserEventSet(Set<UserEvent> userEventSet) {
+        this.userEventSet = userEventSet;
+    }
+
+    public boolean isEventOpen() {
+        return eventOpen;
+    }
+
+    public boolean isEventActive() {
+        return eventActive;
+    }
+
+    public void setEventActive(boolean eventActive) {
+        this.eventActive = eventActive;
+    }
+
+    public Timestamp getEventCreation() {
+        return eventCreation;
+    }
+
+    public void setEventCreation(Timestamp eventCreation) {
+        this.eventCreation = eventCreation;
+    }
+
+    public Timestamp getEventRemoval() {
+        return eventRemoval;
+    }
+
+    public void setEventRemoval(Timestamp eventRemoval) {
+        this.eventRemoval = eventRemoval;
+    }
+
+    public void setEventOpen(boolean eventOpen) {
+        this.eventOpen = eventOpen;
     }
 }
