@@ -125,7 +125,6 @@ export class CreateEventComponent implements OnInit {
     }
 
     onCreate(){
-
         this.event.eventOwner = this.authenticationService.getUser().id;
         this.eventPartakers.push(this.authenticationService.getUser().id);
         this.eventService.createEvent(this.event).subscribe((response) => {
@@ -145,7 +144,6 @@ export class CreateEventComponent implements OnInit {
     onEdit(){
         this.eventPartakers.push(this.authenticationService.getUser().id);
         this.eventService.editEvent(this.event).subscribe(() => {
-            console.log(this.eventPartakers);
             this.userEventService.editUserEvent(this.event.eventId, this.eventPartakers).subscribe();
             this.eventSave.emit();
             this.closeModal();
@@ -171,6 +169,7 @@ export class CreateEventComponent implements OnInit {
         this.eventPartakers = [];
         this.eventGroups = [];
         this.imageFormat = null;
+        this.cancelDate();
     }
 
     changeStyle($event){
@@ -232,11 +231,8 @@ export class CreateEventComponent implements OnInit {
                     this.selectPartakers = [... this.selectPartakers];
                 }
             });
+            this.selectedSelect();
             this.selectPartakers = this.selectPartakers.sort((a, b) => {
-
-                // if (a.groupId == 0) {
-                //     return 1;
-                // }
 
                 if (a.groupName > b.groupName) {
                     return -1;
@@ -296,28 +292,23 @@ export class CreateEventComponent implements OnInit {
 
     }
 
+    private selectedSelect(){
+        this.eventPartakers.forEach(partaker => {
+            this.selectPartakers.map(user => {
+                if (partaker == user.userId){
+                    user.disabled = true;
+                }
+            });
+        });
+        this.selectPartakers = [... this.selectPartakers];
+    }
+
     public getPartakersByGroupId(id: number): MGroupMembers {
         return this.selectPartakers.find(group => group.groupId === id);
     }
 
+
     public changeSelect(event) {
-       /*var options = document.getElementsByClassName("ng-option");
-       var totalOptions = options.length;
-       var index;
-       for (index =0 ; index < totalOptions; index++){
-           if (options.item(index).getElementsByTagName("span").item(0).id.endsWith(event.valueOf()[0].userId.toString())){
-               options.item(index).getElementsByTagName("span").item(0).click();
-           }
-       }*/
-
-            /*var i;
-            for(i=0;i<totalOptions.length;i++) {
-                if(totalOptions[i].classList.value.includes('ng-option-marked')) {
-                    this.selectedCars = i;
-                    totalOptions[i].click();
-
-                }
-            }*/
 
             event.forEach(userSelected => {
                 this.selectPartakers.map(user => {
@@ -331,7 +322,7 @@ export class CreateEventComponent implements OnInit {
 
     public removePartaker(event) {
             this.selectPartakers.map(user => {
-                if (user == event.userId) {
+                if (user.userId == event.value.userId) {
                     user.disabled = false;
                 }
             });
@@ -340,6 +331,12 @@ export class CreateEventComponent implements OnInit {
 
     public clearPartakers() {
         this.eventPartakers = [];
+        this.selectPartakers.map(user => {
+            if (user.disabled == true){
+                user.disabled = false;
+            }
+        });
+        this.selectPartakers = [... this.selectPartakers];
     }
 
     public unselectGroup(groupID): void {

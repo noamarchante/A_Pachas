@@ -16,9 +16,8 @@
     color: #555;
 }
 
-.file-input{
-    padding-top: 20px;
-    padding-bottom: 40px;
+.ng-value-icon:hover{
+    background-color: rgba(102, 187, 106, 0.1) !important;
 }
 
 .file-input label{
@@ -61,7 +60,7 @@
 
 .imageText2{
     position: absolute;
-    top: 48%;
+    top: 44%;
     left: 88%;
     transform: translate(-50%, -50%);
     width: 100%;

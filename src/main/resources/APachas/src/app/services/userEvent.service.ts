@@ -10,13 +10,15 @@ import {User} from "./entities/User";
 import {APachasError} from "../modules/notification/entities";
 import {UserEvent} from "./entities/UserEvent";
 import {MUserEvent} from "../models/MUserEvent";
+import {AuthenticationService} from "./authentication.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserEventService {
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+                private authenticationService: AuthenticationService) {
     }
 
     countMutualEvents(userId: number, authId: number): Observable<number> {
@@ -35,16 +37,36 @@ export class UserEventService {
         );
     }
 
+    getPageableSearchEventsWithFinished(eventName: string, authId: number, page: number, size: number): Observable<MEvent[]>{
+        return this.http.get<Event[]>(`${environment.restApi}/usersEvents/pageable/withFinished/${eventName}/${authId}/?page=${page}&size=${size}`).pipe(
+            map(events => events.map(this.mapEvent.bind(this)))
+        );
+    }
+
     countSearchEvents(eventName: string, authId: number): Observable<number> {
         return this.http.get<number>(`${environment.restApi}/usersEvents/count/${eventName}/${authId}`);
+    }
+
+    countSearchEventsWithFinished(eventName: string, authId: number): Observable<number> {
+        return this.http.get<number>(`${environment.restApi}/usersEvents/count/withFinished/${eventName}/${authId}`);
     }
 
     countEvents(authId: number): Observable<number>{
         return this.http.get<number>(`${environment.restApi}/usersEvents/count/${authId}`);
     }
 
+    countEventsWithFinished(authId: number): Observable<number>{
+        return this.http.get<number>(`${environment.restApi}/usersEvents/count/withFinished/${authId}`);
+    }
+
     getPageableEvents(authId: number, page: number, size: number): Observable<MEvent[]> {
         return this.http.get<Event[]>(`${environment.restApi}/usersEvents/pageable/${authId}?page=${page}&size=${size}`).pipe(
+            map(events => events.map(this.mapEvent.bind(this)))
+        );
+    }
+
+    getPageableEventsWithFinished(authId: number, page: number, size: number): Observable<MEvent[]> {
+        return this.http.get<Event[]>(`${environment.restApi}/usersEvents/pageable/withFinished/${authId}?page=${page}&size=${size}`).pipe(
             map(events => events.map(this.mapEvent.bind(this)))
         );
     }
@@ -66,12 +88,14 @@ export class UserEventService {
     }
 
     createUserEvent(eventId: any, userId: number): Observable<void> {
-        console.log(eventId);
-        console.log(userId);
+        let accept = false;
+        if (userId == this.authenticationService.getUser().id){
+            accept = true;
+        }
         return this.http.post<void>(`${environment.restApi}/usersEvents`,{
             "eventId":eventId,
             "userId": userId,
-            "accept": false,
+            "accept": accept,
             "totalExpense": 0,
             "userEventActive": true,
             "userEventCreation": "",

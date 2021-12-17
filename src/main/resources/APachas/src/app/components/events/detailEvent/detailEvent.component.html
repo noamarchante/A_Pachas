@@ -36,18 +36,22 @@
                                     <img class="imageEvent" [src]="defaultImage">
                                 </ng-template>
                                 <div class="date text">
+                                    <img class="icon" src="./assets/calendario.png" alt=""
+                                         id="detailUserEvent_date">
                                     {{event.eventStart | date: 'dd-MM-yyyy HH:mm'}}
                                     -
                                     {{event.eventEnd | date: 'dd-MM-yyyy HH:mm'}}</div>
                                 <div class="description-row text"
+                                     name="eventLocation"
+                                     id="detailEvent_eventLocation">
+                                    <img class="icon" src="./assets/ubicacion.png" alt=""
+                                         id="detailUserEvent_location">
+                                    {{event.eventLocation}}
+                                </div>
+                                <div class="description-row text"
                                      name="eventDescription"
                                      id="detailEvent_eventDescription">
                                     {{event.eventDescription}}
-                                </div>
-                                <div class="description-row text"
-                                     name="eventLocation"
-                                     id="detailEvent_eventLocation">
-                                    {{event.eventLocation}}
                                 </div>
                             </div>
                         </div>
@@ -78,7 +82,7 @@
                         </div>
                     </div>
                     <div class="manageDiv">
-                        <button type="button" class="button" title="Gestion evento" (click)="openDetailsEvent()">Productos</button>
+                        <button type="button" class="button" title="Gestion evento">Productos</button>
                     </div>
                     <div class="modal-footer">
                         <ul class="row paginationEvent">

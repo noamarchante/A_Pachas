@@ -42,7 +42,7 @@ export class DetailEventComponent implements OnInit {
     _previous: boolean = false;
     _next: boolean = false;
     _event: MEvent = new MEvent();
-    status:string="";
+    _status: string ="";
     messageRequest: boolean;
 
 
@@ -85,6 +85,16 @@ export class DetailEventComponent implements OnInit {
         this._previous = previous;
     }
 
+    get status(){
+        return this._status;
+    }
+
+    @Input() set status( status: string){
+        if (status != undefined){
+            this._status = status;
+        }
+    }
+
     get next(){
         return this._next;
     }
@@ -104,7 +114,6 @@ export class DetailEventComponent implements OnInit {
             if (this.event.eventId != null){
                 this.getPartakers(this.event.eventId);
                 this.getTotalPartakers(this.event.eventId);
-                this.getUserEvent();
             }else{
                 this._event = new MEvent();
             }
@@ -151,10 +160,6 @@ export class DetailEventComponent implements OnInit {
         if(userId == this.event.eventOwner){
             return "owner";
         }
-    }
-
-    openDetailsEvent(){
-
     }
 
     setPageEvent(number: number){
@@ -216,11 +221,7 @@ export class DetailEventComponent implements OnInit {
 
 
     onRequest($event){
-        console.log("ON REQUEST MESSAGEREQUEST");
-        console.log(this.messageRequest);
         if (this.messageRequest){
-            console.log("ON REQUEST MESSAGEREQUEST TRUE");
-            console.log($event.valueOf());
             this.setStatus($event);
             this.eventMessage.emit();
         }else if (!this.messageRequest){
@@ -229,28 +230,25 @@ export class DetailEventComponent implements OnInit {
     }
 
     setStatus($event){
-        console.log("SET STATUS");
-        console.log($event.valueOf());
         if ($event.valueOf() && this.status == STATUS.PENDING){
-            console.log("set statis edit");
             this.userEventService.editStatus(this.event.eventId, this.authenticationService.getUser().id).subscribe();
         }else{
             this.userEventService.deleteUserEvent(this.event.eventId, this.authenticationService.getUser().id).subscribe();
         }
     }
 
-    getStatus(status: boolean){
+    /*getStatus(status: boolean){
         if (status){
             this.status = STATUS.FOLLOW;
         }else{
             this.status = STATUS.PENDING;
         }
-    }
+    }*/
 
-    getUserEvent(){
+    /*getUserEvent(){
         this.userEventService.getUserEvent(this.event.eventId, this.authenticationService.getUser().id).subscribe((response) =>{
             this.getStatus(response.accept);
         });
 
-    }
+    }*/
 }

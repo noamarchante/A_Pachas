@@ -150,8 +150,13 @@ div.paginationPartakerDiv {
     border-color: rgba(102, 187, 106, 0.53);
 }
 
+.icon{
+    width: 25px;
+    height: 20px;
+    padding-right: 5px;
+}
+
 .date{
-    font-size: 10px;
     width: 100%;
     padding-top: 10px;
 }

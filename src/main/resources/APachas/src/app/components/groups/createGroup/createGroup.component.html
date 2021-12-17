@@ -17,7 +17,7 @@
                                 <label title="Cambiar imagen de grupo" for="createUserGroup_userGroupPhoto"
                                        (mouseover)="changeStyle($event)" (mouseout)="changeStyle($event)">
                                     <ng-container *ngIf="userGroup.groupPhoto; else imagesDiv">
-                                        <img class="image" [src]="userGroup.groupPhoto" alt=""
+                                        <img class="image" [ngClass]="imageColor" [src]="userGroup.groupPhoto" alt=""
                                              id="createUserGroup_photo">
                                     </ng-container>
                                     <ng-template #imagesDiv>
@@ -73,8 +73,6 @@
                             </div>
                         </div>
                     <div class="row">
-                        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12"
-                             title="Selecciona los miembros del grupo">
                             <ng-select class="text" id="createUserGroup_userGroupMembers" name="userGroupMembers"
                                        [items]="friends"
                                        [multiple]="true"
@@ -113,7 +111,7 @@
                                     </ng-template>
                                 </ng-template>
                             </ng-select>
-                        </div>
+
                     </div>
                     </div>
                     <div class="modal-footer">

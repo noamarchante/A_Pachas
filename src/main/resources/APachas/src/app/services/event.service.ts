@@ -16,8 +16,6 @@ export class EventService {
 
 
     createEvent(mEvent: MEvent): Observable<number> {
-        console.log(mEvent.eventStart.toJSON());
-        console.log(mEvent.eventEnd.toJSON());
         return this.http.post<number>(`${environment.restApi}/events`,{
             "eventId": mEvent.eventId,
             "eventName":mEvent.eventName,

@@ -86,8 +86,6 @@ export class CreateGroupComponent implements OnInit {
                 document.getElementById("closeButton").click();
                 this.notificationService.success("Nuevo grupo creado", "Se ha creado el grupo correctamente.");
             });
-
-
     }
 
     onEdit(){

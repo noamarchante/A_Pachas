@@ -27,61 +27,68 @@
                                 </ng-template>
                             </div>
                             <p class="text">AMIGOS COMUNES</p>
-                            <div class="row paginationMutualDiv">
-                                <div *ngFor="let user of mutualFriends" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                                    <ng-container *ngIf="user.userPhoto; else userImagesDiv">
-                                        <p class="imageP">
-                                            <img class="imageMutuals"
-                                                 [src]="user.userPhoto" alt="" id="detailMutualUser_photo">
-                                        </p>
-                                        <p class="mutual">
-                                            {{user.userLogin}}
-                                        </p>
-                                    </ng-container>
-                                    <ng-template #userImagesDiv>
-                                        <p class="imageP">
-                                            <img class="imageMutuals" [src]="defaultImage">
-                                        </p>
-                                        <p class="mutual">
-                                            {{user.userLogin}}
-                                        </p>
-                                    </ng-template>
+                            <div class="paginationMutualDiv col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                <div class="row">
+                                    <div *ngFor="let user of mutualFriends" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                        <ng-container *ngIf="user.userPhoto; else userImagesDiv">
+                                            <p class="imageP">
+                                                <img class="imageMutuals"
+                                                     [src]="user.userPhoto" alt="" id="detailMutualUser_photo">
+                                            </p>
+                                            <p class="mutual">
+                                                {{user.userLogin}}
+                                            </p>
+                                        </ng-container>
+                                        <ng-template #userImagesDiv>
+                                            <p class="imageP">
+                                                <img class="imageMutuals" [src]="defaultImage">
+                                            </p>
+                                            <p class="mutual">
+                                                {{user.userLogin}}
+                                            </p>
+                                        </ng-template>
+                                    </div>
+                                    <div *ngIf="pageMutualFriends > 0" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getLessMutualFriends();"><a>
+                                        Ver menos</a></div>
+                                    <div *ngIf="mutualFriends.length < totalMutualFriends" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMoreMutualFriends();"><a>
+                                        Ver más</a></div>
                                 </div>
-                                <div *ngIf="pageMutualFriends > 0" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getLessMutualFriends();"><a>
-                                    Ver menos</a></div>
-                                <div *ngIf="mutualFriends.length < totalMutualFriends" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMoreMutualFriends();"><a>
-                                    Ver más</a></div>
+
                             </div>
                         </div>
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mutualBorder">
-                            <p class="text">GRUPOS COMUNES</p>
-                            <div class="row paginationMutualDiv">
-                                <div *ngFor="let group of mutualGroups" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                                    <ng-container *ngIf="group.groupPhoto; else groupImagesDiv">
-                                        <p class="imageP">
-                                            <img class="imageMutuals"
-                                                 [src]="group.groupPhoto" alt="" id="detailMutualGroup_photo">
-                                        </p>
-                                        <p class="mutual">
-                                            {{group.groupName}}
-                                        </p>
-                                    </ng-container>
-                                    <ng-template #groupImagesDiv>
-                                        <p class="imageP">
-                                            <img class="imageMutuals" [src]="defaultGroupImage">
-                                        </p>
-                                        <p class="mutual">
-                                            {{group.groupName}}
-                                        </p>
-                                    </ng-template>
+                                <p class="text">GRUPOS COMUNES</p>
+                                <div class="paginationMutualDiv mutualRight col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                    <div class="row">
+                                        <div *ngFor="let group of mutualGroups" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                            <ng-container *ngIf="group.groupPhoto; else groupImagesDiv">
+                                                <p class="imageP">
+                                                    <img class="imageMutuals"
+                                                         [src]="group.groupPhoto" alt="" id="detailMutualGroup_photo">
+                                                </p>
+                                                <p class="mutual">
+                                                    {{group.groupName}}
+                                                </p>
+                                            </ng-container>
+                                            <ng-template #groupImagesDiv>
+                                                <p class="imageP">
+                                                    <img class="imageMutuals" [src]="defaultGroupImage">
+                                                </p>
+                                                <p class="mutual">
+                                                    {{group.groupName}}
+                                                </p>
+                                            </ng-template>
+                                        </div>
+                                        <div *ngIf="mutualGroups.length > 2" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getLessMutualGroups()"><a>
+                                            Ver menos</a></div>
+                                        <div *ngIf="mutualGroups.length < totalMutualGroups" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMoreMutualGroups()"><a>
+                                            Ver más</a></div>
+                                    </div>
+
                                 </div>
-                                <div *ngIf="pageMutualGroups > 0" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getLessMutualGroups();"><a>
-                                    Ver menos</a></div>
-                                <div *ngIf="mutualGroups.length < totalMutualGroups" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMoreMutualGroups();"><a>
-                                    Ver más</a></div>
-                            </div>
                             <p class="text">EVENTOS COMUNES</p>
-                            <div class="row paginationMutualDiv">
+                            <div class="paginationMutualDiv mutualRight col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                <div class="row">
                                 <div *ngFor="let event of mutualEvents" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                                     <ng-container *ngIf="event.eventPhoto; else eventImagesDiv">
                                         <p class="imageP">
@@ -101,10 +108,11 @@
                                         </p>
                                     </ng-template>
                                 </div>
-                                <div *ngIf="pageMutualEvents > 0" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getLessMutualEvents();"><a>
+                                <div *ngIf="pageMutualEvents > 2" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getLessMutualEvents();"><a>
                                     Ver menos</a></div>
                                 <div *ngIf="mutualEvents.length < totalMutualEvents" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMoreMutualEvents();"><a>
                                     Ver más</a></div>
+                            </div>
                             </div>
                         </div>
                     </div>

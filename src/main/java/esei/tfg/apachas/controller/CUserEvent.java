@@ -1,9 +1,7 @@
 package esei.tfg.apachas.controller;
 
-import esei.tfg.apachas.entity.id.GroupUserId;
 import esei.tfg.apachas.entity.id.UserEventId;
 import esei.tfg.apachas.model.MEvent;
-import esei.tfg.apachas.model.MGroupUser;
 import esei.tfg.apachas.model.MUser;
 import esei.tfg.apachas.model.MUserEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +80,21 @@ public class CUserEvent {
         return new ResponseEntity<>(eventCount, HttpStatus.OK);
     }
 
+    @GetMapping("/count/withFinished/{authId}")
+    public ResponseEntity<Long> countEventsWithFinished( @PathVariable("authId") long authId) {
+        long eventCount = sUserEvent.countEventsWithFinished(authId);
+        return new ResponseEntity<>(eventCount, HttpStatus.OK);
+    }
+
     @GetMapping("/count/{eventName}/{authId}")
     public ResponseEntity<Long> countSearchEvents(@PathVariable("eventName") String eventName, @PathVariable("authId") long authId) {
         long eventCount = sUserEvent.countSearchEvents(eventName, authId);
+        return new ResponseEntity<>(eventCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/withFinished/{eventName}/{authId}")
+    public ResponseEntity<Long> countSearchEventsWithFinished(@PathVariable("eventName") String eventName, @PathVariable("authId") long authId) {
+        long eventCount = sUserEvent.countSearchEventsWithFinished(eventName, authId);
         return new ResponseEntity<>(eventCount, HttpStatus.OK);
     }
 
@@ -107,13 +117,23 @@ public class CUserEvent {
         return new ResponseEntity<>(eventList, HttpStatus.OK);
     }
 
+    @GetMapping("/pageable/withFinished/{eventName}/{authId}")
+    public ResponseEntity<List<MEvent>> getPageableSearchEventsWithFinished(@PathVariable("eventName") String eventName, @PathVariable("authId") long authId, Pageable pageable) {
+        List<MEvent> eventList = sUserEvent.selectPageableSearchEventsWithFinished(eventName, authId,pageable);
+        return new ResponseEntity<>(eventList, HttpStatus.OK);
+    }
+
     @GetMapping("/pageable/{authId}")
     public ResponseEntity<List<MEvent>> getPageableEvents(@PathVariable("authId") long authId, Pageable pageable) {
         List<MEvent> mEventList = sUserEvent.selectPageableEvents(authId, pageable);
         return new ResponseEntity<>(mEventList, HttpStatus.OK);
     }
 
-
+    @GetMapping("/pageable/withFinished/{authId}")
+    public ResponseEntity<List<MEvent>> getPageableEventsWithFinished(@PathVariable("authId") long authId, Pageable pageable) {
+        List<MEvent> mEventList = sUserEvent.selectPageableEventsWithFinished(authId, pageable);
+        return new ResponseEntity<>(mEventList, HttpStatus.OK);
+    }
 
     @GetMapping("/pageable/partakers/{eventId}")
     public ResponseEntity<List<MUser>> getPageablePartakers(@PathVariable("eventId") long eventId, Pageable pageable) {

@@ -6,6 +6,7 @@ import {AuthenticationService} from "../../../services/authentication.service";
 import {MEvent} from "../../../models/MEvent";
 import {EventService} from "../../../services/event.service";
 import {UserEventService} from "../../../services/userEvent.service";
+import {STATUS} from "../../users/listUsers/listUsers.component";
 
 @Component({
     selector: 'app-events',
@@ -16,11 +17,13 @@ export class ListEventsComponent implements OnInit {
     eventName = "";
     events: MEvent[] = [];
     images: {[index:number]: any;} = {};
+    status: {[index: number]: any;} = {};
     defaultImage: string = "./assets/event.jpg";
     totalPage:number= 0;
     page: number= 0;
     edit: boolean = false;
     selectedEvent: MEvent = new MEvent();
+    selectedStatus: string ="";
     size: number= 6;
     index: number;
     previous: boolean;
@@ -28,6 +31,7 @@ export class ListEventsComponent implements OnInit {
     previousClass:string;
     nextClass:string;
     pageDirection: number;
+    checked: boolean;
 
 
     constructor(private route: ActivatedRoute,
@@ -41,6 +45,12 @@ export class ListEventsComponent implements OnInit {
     ngOnInit() {
         this.getEvents();
         this.paginationClass();
+        this.checked = false;
+    }
+
+    toggleCheck(){
+        this.checked = !this.checked;
+        this.pagination();
     }
 
     setEvent(){
@@ -49,6 +59,7 @@ export class ListEventsComponent implements OnInit {
 
     selectEvent(index:number){
         this.selectedEvent = this.events[index];
+        this.selectedStatus = this.status[this.selectedEvent.eventId];
         this.index = index;
     }
 
@@ -56,11 +67,11 @@ export class ListEventsComponent implements OnInit {
         if (this.pageDirection != undefined){
             if (this.pageDirection == -1){
                 this.index = this.size-1;
-                this.selectedEvent = this.events[this.index];
             }else if (this.pageDirection == 1){
                 this.index = 0;
-                this.selectedEvent = this.events[this.index];
             }
+            this.selectedEvent = this.events[this.index];
+            this.selectedStatus = this.status[this.index];
         }
     }
 
@@ -68,8 +79,19 @@ export class ListEventsComponent implements OnInit {
         this.userEventService.getPageableEvents(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
             this.events = response;
             this.setSelectedEventPage();
+            this.getStatus(response);
             this.getURL(response);
             this.totalPages();
+        });
+    }
+
+    getEventsWithFinished(){
+        this.userEventService.getPageableEventsWithFinished(this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
+            this.events = response;
+            this.setSelectedEventPage();
+            this.getStatus(response);
+            this.getURL(response);
+            this.totalPagesWithFinished();
         });
     }
 
@@ -96,10 +118,18 @@ export class ListEventsComponent implements OnInit {
     }
 
     private pagination(){
-        if(this.eventName == ""){
-            this.getEvents();
+        if (this.checked){
+            if(this.eventName == ""){
+                this.getEventsWithFinished();
+            }else{
+                this.searchWithFinished();
+            }
         }else{
-            this.search();
+            if(this.eventName == ""){
+                this.getEvents();
+            }else{
+                this.search();
+            }
         }
     }
 
@@ -113,7 +143,18 @@ export class ListEventsComponent implements OnInit {
         this.userEventService.getPageableSearchEvents(this.eventName, this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
             this.events = response;
             this.setSelectedEventPage();
+            this.getStatus(response);
             this.searchTotalPages();
+            this.getURL(response);
+        });
+    }
+
+    private searchWithFinished(){
+        this.userEventService.getPageableSearchEventsWithFinished(this.eventName, this.authenticationService.getUser().id, this.page, this.size).subscribe((response) => {
+            this.events = response;
+            this.setSelectedEventPage();
+            this.getStatus(response);
+            this.searchTotalPagesWithFinished();
             this.getURL(response);
         });
     }
@@ -129,8 +170,20 @@ export class ListEventsComponent implements OnInit {
         });
     }
 
+    private totalPagesWithFinished(){
+        this.userEventService.countEventsWithFinished(this.authenticationService.getUser().id).subscribe((response) => {
+            this.totalPage = Math.ceil(response/this.size);
+        });
+    }
+
     private searchTotalPages(){
         this.userEventService.countSearchEvents(this.eventName, this.authenticationService.getUser().id).subscribe((response) => {
+            this.totalPage = Math.ceil(response/this.size);
+        });
+    }
+
+    private searchTotalPagesWithFinished(){
+        this.userEventService.countSearchEventsWithFinished(this.eventName, this.authenticationService.getUser().id).subscribe((response) => {
             this.totalPage = Math.ceil(response/this.size);
         });
     }
@@ -159,5 +212,26 @@ export class ListEventsComponent implements OnInit {
             this.setPage(event.valueOf());
 
         }
+    }
+
+    private statusValue (statusBD: boolean): string {
+        let status: string;
+        if (statusBD) {
+            status = STATUS.FOLLOW;
+        }else if (!statusBD){
+            status = STATUS.PENDING;
+        }else{
+            status = STATUS.REQUEST;
+        }
+        return status;
+    }
+
+    private getStatus (mEvents: MEvent[]) {
+        mEvents.forEach((mEvent) => {
+            this.userEventService.getUserEvent(mEvent.eventId, this.authenticationService.getUser().id).subscribe((response) => {
+                this.status[mEvent.eventId] = this.statusValue(response.accept);
+
+            });
+        });
     }
 }

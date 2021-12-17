@@ -86,7 +86,7 @@ export class DetailUserComponent implements OnInit {
             this._user = user;
             this.mutualReset();
             if (this.user.userId != null){
-                this.getMutualUserGroups(this.user.userId);
+                this.getMutualUserGroups(this.user.userId/*, this.pageMutualGroups, this.sizeMutualGroups*/);
                 this.getMutualFriends(this.user.userId);
                 this.getMutualEvents(this.user.userId);
 
@@ -218,6 +218,7 @@ export class DetailUserComponent implements OnInit {
     getMutualUserGroups(userId:number){
         this.groupUserService.getPageableMutualGroups(userId, this.authenticationService.getUser().id,this.pageMutualGroups, this.sizeMutualGroups).subscribe((response) => {
             this.mutualGroups.push(...response);
+
         });
     }
 

@@ -56,7 +56,6 @@ public class SUserEvent {
         if (existingUserEvent != null || existingEvent == null || existingUser == null) {
             return false;
         } else {
-            userEvent.setAccept(false);
             userEvent.setUserEventActive(true);
             userEvent.setUserEventRemoval(null);
             userEvent.setUserEventCreation(new Timestamp(System.currentTimeMillis()));
@@ -119,8 +118,16 @@ public class SUserEvent {
         return rUserEvent.countEvents(authId);
     }
 
+    public synchronized Long countEventsWithFinished(long authId){
+        return rUserEvent.countEventsWithFinished(authId);
+    }
+
     public synchronized Long countSearchEvents(String eventName, long authId){
         return rUserEvent.countSearchEvents(authId, eventName);
+    }
+
+    public synchronized Long countSearchEventsWithFinished(String eventName, long authId){
+        return rUserEvent.countSearchEventsWithFinished(authId, eventName);
     }
 
     public synchronized Long countMutualEvents( long userId, long authId){
@@ -136,8 +143,17 @@ public class SUserEvent {
         return conEvent.conEventList(eventList);
     }
 
+    public synchronized List<MEvent> selectPageableEventsWithFinished(Long userId, Pageable pageable) {
+        List<Event> eventList = rUserEvent.findPageableEventsWithFinished(userId, pageable).getContent();
+        return conEvent.conEventList(eventList);
+    }
+
     public synchronized List<MEvent> selectPageableSearchEvents(String eventName, long authId, Pageable pageable) {
         return conEvent.conEventList(rUserEvent.findPageableSearchEvents(authId, eventName, pageable).getContent());
+    }
+
+    public synchronized List<MEvent> selectPageableSearchEventsWithFinished(String eventName, long authId, Pageable pageable) {
+        return conEvent.conEventList(rUserEvent.findPageableSearchEventsWithFinished(authId, eventName, pageable).getContent());
     }
 
     public synchronized List<MEvent> selectPageableMutualEvents(long userId, long authId, Pageable pageable) {

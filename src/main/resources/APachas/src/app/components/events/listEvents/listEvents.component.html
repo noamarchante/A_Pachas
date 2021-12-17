@@ -1,16 +1,23 @@
+
 <div class="searchDiv row">
     <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-8 col-sm-8 col-8">
         <form ngNativeValidate (input)="searchInput()" #searchEventsForm="ngForm">
             <input type="search" id="events_eventName" name="eventName" placeholder="Buscar por nombre de evento"
-                   [(ngModel)]="eventName" required #eventNameForm="ngModel" aria-label="Search">
+                       [(ngModel)]="eventName" required #eventNameForm="ngModel" aria-label="Search">
         </form>
     </div>
-    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-4 col-sm-4 col-4 createDiv">
+    <div class="col-xxl-1 col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 createDiv">
         <button type="button" class="button" data-bs-toggle="modal" data-bs-target="#createEventModal" (click)="setEvent();"></button>
     </div>
 </div>
-<app-createEvent (eventSave)="getEvents();" [event]="this.selectedEvent"></app-createEvent>
-<app-detailEvent (eventDelete)="getEvents();" (eventDetail)="setSelectedEvent($event)" (eventMessage)="getEvents()" [event]="selectedEvent" [previous] = "getPrevious()" [next] = "getNext()"></app-detailEvent>
+
+<div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" [checked]="this.checked" (click)="toggleCheck()">
+    <label class="form-check-label" for="flexSwitchCheckDefault">Eventos finalizados</label>
+</div>
+
+<app-createEvent (eventSave)="getEvents();" [event]="selectedEvent"></app-createEvent>
+<app-detailEvent (eventDelete)="getEvents();" (eventDetail)="setSelectedEvent($event)" (eventMessage)="getEvents()" [event]="selectedEvent" [previous] = "getPrevious()" [next] = "getNext()" [status] ="selectedStatus"></app-detailEvent>
 
 <div class="row row-cols-1 row-cols-xxl-3 row-cols-xl-3 row-cols-lg-2 row-cols-md-2 row-cols-sm-1 g-4 divAligment">
     <div *ngFor="let event of events;let i=index">
@@ -29,6 +36,9 @@
                     <div class="col-xxl-7 col-xl-12 col-lg-7 col-md-12 col-sm-7 divAligment">
                         <div class="card-body-xxl-7 card-body-xl-12 card-body-lg-7 card-body-md-12 card-body-sm-7 divAligment">
                             <h5 class="title">{{event.eventName}}</h5>
+                            <p class="card-text">
+                                <a class="message">{{status[event.eventId]}}</a>
+                            </p>
                         </div>
                     </div>
                 </div>
