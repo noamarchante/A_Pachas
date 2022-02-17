@@ -12,20 +12,16 @@ export class MessageConfirmComponent implements OnInit {
 
     _message: string = "";
 
-    private return = 'message';
-
     constructor() {
     }
 
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
     get message(){
         return this._message;
     }
 
-    @Input() set message( message: string){
+    @Input() set message(message: string){
         if (message!= undefined){
             this._message = message;
         }
@@ -34,6 +30,4 @@ export class MessageConfirmComponent implements OnInit {
     onConfirm(value: boolean){
         this.eventMessageConfirm.emit(value);
     }
-
-
 }
