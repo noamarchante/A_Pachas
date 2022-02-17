@@ -16,7 +16,6 @@ import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RGroup;
 import esei.tfg.apachas.repository.RGroupUser;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 @Service("SGroupUser")

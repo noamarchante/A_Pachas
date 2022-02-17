@@ -59,7 +59,7 @@ public class CUserEvent {
     }
 
     @DeleteMapping("/{eventId}/{userId}")
-    public ResponseEntity<Void> deleteGroupUser(@PathVariable("eventId") long eventId, @PathVariable("userId") long userId) {
+    public ResponseEntity<Void> deleteUserEvent(@PathVariable("eventId") long eventId, @PathVariable("userId") long userId) {
         boolean flag = sUserEvent.deleteUserEvent(eventId, userId);
         if (!flag) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -74,21 +74,21 @@ public class CUserEvent {
         return new ResponseEntity<>(eventCount, HttpStatus.OK);
     }
 
-    @GetMapping("/count/{authId}")
+    @GetMapping("/count/events/{authId}")
     public ResponseEntity<Long> countEvents( @PathVariable("authId") long authId) {
         long eventCount = sUserEvent.countEvents(authId);
+        return new ResponseEntity<>(eventCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/events/{eventName}/{authId}")
+    public ResponseEntity<Long> countSearchEvents(@PathVariable("eventName") String eventName, @PathVariable("authId") long authId) {
+        long eventCount = sUserEvent.countSearchEvents(eventName, authId);
         return new ResponseEntity<>(eventCount, HttpStatus.OK);
     }
 
     @GetMapping("/count/withFinished/{authId}")
     public ResponseEntity<Long> countEventsWithFinished( @PathVariable("authId") long authId) {
         long eventCount = sUserEvent.countEventsWithFinished(authId);
-        return new ResponseEntity<>(eventCount, HttpStatus.OK);
-    }
-
-    @GetMapping("/count/{eventName}/{authId}")
-    public ResponseEntity<Long> countSearchEvents(@PathVariable("eventName") String eventName, @PathVariable("authId") long authId) {
-        long eventCount = sUserEvent.countSearchEvents(eventName, authId);
         return new ResponseEntity<>(eventCount, HttpStatus.OK);
     }
 
@@ -111,7 +111,7 @@ public class CUserEvent {
         return new ResponseEntity<>(eventList, HttpStatus.OK);
     }
 
-    @GetMapping("/pageable/{eventName}/{authId}")
+    @GetMapping("/pageable/events/{eventName}/{authId}")
     public ResponseEntity<List<MEvent>> getPageableSearchEvents(@PathVariable("eventName") String eventName, @PathVariable("authId") long authId, Pageable pageable) {
         List<MEvent> eventList = sUserEvent.selectPageableSearchEvents(eventName, authId,pageable);
         return new ResponseEntity<>(eventList, HttpStatus.OK);
@@ -123,7 +123,7 @@ public class CUserEvent {
         return new ResponseEntity<>(eventList, HttpStatus.OK);
     }
 
-    @GetMapping("/pageable/{authId}")
+    @GetMapping("/pageable/events/{authId}")
     public ResponseEntity<List<MEvent>> getPageableEvents(@PathVariable("authId") long authId, Pageable pageable) {
         List<MEvent> mEventList = sUserEvent.selectPageableEvents(authId, pageable);
         return new ResponseEntity<>(mEventList, HttpStatus.OK);
@@ -160,14 +160,48 @@ public class CUserEvent {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
-    /*
-    @DeleteMapping("/userEventParticipateDelete/{eventId}/{userId}")
-    public ResponseEntity<Void> deleteUserEventParticipate(@PathVariable("eventId") long eventId, @PathVariable("userId") long userId) {
-        boolean flag = sUserEvent.delete(new UserEventId(eventId,userId));
+
+    @GetMapping("/pageable/{eventId}")
+    public ResponseEntity<List<MUserEvent>> getPageableUserEvents(@PathVariable("eventId") long eventId, Pageable pageable) {
+        List<MUserEvent> mUserEventList = sUserEvent.selectPageableUserEvents(eventId, pageable);
+        return new ResponseEntity<>(mUserEventList, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/{eventId}")
+    public ResponseEntity<Long> countUserEvents( @PathVariable("eventId") long eventId) {
+        long userEventCount = sUserEvent.countUserEvents(eventId);
+        return new ResponseEntity<>(userEventCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/pageable/{userName}/{eventId}")
+    public ResponseEntity<List<MUserEvent>> getPageableSearchUserEvents(@PathVariable("userName") String userName, @PathVariable("eventId") long eventId, Pageable pageable) {
+        List<MUserEvent> userEventList = sUserEvent.selectPageableSearchUserEvents(userName, eventId,pageable);
+        return new ResponseEntity<>(userEventList, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/{userName}/{eventId}")
+    public ResponseEntity<Long> countSearchUserEvents(@PathVariable("userName") String userName, @PathVariable("eventId") long eventId) {
+        long userEventCount = sUserEvent.countSearchUserEvents(userName, eventId);
+        return new ResponseEntity<>(userEventCount, HttpStatus.OK);
+    }
+
+    @PutMapping("/totalExpense/{eventId}/{userId}")
+    public ResponseEntity<Void> editTotalExpense(@PathVariable("eventId") long eventId,@PathVariable("userId") long userId, @RequestBody @Valid double totalExpense) {
+        boolean flag = sUserEvent.updateTotalExpense(eventId, userId, totalExpense);
         if (!flag) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
-    }*/
+    }
+
+    @PutMapping("/debt/{eventId}/{userId}")
+    public ResponseEntity<Void> editDebt(@PathVariable("eventId") long eventId,@PathVariable("userId") long userId, @RequestBody @Valid double userDebt) {
+        boolean flag = sUserEvent.updateDebt(eventId, userId, userDebt);
+        if (!flag) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+    }
 }

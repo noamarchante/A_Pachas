@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {GroupService} from "../../../services/group.service";
-import {UserService} from "../../../services/user.service";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {MUser} from "../../../models/MUser";
 import {GroupUserService} from "../../../services/groupUser.service";
@@ -28,13 +26,8 @@ export class CreateGroupComponent implements OnInit {
     _userGroup: MGroup;
     @Output()
     eventSave = new EventEmitter<boolean>();
-    private return = 'groups';
 
-
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private groupService: GroupService,
-                private userService: UserService,
+    constructor(private groupService: GroupService,
                 private groupUserService: GroupUserService,
                 private userUserService: UserUserService,
                 private authenticationService: AuthenticationService,

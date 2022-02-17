@@ -5,20 +5,24 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title title">{{event.eventName}}</h5>
-                <div class="statusDiv">
-                    <button type="button" class="button" title="Cambiar de estado"
-                            data-bs-toggle="modal" data-bs-target="#messageConfirmModal" (click)="messageValue(true);">{{status}}</button>
+                <div class="dropdown">
+                    <a class="btn btn-neutral dropdown-toggle drop" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="zmdi zmdi-label"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><button type="button" *ngIf="showButtons()" class="dropdown-item buttonText" title="Editar evento"
+                                    data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#createEventModal"
+                                    (click)="pagePartaker=0">Editar evento</button></li>
+                        <li><button type="button" *ngIf="showButtons()" class="dropdown-item buttonText" title="Eliminar evento" data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
+                                    (click)="showDeleteEvent();pagePartaker=0">Eliminar evento</button></li>
+                        <li><button *ngIf="showSetStatus()" type="button" class="dropdown-item buttonText" title="Cambiar de estado"
+                                    data-bs-toggle="modal" data-bs-target="#messageConfirmModal" (click)="messageValue();">{{statusMessage}}</button></li>
+                        <li><button *ngIf="showButtons()" type="button" id="close" class="dropdown-item buttonText" title=""
+                                    data-bs-toggle="modal" data-bs-target="#messageConfirmModal" (click)="closeMessage()">Finalizar evento</button></li>
+                        <li><button *ngIf="show" (click)="showDetailsAndProducts()" data-bs-dismiss="modal" type="button" class="dropdown-item buttonText" title="Gestion evento">Gestión del evento</button></li>
+                        <li><button *ngIf="show && !event.eventOpen" (click)="showTransactions()" data-bs-dismiss="modal" type="button" class="dropdown-item buttonText" title="Transacciones">Transacciones</button></li>
+                    </ul>
                 </div>
-                <div class="editDiv" *ngIf="editDelete()">
-                    <button type="button" class="editButton" title="Editar evento"
-                            data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#createEventModal"
-                            (click)="pagePartaker=0"></button>
-                </div>
-                <div class="deleteDiv" *ngIf="editDelete()">
-                    <button type="button" class="deleteButton" title="Eliminar evento"  data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
-                            (click)="messageValue(false);pagePartaker=0"></button>
-                </div>
-
                 <button type="button" id="closeButton" class="btn-close closeButton" data-bs-dismiss="modal"
                         aria-label="Close"
                         (click)="pagePartaker=0"></button>
@@ -76,13 +80,12 @@
                                         </p>
                                     </ng-template>
                                 </div>
-                                <div *ngIf="totalPartaker > sizePartaker" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMorePartakers();"><a>
-                                    {{more}}</a></div>
+                                <div *ngIf="eventPartakers.length > sizePartaker" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getLessPartakers()"><a>
+                                    Ver menos</a></div>
+                                <div *ngIf="eventPartakers.length < totalPartaker" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMorePartakers()"><a>
+                                    Ver más</a></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="manageDiv">
-                        <button type="button" class="button" title="Gestion evento">Productos</button>
                     </div>
                     <div class="modal-footer">
                         <ul class="row paginationEvent">
@@ -100,3 +103,4 @@
     </div>
 </div>
 <simple-notifications></simple-notifications>
+

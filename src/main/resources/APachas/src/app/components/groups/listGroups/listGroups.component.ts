@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {DomSanitizer} from "@angular/platform-browser";
-import {UserService} from "../../../services/user.service";
 import {AuthenticationService} from "../../../services/authentication.service";
-import {GroupService} from "../../../services/group.service";
 import {MGroup} from "../../../models/MGroup";
 import {GroupUserService} from "../../../services/groupUser.service";
 
@@ -19,21 +16,14 @@ export class ListGroupsComponent implements OnInit {
     defaultImage = "./assets/group.jpg";
     totalPage:number= 0;
     page: number= 0;
-    edit: boolean = false;
     selectedUserGroup: MGroup = new MGroup();
     size: number= 6;
     index: number;
-    previous: boolean;
-    next:boolean;
     previousClass:string;
     nextClass:string;
     pageDirection: number;
 
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private userService: UserService,
-                private groupService: GroupService,
-                private groupUserService: GroupUserService,
+    constructor(private groupUserService: GroupUserService,
                 private authenticationService: AuthenticationService,
                 private sanitizer: DomSanitizer) {}
 

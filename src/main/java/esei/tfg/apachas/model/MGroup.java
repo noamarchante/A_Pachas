@@ -2,7 +2,6 @@ package esei.tfg.apachas.model;
 
 
 import esei.tfg.apachas.entity.Group;
-
 import java.sql.Timestamp;
 
 public class MGroup {

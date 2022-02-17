@@ -1,12 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {GroupService} from "../../../services/group.service";
-import {UserService} from "../../../services/user.service";
 import {GroupUserService} from "../../../services/groupUser.service";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {NotificationService} from "../../../modules/notification/services/notification.service";
 import {MUser} from "../../../models/MUser";
 import {MGroup} from "../../../models/MGroup";
+import {STATUS} from "../../users/listUsers/listUsers.component";
 
 @Component({
     selector: 'app-detailGroup',
@@ -29,8 +28,8 @@ export class DetailGroupComponent implements OnInit {
     pageMember = 0;
     sizeMember = 6;
     totalMembers: number=0;
-    more: string = "Ver más ...";
     message: string = "";
+    delete: string = "";
 
     previousUserGroup: string="";
     nextUserGroup: string="";
@@ -39,12 +38,7 @@ export class DetailGroupComponent implements OnInit {
     _next: boolean = false;
     _userGroup: MGroup = new MGroup();
 
-    private return = 'groups';
-
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private groupService: GroupService,
-                private userService: UserService,
+    constructor(private groupService: GroupService,
                 private groupUserService: GroupUserService,
                 private authenticationService: AuthenticationService,
                 private notificationService: NotificationService
@@ -55,8 +49,8 @@ export class DetailGroupComponent implements OnInit {
         this.paginationUserGroupClass();
     }
 
-    messageValue(){
-        if (this.authenticationService.getUser().id == this.userGroup.groupOwner){
+    messageValue(request: boolean){
+        if (!request && this.authenticationService.getUser().id == this.userGroup.groupOwner){
             this.message = "¿Estás seguro de que deseas eliminar el grupo?";
         }else{
             this.message = "¿Estás seguro de que quieres salir del grupo?";
@@ -69,6 +63,7 @@ export class DetailGroupComponent implements OnInit {
 
     @Input() set previous( previous: boolean){
         this._previous = previous;
+        this.paginationUserGroupClass();
     }
 
     get next(){
@@ -77,6 +72,7 @@ export class DetailGroupComponent implements OnInit {
 
     @Input() set next( next: boolean){
         this._next = next;
+        this.paginationUserGroupClass();
     }
 
 
@@ -87,6 +83,12 @@ export class DetailGroupComponent implements OnInit {
     @Input() set userGroup (userGroup: MGroup) {
         if (userGroup != undefined) {
             this._userGroup = userGroup;
+            this.membersReset();
+            if (this.authenticationService.getUser().id == this.userGroup.groupOwner){
+                this.delete = "Eliminar";
+            }else{
+                this.delete = "Salir";
+            }
             if (this.userGroup.groupId != null){
                 this.getMembers(this.userGroup.groupId);
                 this.getTotalMembers(this.userGroup.groupId);
@@ -96,6 +98,7 @@ export class DetailGroupComponent implements OnInit {
         }
         this.groupMembers = [];
         this.groupMembersStored = [];
+        this.paginationUserGroupClass();
     }
 
     onDelete($event){
@@ -116,7 +119,7 @@ export class DetailGroupComponent implements OnInit {
         }
     }
 
-    edit(): boolean{
+    showButtons(): boolean{
         if (this.userGroup.groupOwner == this.authenticationService.getUser().id){
             return true;
         }else{
@@ -142,51 +145,52 @@ export class DetailGroupComponent implements OnInit {
         this.eventDetail.emit(number);
     }
 
-    getMembers(userGroupId:number){
-        this.groupUserService.getPageableMembers(userGroupId,this.pageMember, this.sizeMember).subscribe((response) => {
+    getMembers(groupId:number){
+        this.groupUserService.getPageableMembers(groupId,this.pageMember, this.sizeMember).subscribe((response) => {
             this.groupMembers.push(...response);
-            this.paginationUserGroupClass();
-            this.setMoreLabel();
         });
     }
 
-    getTotalMembers(userGroupId:number){
-        this.groupUserService.countMembers(userGroupId).subscribe((members)=>{
-            this.totalMembers = members;
+    getTotalMembers(groupId:number){
+        this.groupUserService.countMembers(groupId).subscribe((number)=>{
+            this.totalMembers = number;
         });
-    }
-
-    setMoreLabel(){
-        if (this.groupMembers.length == this.totalMembers){
-            this.more = "... Ver menos";
-        }else{
-            this.more = "Ver más ...";
-        }
     }
 
     getMoreMembers(){
-        if (this.groupMembers.length == this.totalMembers){
-            this.groupMembersStored = this.groupMembers;
-            this.groupMembers = this.groupMembers.slice(0,this.sizeMember);
+        this.pageMember +=1;
+        if (this.groupMembers.length < this.groupMembersStored.length){
+            this.groupMembers = this.groupMembersStored.slice(0,this.sizeMember*(this.pageMember+1));
         }else{
-            if (this.groupMembersStored.length ==0){
-                this.pageMember +=1;
-                this.getMembers(this.userGroup.groupId);
-            }else{
-                this.groupMembers = this.groupMembersStored;
-            }
+            this.getMembers(this.userGroup.groupId);
         }
-        this.setMoreLabel();
     }
 
+    getLessMembers(){
+        if (this.groupMembersStored.length != this.totalMembers){
+            this.groupMembersStored = this.groupMembers;
+            this.groupMembers = this.groupMembers.slice(0,this.sizeMember*this.pageMember);
+        }else{
+            this.groupMembers = this.groupMembersStored.slice(0, this.sizeMember*this.pageMember);
+        }
+        this.pageMember -=1;
+    }
+
+    membersReset(){
+        this.groupMembers = [];
+        this.groupMembersStored = [];
+        this.pageMember = 0;
+    }
+
+
     private paginationUserGroupClass(){
-        if(this._previous && this._next){
+        if(this.previous && this.next){
             this.previousUserGroup = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6";
             this.nextUserGroup = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6";
-        }else if (!this._previous && this._next){
+        }else if (!this.previous && this.next){
             this.previousUserGroup = "";
             this.nextUserGroup = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
-        }else if(this._previous && !this._next){
+        }else if(this.previous && !this.next){
             this.previousUserGroup = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
             this.nextUserGroup = "";
         }else{

@@ -5,7 +5,6 @@ import {environment} from "../../environments/environment";
 import {APachasError} from "../modules/notification/entities";
 import {MGroup} from "../models/MGroup";
 import {Group} from "./entities/Group";
-import {map} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -50,18 +49,5 @@ export class GroupService {
         return this.http.delete<void>(`${environment.restApi}/groups/${groupId}`).pipe(
             APachasError.throwOnError('Fallo al eliminar grupo', `Por favor, inténtelo de nuevo`)
         );
-    }
-
-    private mapGroup(group: Group) : MGroup {
-        return {
-            groupId: group.groupId,
-            groupName: group.groupName,
-            groupDescription: group.groupDescription,
-            groupPhoto: group.groupPhoto,
-            groupCreation: group.groupCreation,
-            groupRemoval: group.groupRemoval,
-            groupOwner: group.groupOwner,
-            groupActive: group.groupActive
-        }
     }
 }

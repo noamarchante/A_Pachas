@@ -37,7 +37,6 @@ public class Group implements Serializable {
     @Column(name = "groupRemoval")
     private Timestamp groupRemoval;
 
-    //ATRIBUTO: GRUPO ACTIVO (SI SE HA ELIMINADO O NO)
     @Column(name = "groupActive", length = 1)
     @Size(min = 1, max = 1)
     private boolean groupActive;

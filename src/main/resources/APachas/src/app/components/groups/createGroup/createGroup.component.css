@@ -20,10 +20,6 @@
     background-color: rgba(102, 187, 106, 0.1) !important;
 }
 
-.file-input label{
-    align-self: center;
-}
-
 .file {
     opacity: 0;
     width: 0.1px;

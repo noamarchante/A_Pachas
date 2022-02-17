@@ -5,14 +5,19 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title title">{{userGroup.groupName}}</h5>
-                <div class="editDiv">
-                    <button type="button" *ngIf="edit()" class="editButton" title="Editar grupo"
-                            data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#createGroupModal"
-                            (click)="pageMember=0"></button>
-                </div>
-                <div class="deleteDiv">
-                    <button type="button" class="deleteButton" title="Eliminar grupo"  data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
-                             (click)="messageValue();pageMember=0"></button>
+                <div class="dropdown">
+                    <a class="btn btn-neutral dropdown-toggle drop" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="zmdi zmdi-label"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><button type="button" *ngIf="showButtons()" class="dropdown-item buttonText" title="Editar grupo"
+                                    data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#createGroupModal"
+                                    (click)="pageMember=0">Editar</button></li>
+                        <li><button type="button" *ngIf="showButtons()" class="dropdown-item buttonText" title="Eliminar grupo"  data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
+                                    (click)="messageValue(false);pageMember=0">Eliminar</button></li>
+                        <li><button type="button" class="dropdown-item buttonText" title="Salir del grupo"  data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
+                                    (click)="messageValue(true);pageMember=0">Salir del grupo</button></li>
+                    </ul>
                 </div>
                 <button type="button" id="closeButton" class="btn-close closeButton" data-bs-dismiss="modal"
                         aria-label="Close"
@@ -61,8 +66,10 @@
                                         </p>
                                     </ng-template>
                                 </div>
-                                <div *ngIf="totalMembers > sizeMember" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMoreMembers();"><a>
-                                    {{more}}</a></div>
+                                <div *ngIf="groupMembers.length > sizeMember" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getLessMembers()"><a>
+                                    Ver menos</a></div>
+                                <div *ngIf="groupMembers.length < totalMembers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 more" (click)="getMoreMembers()"><a>
+                                    Ver más</a></div>
                             </div>
                         </div>
                     </div>

@@ -20,8 +20,6 @@ public interface RGroupUser extends CrudRepository<GroupUser, GroupUserId>, Pagi
 
     List<GroupUser> findByGroupUserId_UserId(Long userId);
 
-
-
     List<GroupUser> findByGroupUserId_GroupId(Long groupId);
 
     Long countByGroupUserId_GroupIdAndGroupUserActiveTrue(Long groupId);

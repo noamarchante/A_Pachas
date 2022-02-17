@@ -2,12 +2,9 @@ package esei.tfg.apachas.entity;
 
 import esei.tfg.apachas.entity.id.GroupUserId;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Table(name = "groupUser")
 @Entity(name = "groupUser")
@@ -32,7 +29,6 @@ public class GroupUser implements Serializable {
     @Column(name = "groupUserRemoval")
     private Timestamp groupUserRemoval;
 
-    //ATRIBUTO: USUARIO DE GRUPO ACTIVO (SI SE HA ELIMINADO O NO)
     @Column(name = "groupUserActive", length = 1)
     @Size(min = 1, max = 1)
     private boolean groupUserActive;
