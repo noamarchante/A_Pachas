@@ -9,6 +9,10 @@ export class AuthUser {
   private roles: string;
   private permissions: string;
   private userId: number;
+  private userName: string;
+  private userSurname: string;
+  private userBirthday: Date;
+  private userPhoto: string;
 
   constructor() {
     const user: AuthUser = JSON.parse(<string>localStorage.getItem('currentUser'));
@@ -21,6 +25,10 @@ export class AuthUser {
       this._authHeader = user._authHeader;
       this.roles = user.roles;
       this.permissions = user.permissions;
+      this.userName = user.userName;
+      this.userSurname = user.userSurname;
+      this.userBirthday = user.userBirthday;
+      this.userPhoto = user.userPhoto;
     } else {
       this._authenticated = false;
     }
@@ -48,6 +56,38 @@ export class AuthUser {
 
   set email(value: string) {
     this.userEmail = value;
+  }
+
+  get name(): string {
+    return this.userName;
+  }
+
+  set name(value: string) {
+    this.userName = value;
+  }
+
+  get surname(): string {
+    return this.userSurname;
+  }
+
+  set surname(value: string) {
+    this.userSurname = value;
+  }
+
+  get birthday(): Date {
+    return this.userBirthday;
+  }
+
+  set birthday(value: Date) {
+    this.userBirthday = value;
+  }
+
+  get photo(): string {
+    return this.userPhoto;
+  }
+
+  set photo(value: string) {
+    this.userPhoto = value;
   }
 
   get login(): string {

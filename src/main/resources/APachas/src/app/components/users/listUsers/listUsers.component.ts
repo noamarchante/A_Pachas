@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from "../../../services/user.service";
 import {UserUserService} from "../../../services/userUser.service";
 import {AuthenticationService} from "../../../services/authentication.service";
@@ -33,9 +32,7 @@ export class ListUsersComponent implements OnInit {
     status:string="";
     selectedUser: MUser = new MUser();
 
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private userService: UserService,
+    constructor(private userService: UserService,
                 private userUserService: UserUserService,
                 private authenticationService: AuthenticationService,
                 private sanitizer: DomSanitizer) {}

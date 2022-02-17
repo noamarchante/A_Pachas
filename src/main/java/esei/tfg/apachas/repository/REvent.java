@@ -1,6 +1,5 @@
 package esei.tfg.apachas.repository;
 
-
 import esei.tfg.apachas.entity.Event;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

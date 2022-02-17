@@ -1,11 +1,7 @@
 package esei.tfg.apachas.model;
 
 import esei.tfg.apachas.entity.User;
-
-import java.sql.Blob;
 import java.sql.Timestamp;
-import java.util.Date;
-
 
 public class MUser {
 

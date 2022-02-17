@@ -17,18 +17,34 @@ public interface RUserUser extends CrudRepository<UserUser, UserUserId>, PagingA
 
     UserUser findByUserUserId(UserUserId userUserId);
 
-    UserUser findByUserUserIdAndUserUserActiveTrue(UserUserId userUserId);
-
     @Query("SELECT uU.user FROM userUser uU WHERE uU.userUserId.friendId = :friendId AND uU.userUserActive = TRUE")
     List<User> findFriendsByFriendId(@Param("friendId") long friendId);
 
     @Query("SELECT uU.friend FROM userUser uU WHERE uU.userUserId.userId = :userId AND uU.userUserActive = TRUE")
     List<User> findFriendsByUserId(@Param("userId") long userId);
 
-    @Query("SELECT COUNT(DISTINCT u) FROM user u, userUser uU WHERE u.userId = uU.userUserId.userId AND uU.userUserId.userId = :userId AND uU.userUserActive = TRUE AND uU.accept = TRUE AND u.userActive = TRUE AND u.userId IN (SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.userId AND uU.userUserId.friendId = :authId AND uU.accept = TRUE AND uU.userUserActive = TRUE AND u.userActive = TRUE)")
+    @Query("SELECT COUNT(DISTINCT u) FROM user u, userUser uU WHERE " +
+            "(u.userId IN " +
+                "(SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.friendId AND uU.userUserId.userId = :authId AND uU.accept = TRUE AND u.userActive = TRUE AND uU.userUserActive = TRUE) " +
+            "OR u.userId IN " +
+                "(SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.userId AND uU.userUserId.friendId = :authId AND uU.accept = TRUE AND u.userActive = TRUE AND uU.userUserActive = TRUE))" +
+            "AND (u.userId IN " +
+                "(SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.friendId AND uU.userUserId.userId = :userId AND uU.accept = TRUE AND u.userActive = TRUE AND uU.userUserActive = TRUE) " +
+            "OR u.userId IN " +
+                "(SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.userId AND uU.userUserId.friendId = :userId AND uU.accept = TRUE AND u.userActive = TRUE AND uU.userUserActive = TRUE))" +
+            "AND u.userActive = TRUE AND uU.userUserActive = TRUE AND uU.accept = TRUE")
     Long countMutualFriends(@Param("userId")long userId, @Param("authId") long authId);
 
-    @Query("SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.userId AND uU.userUserId.userId = :userId AND uU.userUserActive = TRUE AND uU.accept = TRUE AND u.userActive = TRUE AND u.userId IN (SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.userId AND uU.userUserId.friendId = :authId AND uU.accept = TRUE AND uU.userUserActive = TRUE AND u.userActive = TRUE) ORDER BY u.userLogin ASC")
+    @Query("SELECT DISTINCT u FROM user u, userUser uU WHERE " +
+            "(u.userId IN " +
+                "(SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.friendId AND uU.userUserId.userId = :authId AND uU.accept = TRUE AND u.userActive = TRUE AND uU.userUserActive = TRUE) " +
+            "OR u.userId IN " +
+                "(SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.userId AND uU.userUserId.friendId = :authId AND uU.accept = TRUE AND u.userActive = TRUE AND uU.userUserActive = TRUE))" +
+            "AND (u.userId IN " +
+                "(SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.friendId AND uU.userUserId.userId = :userId AND uU.accept = TRUE AND u.userActive = TRUE AND uU.userUserActive = TRUE) " +
+            "OR u.userId IN " +
+                "(SELECT DISTINCT u FROM user u, userUser uU WHERE u.userId = uU.userUserId.userId AND uU.userUserId.friendId = :userId AND uU.accept = TRUE AND u.userActive = TRUE AND uU.userUserActive = TRUE))" +
+            "AND u.userActive = TRUE AND uU.userUserActive = TRUE AND uU.accept = TRUE")
     Page<User> findPageableMutualFriends(@Param("userId") long userId, @Param("authId") long authId, Pageable pageable);
 
 }

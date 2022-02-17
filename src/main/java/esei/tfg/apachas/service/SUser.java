@@ -96,25 +96,4 @@ public class SUser implements UserDetailsService {
         User user = rUser.findByUserLoginAndUserActiveTrue(userLogin);
         return conUser.conUser(user);
     }
-
-   /* public synchronized boolean update(MUser mUser) {
-        User user = conUser.conMUser(mUser);
-        User existingUser = rUser.findByUserId(user.getUserId());
-        if (existingUser != null) {
-            rUser.save(user);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public synchronized boolean delete(long userId) {
-        User existingUser = rUser.findByUserId(userId);
-        if (existingUser != null) {
-            rUser.delete(existingUser);
-            return true;
-        } else {
-            return false;
-        }
-    }*/
 }

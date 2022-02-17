@@ -13,7 +13,6 @@ import esei.tfg.apachas.entity.id.UserUserId;
 import esei.tfg.apachas.model.MUserUser;
 import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RUserUser;
-
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -59,32 +58,13 @@ public class SUserUser {
         UserUser existingUserUser = rUserUser.findByUserUserId(userUser.getUserUserId());
         User existingUser = rUser.findByUserId(userUser.getUserUserId().getUserId());
         User existingFriend = rUser.findByUserId(userUser.getUserUserId().getFriendId());
-
         if (existingUserUser != null || existingUser != null || existingFriend != null) {
-            existingUserUser = activeUseruser(userUser, existingUserUser);
-            existingUserUser = acceptUserUser(existingUserUser);
-            rUserUser.save(existingUserUser);
+            rUserUser.save(userUser);
             return true;
         } else {
             return false;
         }
     }
-
-    private UserUser activeUseruser(UserUser userUser, UserUser existingUserUser){
-        if (!existingUserUser.isUserUserActive() && userUser.isUserUserActive()) {
-            existingUserUser.setUserUserActive(true);
-            existingUserUser.setUserUserRemoval(null);
-        }
-        return existingUserUser;
-    }
-
-    private UserUser acceptUserUser(UserUser existingUserUser){
-        if (existingUserUser.isUserUserActive()){
-            existingUserUser.setAccept(true);
-        }
-        return existingUserUser;
-    }
-
 
     public synchronized boolean deleteUserUser(long friendId, long userId) {
         UserUser existingUserUser = rUserUser.findByUserUserId(new UserUserId(friendId, userId));
@@ -105,11 +85,13 @@ public class SUserUser {
     }
 
     public synchronized Long countMutualFriends( long userId, long authId){
-        return rUserUser.countMutualFriends(userId, authId);
+        Long countUsers = rUserUser.countMutualFriends(userId, authId);
+        return countUsers;
     }
 
     public synchronized List<MUser> selectPageableMutualFriends(long userId, long authId, Pageable pageable) {
-        return conUser.conUserList(rUserUser.findPageableMutualFriends(userId, authId, pageable).getContent());
+        List<User> userList = rUserUser.findPageableMutualFriends(userId, authId, pageable).getContent();
+        return conUser.conUserList(userList);
     }
 
     public synchronized MUserUser selectUserUser(UserUserId userUserId) {

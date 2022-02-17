@@ -2,7 +2,6 @@ package esei.tfg.apachas.model;
 
 
 import esei.tfg.apachas.entity.UserUser;
-
 import java.sql.Timestamp;
 
 public class MUserUser {
@@ -10,7 +9,6 @@ public class MUserUser {
     private long userId;
     private long friendId;
     private boolean accept;
-
     private Timestamp userUserCreation;
     private Timestamp userUserRemoval;
     private boolean userUserActive;
@@ -42,7 +40,7 @@ public class MUserUser {
         this.friendId = friendId;
     }
 
-    public boolean getAccept() {
+    public boolean isAccept() {
         return accept;
     }
 

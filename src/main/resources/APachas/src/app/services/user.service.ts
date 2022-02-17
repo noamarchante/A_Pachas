@@ -61,8 +61,6 @@ export class UserService {
       );
   }
 
-
-
   private mapUser(user: User) : MUser {
     return {
       userId: user.userId,

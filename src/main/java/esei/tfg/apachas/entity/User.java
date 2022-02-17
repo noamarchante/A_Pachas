@@ -10,51 +10,43 @@ import java.util.*;
 @Table(name = "user")
 public class User implements Serializable {
 
-    //CLAVE PRIMARIA: ID_USUARIO
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "userId")
     private long userId;
 
-    //ATRIBUTO: NOMBRE_USUARIO
     @Column(name = "userName", length = 50, nullable = false)
     @Size(min = 3, max = 50)
     @NotNull
     @NotBlank
     private String userName;
 
-    //ATRIBUTO: APELLIDOS
     @Column(name = "userSurname", length = 50, nullable = false)
     @Size(min = 4, max = 50)
     @NotNull
     @NotBlank
     private String userSurname;
 
-    //ATRIBUTO: LOGIN
     @Column(name = "userLogin", length = 14, nullable = false, unique = true)
     @Size(min = 4, max = 15)
     @NotBlank
     @NotNull
     private String userLogin;
 
-    //ATRIBUTO: CONTRASEÑA
     @Column(name = "userPassword", nullable = false)
     @NotNull
     @NotBlank
     private String userPassword;
 
-    //ATRIBUTO: EMAIL
     @Column(name = "userEmail", length = 320, nullable = false, unique = true)
     @NotNull
     @NotBlank
     @Email
     private String userEmail;
 
-    //ATRIBUTO: FECHA_NACIMIENTO
     @Column(name = "userBirthday")
     private Timestamp userBirthday;
 
-    //ATRIBUTO: FOTO_USUARIO
     @Lob
     @Column(name = "userPhoto", length = 100000)
     private String userPhoto;
@@ -71,7 +63,6 @@ public class User implements Serializable {
     @Column(name = "userRemoval")
     private Timestamp userRemoval;
 
-    //ATRIBUTO: USUARIO ACTIVO (SI SE HA ELIMINADO O NO)
     @Column(name = "userActive", length = 1)
     @Size(min = 1, max = 1)
     private boolean userActive;
@@ -95,16 +86,6 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Transient
     private Set<Event> eventSet = new HashSet<>();
-
-    //N:M USUARIO PAGA ELEMENTO
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @Transient
-    private Set<UserItemPay> userItemPaySet = new HashSet<>();
-
-    //N:M USUARIO DEBE ELEMENTO
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @Transient
-    private Set<UserItemDebt> userItemDebtSet = new HashSet<>();
 
     //N:M USUARIO INTEGRADO EN GRUPO
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -224,21 +205,6 @@ public class User implements Serializable {
         this.eventSet = eventSet;
     }
 
-    public Set<UserItemPay> getUserItemPaySet() {
-        return userItemPaySet;
-    }
-
-    public void setUserItemPaySet(Set<UserItemPay> userItemPaySet) {
-        this.userItemPaySet = userItemPaySet;
-    }
-
-    public Set<UserItemDebt> getUserItemDebtSet() {
-        return userItemDebtSet;
-    }
-
-    public void setUserItemDebtSet(Set<UserItemDebt> userItemDebtSet) {
-        this.userItemDebtSet = userItemDebtSet;
-    }
 
     public Set<GroupUser> getUserGroupUserSet() {
         return groupUserSet;

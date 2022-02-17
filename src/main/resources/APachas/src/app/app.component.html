@@ -5,9 +5,10 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/listUsers"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>AMIGOS</a>
-      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/listGroups"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>GRUPOS</a>
-      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/listEvents"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>EVENTOS</a>
+      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/users"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>AMIGOS</a>
+      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/groups"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>GRUPOS</a>
+      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/events"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>EVENTOS</a>
+      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/profile"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>PERFIL</a>
       <a *ngIf="authenticationService.getUser().authenticated == false" class="nav-link active" aria-current="page" (click)="logIn()"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>Iniciar sesión</a>
       <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" (click)="logOut()"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>Cerrar sesión</a>
     </div>

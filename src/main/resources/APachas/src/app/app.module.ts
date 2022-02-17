@@ -7,11 +7,11 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NotificationModule} from './modules/notification/notification.module';
 import {SimpleNotificationsModule} from 'angular2-notifications';
 import {ErrorNotificationHandler} from './modules/notification/handlers/error-notification.handler';
-import {LoginComponent} from './components/login/login.component';
+import {LoginComponent} from './components/authUser/login/login.component';
 import {AuthenticationInterceptor} from './helpers/authentication.interceptor';
 import {HomeComponent} from './components/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {RegisterComponent} from "./components/register/register.component";
+import {RegisterComponent} from "./components/authUser/register/register.component";
 import {ListUsersComponent} from "./components/users/listUsers/listUsers.component";
 import {CreateGroupComponent} from "./components/groups/createGroup/createGroup.component";
 import {ListGroupsComponent} from "./components/groups/listGroups/listGroups.component";
@@ -23,6 +23,12 @@ import {ListEventsComponent} from "./components/events/listEvents/listEvents.com
 import {DetailEventComponent} from "./components/events/detailEvent/detailEvent.component";
 import {CreateEventComponent} from "./components/events/createEvent/createEvent.component";
 import {Daterangepicker} from "ng2-daterangepicker";
+import {ListProductsComponent} from "./components/products/listProducts/listProducts.component";
+import {CreateProductComponent} from "./components/products/createProduct/createProduct.component";
+import {DetailProductComponent} from "./components/products/detailProduct/detailProduct.component";
+import {CreateUserEventExpenseComponent} from "./components/products/createUserEventExpense/createUserEventExpense.component";
+import {DetailProfileComponent} from "./components/authUser/profile/detailProfile/detailProfile.component";
+import {ListTransactionsComponent} from "./components/transactions/listTransactions.component";
 
 
 @NgModule({
@@ -39,6 +45,12 @@ import {Daterangepicker} from "ng2-daterangepicker";
     ListEventsComponent,
     DetailEventComponent,
     CreateEventComponent,
+    CreateProductComponent,
+    CreateUserEventExpenseComponent,
+    ListProductsComponent,
+    DetailProductComponent,
+    ListTransactionsComponent,
+    DetailProfileComponent,
     HomeComponent
   ],
     imports: [

@@ -2,7 +2,7 @@
 COMPONENT -> Bloque de código re-utilizable: CSS + HTML + TypeScript
  */
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from '../../services/authentication.service';
+import {AuthenticationService} from '../../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({

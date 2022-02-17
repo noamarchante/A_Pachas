@@ -1,9 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
-import {UserService} from "../../../services/user.service";
-import {EventService} from "../../../services/event.service";
 import {AuthenticationService} from "../../../services/authentication.service";
-import {GroupService} from "../../../services/group.service";
 import {STATUS} from "../listUsers/listUsers.component";
 import {UserUserService} from "../../../services/userUser.service";
 import {MUser} from "../../../models/MUser";
@@ -12,7 +8,6 @@ import {MUserUser} from "../../../models/MUserUser";
 import {MEvent} from "../../../models/MEvent";
 import {GroupUserService} from "../../../services/groupUser.service";
 import {UserEventService} from "../../../services/userEvent.service";
-
 
 export enum MESSAGE{
     CANCELREQUEST = '¿Cancelar solicitud?', UNFOLLOW = '¿Dejar de seguir?', ALLOWREQUEST = '¿Aceptar solicitud?', SENTREQUEST = '¿Enviar solicitud?'
@@ -37,7 +32,7 @@ export class DetailUserComponent implements OnInit {
     mutualGroups: MGroup[] = [];
     mutualGroupsStored: MGroup[] = [];
     pageMutualGroups = 0;
-    sizeMutualGroups = 2;
+    sizeMutualGroups = 6;
     totalMutualGroups: number=0;
 
     mutualFriends: MUser[] = [];
@@ -61,14 +56,9 @@ export class DetailUserComponent implements OnInit {
     @Output()
     eventDetail = new EventEmitter<number>();
 
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private userService: UserService,
-                private authenticationService: AuthenticationService,
+    constructor(private authenticationService: AuthenticationService,
                 private userUserService: UserUserService,
-                private eventService: EventService,
                 private userEventService: UserEventService,
-                private groupService: GroupService,
                 private groupUserService: GroupUserService
     ) {
     }
@@ -86,7 +76,7 @@ export class DetailUserComponent implements OnInit {
             this._user = user;
             this.mutualReset();
             if (this.user.userId != null){
-                this.getMutualUserGroups(this.user.userId/*, this.pageMutualGroups, this.sizeMutualGroups*/);
+                this.getMutualUserGroups(this.user.userId);
                 this.getMutualFriends(this.user.userId);
                 this.getMutualEvents(this.user.userId);
 
@@ -160,6 +150,18 @@ export class DetailUserComponent implements OnInit {
         }
     }
 
+    getMessageStatus(): string{
+        if (this.status == STATUS.FOLLOW){
+            return "DEJAR DE SEGUIR";
+        }else if (this.status == STATUS.SENT){
+            return "CANCELAR ENVÍO DE SOLICITUD";
+        }else if (this.status == STATUS.PENDING){
+            return "ACEPTAR O DENEGAR SOLICITUD";
+        }else if (this.status == STATUS.REQUEST){
+            return "ENVIAR SOLICITUD"
+        }
+    }
+
     private paginationUserClass(){
         if(this._previous && this._next){
             this.previousUser = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6";
@@ -178,37 +180,34 @@ export class DetailUserComponent implements OnInit {
 
     onRequest($event){
         if ($event){
-            this.setStatus();
-            this.eventMessage.emit();
-        }else if (!$event && this.status == STATUS.PENDING){
-            this.deleteUserUser();
-            this.eventMessage.emit();
+            if (this.status == STATUS.PENDING) {
+                let mUserUser: MUserUser = new MUserUser();
+                mUserUser.userId = this.user.userId;
+                mUserUser.friendId = this.authenticationService.getUser().id;
+                mUserUser.accept = true;
+                this.userUserService.editUserUser(mUserUser).subscribe();
+            }else if (this.status == STATUS.REQUEST){
+                let mUserUser: MUserUser = new MUserUser();
+                mUserUser.userId = this.authenticationService.getUser().id;
+                mUserUser.friendId = this.user.userId;
+                mUserUser.userUserActive = true;
+                mUserUser.accept = false;
+                this.userUserService.getDeletedUserUser(this.user.userId,this.authenticationService.getUser().id).subscribe((response)=>{
+                    if (response != null && !response.userUserActive){
+                        this.userUserService.editUserUser(mUserUser).subscribe();
+                    }else{
+                        this.userUserService.createUserUser(mUserUser).subscribe();
+                    }
+                });
+            }else if (this.status == STATUS.SENT || this.status == STATUS.FOLLOW){
+                this.deleteUserUser();
+            }
+        }else{
+            if (this.status == STATUS.PENDING){
+                this.deleteUserUser();
+            }
         }
-    }
-
-    setStatus(){
-        if (this.status == STATUS.REQUEST){
-            let mUserUser: MUserUser = new MUserUser();
-            mUserUser.userId = this.authenticationService.getUser().id;
-            mUserUser.friendId = this.user.userId;
-            this.userUserService.getDeletedUserUser(this.user.userId,this.authenticationService.getUser().id).subscribe((response)=>{
-                if (response != null && !response.userUserActive){
-                    mUserUser.userUserActive = true;
-                    mUserUser.accept = false;
-                    this.userUserService.editUserUser(mUserUser).subscribe();
-                }else{
-                    this.userUserService.createUserUser(mUserUser).subscribe();
-                }
-            });
-        }else if (this.status == STATUS.FOLLOW || this.status == STATUS.SENT) {
-            this.deleteUserUser();
-        }else if (this.status == STATUS.PENDING){
-            let mUserUser: MUserUser = new MUserUser();
-            mUserUser.userId = this.user.userId;
-            mUserUser.friendId = this.authenticationService.getUser().id;
-            mUserUser.accept = true;
-            this.userUserService.editUserUser(mUserUser).subscribe();
-        }
+        this.eventMessage.emit();
     }
 
     private deleteUserUser(){
@@ -286,7 +285,6 @@ export class DetailUserComponent implements OnInit {
 
     getTotalMutualEvents(userId:number){
         this.userEventService.countMutualEvents(userId, this.authenticationService.getUser().id).subscribe((number)=>{
-            console.log(number);
             this.totalMutualEvents = number;
         });
     }

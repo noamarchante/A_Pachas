@@ -8,6 +8,24 @@
 .modal-header{
     padding-bottom: 10px;
 }
+.drop{
+    margin-top: 5px;
+    margin-left: -5px;
+
+}
+
+.buttonText{
+    text-decoration: none;
+    border: 1px solid #ffffff;
+    box-shadow: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: left;
+    font-weight: 300;
+    color: #333;
+    outline: none;
+}
 
 .title{
     padding-top: 5px;
@@ -63,8 +81,13 @@
     outline: none;
 }
 
+.subtitle{
+    color: #555!important;
+    font-weight: 450!important;
+}
+
 .closeButton{
-    margin-top: -65px;
+    margin-top: -50px;
 }
 
 .modal-body{
