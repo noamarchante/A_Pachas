@@ -23,6 +23,6 @@ public class ConUserEvent {
     }
 
     public UserEvent conMUserEvent(MUserEvent mUserEvent) {
-        return new UserEvent(new UserEventId(mUserEvent.getEventId(), mUserEvent.getUserId()), mUserEvent.getTotalExpense(), mUserEvent.isAccept());
+        return new UserEvent(new UserEventId(mUserEvent.getEventId(), mUserEvent.getUserId()), mUserEvent.getTotalExpense(), mUserEvent.getDebt(), mUserEvent.isAccept());
     }
 }

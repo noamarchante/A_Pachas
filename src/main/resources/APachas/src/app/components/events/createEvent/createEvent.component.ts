@@ -1,6 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChildren} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from "../../../services/user.service";
+import {AfterViewChecked, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AuthenticationService} from "../../../services/authentication.service";
 import {MUser} from "../../../models/MUser";
 import {UserUserService} from "../../../services/userUser.service";
@@ -18,7 +16,7 @@ import {MGroupMembers} from "../../../models/MGroupMembers";
     templateUrl: './createEvent.component.html',
     styleUrls: ['./createEvent.component.css']
 })
-export class CreateEventComponent implements OnInit {
+export class CreateEventComponent implements OnInit, AfterViewChecked {
 
     defaultImage = "./assets/event.jpg";
     defaultUserImage = "./assets/user.png";
@@ -35,11 +33,9 @@ export class CreateEventComponent implements OnInit {
     imageText: string;
     title: string = "CREAR EVENTO";
     _event: MEvent;
-    flag: boolean = false;
+
     @Output()
     eventSave = new EventEmitter<boolean>();
-    private return = 'events';
-
     public initialDate;
     public finalDate;
     public options: any = {
@@ -51,7 +47,30 @@ export class CreateEventComponent implements OnInit {
         drops: "up",
         locale: {
             format: 'DD/MM/yyyy HH:mm',
-            "firstDay": 1
+            "firstDay": 1,
+            daysOfWeek: [
+            "D",
+            "L",
+            "M",
+            "X",
+            "J",
+            "V",
+            "S"
+            ],
+            monthNames: [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ]
         },
         minDate: new Date(),
         maxDate: undefined,
@@ -60,10 +79,7 @@ export class CreateEventComponent implements OnInit {
         timePicker: true
     };
 
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private eventService: EventService,
-                private userService: UserService,
+    constructor(private eventService: EventService,
                 private groupUserService: GroupUserService,
                 private userEventService: UserEventService,
                 private userUserService: UserUserService,
@@ -81,19 +97,9 @@ export class CreateEventComponent implements OnInit {
         this.selectPartakers = [];
     }
 
-    public applyDate(): void {
-        this.event.eventStart =new Date(this.initialDate.valueOf());
-        this.event.eventEnd = new Date(this.finalDate.valueOf());
-    }
-
-    public selectedDate(value: any): void {
-        this.initialDate = new Date(value.start);
-        this.finalDate = new Date(value.end);
-    }
-
-    public cancelDate(): void {
-        this.initialDate = undefined;
-        this.finalDate = undefined;
+    ngAfterViewChecked() {
+        document.getElementsByClassName("applyDate")[0].textContent ="Aplicar";
+        document.getElementsByClassName("cancelDate")[0].textContent = "Cancelar";
     }
 
     get event(){
@@ -104,10 +110,14 @@ export class CreateEventComponent implements OnInit {
         if (event.eventId != undefined){
             this._event = event;
             this.title = "Editar evento";
+            this.initialDate = this.event.eventStart;
+            this.finalDate = this.event.eventEnd;
             this.getPartakers();
         }else{
             this._event = new MEvent();
             this.title = "Crear evento";
+            this.initialDate = null;
+            this.finalDate = null;
         }
 
         this.eventPartakers = [];
@@ -116,12 +126,19 @@ export class CreateEventComponent implements OnInit {
         this.getGroups();
     }
 
-    onSubmit(){
-        if (this.event.eventId != undefined){
-            this.onEdit();
-        }else{
-            this.onCreate();
-        }
+    public applyDate(): void {
+        this.event.eventStart =new Date(this.initialDate.valueOf()).toJSON().replace("T", " ").replace("Z", "");
+        this.event.eventEnd = new Date(this.finalDate.valueOf()).toJSON().replace("T", " ").replace("Z", "");
+    }
+
+    public selectedDate(value: any): void {
+        this.initialDate = new Date(value.start);
+        this.finalDate = new Date(value.end);
+    }
+
+    public cancelDate(): void {
+        this.initialDate = undefined;
+        this.finalDate = undefined;
     }
 
     onCreate(){
@@ -152,6 +169,14 @@ export class CreateEventComponent implements OnInit {
         });
     }
 
+    onSubmit(){
+        if (this.event.eventId != undefined){
+            this.onEdit();
+        }else{
+            this.onCreate();
+        }
+    }
+
     getImage(event): any {
         const file = event.target.files[0];
         if (this.imageFormatTest(file)){
@@ -161,24 +186,6 @@ export class CreateEventComponent implements OnInit {
             this.imageFormat = true;
         }else{
             this.imageFormat = false;
-        }
-    }
-
-    closeModal(){
-        this.event = new MEvent();
-        this.eventPartakers = [];
-        this.eventGroups = [];
-        this.imageFormat = null;
-        this.cancelDate();
-    }
-
-    changeStyle($event){
-        if ($event.type == "mouseover"){
-            this.imageColor = "imageColor";
-            this.imageText = "imageText";
-        }else{
-            this.imageColor = "";
-            this.imageText= "";
         }
     }
 
@@ -214,6 +221,25 @@ export class CreateEventComponent implements OnInit {
             return null;
         }
     });
+
+    changeStyle($event){
+        if ($event.type == "mouseover"){
+            this.imageColor = "imageColor";
+            this.imageText = "imageText";
+        }else{
+            this.imageColor = "";
+            this.imageText= "";
+        }
+    }
+
+    closeModal(){
+        this.event = new MEvent();
+        this.eventPartakers = [];
+        this.eventGroups = [];
+        this.imageFormat = null;
+        this.cancelDate();
+    }
+
 
     private getFriends(users: number[]){
         this.userUserService.getFriends(this.authenticationService.getUser().id).subscribe((response) => {
@@ -307,9 +333,7 @@ export class CreateEventComponent implements OnInit {
         return this.selectPartakers.find(group => group.groupId === id);
     }
 
-
     public changeSelect(event) {
-
             event.forEach(userSelected => {
                 this.selectPartakers.map(user => {
                     if (user.userId == userSelected.userId) {

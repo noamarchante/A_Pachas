@@ -1,7 +1,5 @@
 package esei.tfg.apachas.entity;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,64 +13,50 @@ import java.util.Set;
 @Table(name = "event")
 public class Event implements Serializable {
 
-    //CLAVE PRIMARIA: ID_EVENTO
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "eventId")
     private long eventId;
 
-    //ATRIBUTO: NOMBRE_EVENTO
     @Column(name = "eventName", nullable = false, length = 50)
     @Size(min = 4, max = 50)
     @NotNull
     @NotBlank
     private String eventName;
 
-    //ATRIBUTO: DESCRIPCION_EVENTO
     @Column(name = "eventDescription", length = 155)
     @Size(min=0,max = 155)
     @NotBlank
     private String eventDescription;
 
-    //ATRIBUTO: FECHA_INICIO_EVENTO
     @Column(name = "eventStart", nullable = false, length = 19)
     private Timestamp eventStart;
 
-    //ATRIBUTO: LUGAR-EVENTO
     @Column(name = "eventLocation", length = 155, nullable = false)
     @Size(min = 4, max = 155)
     @NotNull
     @NotBlank
     private String eventLocation;
 
-    //ATRIBUTO: FOTO_EVENTO
     @Column(name = "eventPhoto", length = 100000)
     private String eventPhoto;
 
-    //ATRIBUTO: EVENTO ABIERTO (POR ESTAR DENTRO DE FECHA O PAGOS PENDIENTES)
     @Column(name = "eventOpen", length = 1)
     @Size(min = 1, max = 1)
-
     private boolean eventOpen;
 
-    //ATRIBUTO: FECHA_FIN_EVENTO
     @Column(name = "eventEnd", nullable = false, length = 19)
     private Timestamp eventEnd;
 
-
-    //ATRIBUTO: EVENTO ACTIVO (SI SE HA ELIMINADO O NO)
     @Column(name = "eventActive", length = 1)
     @Size(min = 1, max = 1)
     private boolean eventActive;
 
-    //ATRIBUTO: FECHA_CREACIÓN_EVENTO
     @Column(name = "eventCreation", length = 19)
     private Timestamp eventCreation;
 
-    //ATRIBUTO: FECHA_BORRADO_EVENTO
     @Column(name = "eventRemoval", length = 19)
     private Timestamp eventRemoval;
-
 
     //N:1 EVENTO ES CREADO POR USUARIO
     @ManyToOne(fetch = FetchType.LAZY)
@@ -84,7 +68,7 @@ public class Event implements Serializable {
     //1:N EVENTO CONTIENE ELEMENTO
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     @Transient
-    private Set<Item> itemSet = new HashSet<>();
+    private Set<Product> productSet = new HashSet<>();
 
     //N:M EVENTO PARTICIPA USUARIO
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
@@ -179,20 +163,20 @@ public class Event implements Serializable {
         this.eventEnd = eventEnd;
     }
 
-    public Set<Item> getProductSet() {
-        return itemSet;
+    public Set<Product> getProductSet() {
+        return productSet;
     }
 
-    public void setProductSet(Set<Item> itemSet) {
-        this.itemSet = itemSet;
+    public void setProductSet(Set<Product> productSet) {
+        this.productSet = productSet;
     }
 
-    public Set<Item> getItemSet() {
-        return itemSet;
+    public Set<Product> getItemSet() {
+        return productSet;
     }
 
-    public void setItemSet(Set<Item> itemSet) {
-        this.itemSet = itemSet;
+    public void setItemSet(Set<Product> productSet) {
+        this.productSet = productSet;
     }
 
     public Set<UserEvent> getUserEventSet() {

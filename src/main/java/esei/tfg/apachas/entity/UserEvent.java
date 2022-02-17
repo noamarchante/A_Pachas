@@ -33,7 +33,7 @@ public class UserEvent implements Serializable {
     @NotNull
     @NotBlank
     @Size(min = 1, max = 12)
-    @ColumnDefault(value = "0")
+    @ColumnDefault(value = "0.0")
     private Double totalExpense;
 
     @Column(name = "userEventCreation")
@@ -42,21 +42,38 @@ public class UserEvent implements Serializable {
     @Column(name = "userEventRemoval")
     private Timestamp userEventRemoval;
 
-    //ATRIBUTO: USUARIO DE EVENTO ACTIVO (SI SE HA ELIMINADO O NO)
     @Column(name = "userEventActive", length = 1)
     @Size(min = 1, max = 1)
     private boolean userEventActive;
 
+
+    @Column(name = "debt", length = 12, nullable = false)
+    @NotNull
+    @NotBlank
+    @Size(min = 1, max = 12)
+    @ColumnDefault(value = "0")
+    private Double debt;
+
+
     public UserEvent() {
     }
 
-    public UserEvent(UserEventId userEventId, Double totalExpense, boolean accept) {
+    public UserEvent(UserEventId userEventId, Double totalExpense, Double debt, boolean accept) {
         this.userEventId = userEventId;
         this.setTotalExpense(totalExpense);
+        this.setDebt(debt);
         this.setAccept(accept);
         this.setUserEventActive(false);
         this.setUserEventRemoval(null);
         this.setUserEventCreation(new Timestamp(System.currentTimeMillis()));
+    }
+
+    public Double getDebt() {
+        return debt;
+    }
+
+    public void setDebt(Double debt) {
+        this.debt = debt;
     }
 
     public UserEventId getUserEventId() {

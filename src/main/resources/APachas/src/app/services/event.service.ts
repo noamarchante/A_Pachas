@@ -4,7 +4,6 @@ import {Observable} from "rxjs";
 import {environment} from "../../environments/environment";
 import {MEvent} from "../models/MEvent";
 import {APachasError} from "../modules/notification/entities";
-import {DatePipe} from "@angular/common";
 
 @Injectable({
     providedIn: 'root'
@@ -20,8 +19,8 @@ export class EventService {
             "eventId": mEvent.eventId,
             "eventName":mEvent.eventName,
             "eventDescription":mEvent.eventDescription,
-            "eventStart": mEvent.eventStart.toJSON().replace("T", " ").replace("Z", ""),
-            "eventEnd": mEvent.eventEnd.toJSON().replace("T", " ").replace("Z", ""),
+            "eventStart": mEvent.eventStart,
+            "eventEnd": mEvent.eventEnd,
             "eventLocation":mEvent.eventLocation,
             "eventPhoto":mEvent.eventPhoto,
             "eventOpen": "",
@@ -52,6 +51,13 @@ export class EventService {
         })
             .pipe(
                 APachasError.throwOnError('Fallo al editar el evento', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo`)
+            );
+    }
+
+    editOpen(eventId: number, open: boolean): Observable<void>{
+        return this.http.put<void>(`${environment.restApi}/events/open/${eventId}`, open)
+            .pipe(
+                APachasError.throwOnError('Fallo al cerrar evento', `Por favor, inténtelo de nuevo`)
             );
     }
 

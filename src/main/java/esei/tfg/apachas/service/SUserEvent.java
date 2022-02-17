@@ -3,9 +3,7 @@ package esei.tfg.apachas.service;
 import esei.tfg.apachas.converter.ConEvent;
 import esei.tfg.apachas.converter.ConUser;
 import esei.tfg.apachas.entity.*;
-import esei.tfg.apachas.entity.id.GroupUserId;
 import esei.tfg.apachas.model.MEvent;
-import esei.tfg.apachas.model.MGroupUser;
 import esei.tfg.apachas.model.MUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,7 +15,6 @@ import esei.tfg.apachas.model.MUserEvent;
 import esei.tfg.apachas.repository.REvent;
 import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RUserEvent;
-
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -78,7 +75,15 @@ public class SUserEvent {
             });
 
             userIdList.forEach(userId -> {
-                insertUserEvent(new MUserEvent(new UserEvent(new UserEventId(eventId, userId), 0.0, false)));
+                existingUserEventList.forEach(userEvent ->{
+                    if (userEvent.getUser().getUserId() == userId && !userEvent.isUserEventActive()){
+                        userEvent.setUserEventActive(true);
+                        userEvent.setUserEventRemoval(null);
+                        userEvent.setAccept(false);
+                        rUserEvent.save(userEvent);
+                    }
+                });
+                insertUserEvent(new MUserEvent(new UserEvent(new UserEventId(eventId, userId), 0.0, 0.0, false)));
             });
             return true;
         }else{
@@ -91,8 +96,8 @@ public class SUserEvent {
         UserEvent existingUserEvent = rUserEvent.findByUserEventId(new UserEventId(eventId, authId));
         User existingUser = rUser.findByUserId(authId);
 
-        if (existingEvent != null || existingUser != null || existingUserEvent != null){
-            existingUserEvent.setAccept(true);
+        if (existingEvent != null && existingUser != null && existingUserEvent != null){
+            existingUserEvent.setAccept(!existingUserEvent.isAccept());
             rUserEvent.save(existingUserEvent);
             return true;
         }else{
@@ -118,12 +123,11 @@ public class SUserEvent {
         return rUserEvent.countEvents(authId);
     }
 
-    public synchronized Long countEventsWithFinished(long authId){
-        return rUserEvent.countEventsWithFinished(authId);
-    }
-
     public synchronized Long countSearchEvents(String eventName, long authId){
         return rUserEvent.countSearchEvents(authId, eventName);
+    }
+    public synchronized Long countEventsWithFinished(long authId){
+        return rUserEvent.countEventsWithFinished(authId);
     }
 
     public synchronized Long countSearchEventsWithFinished(String eventName, long authId){
@@ -171,5 +175,53 @@ public class SUserEvent {
 
     public synchronized MUserEvent selectUserEvent(long eventId, long authId) {
         return conUserEvent.conUserEvent(rUserEvent.findUserEventByUserEventId_EventIdAndUserEventId_UserId(eventId, authId));
+    }
+
+    public synchronized List<MUserEvent> selectPageableUserEvents(Long eventId, Pageable pageable) {
+        List<UserEvent> userEventList = rUserEvent.findPageableUserEvents(eventId, pageable).getContent();
+        return conUserEvent.conUserEventList(userEventList);
+    }
+
+    public synchronized List<MUserEvent> selectUserEvents(Long eventId) {
+        List<UserEvent> userEventList = rUserEvent.findPageableUserEvents(eventId);
+        return conUserEvent.conUserEventList(userEventList);
+    }
+
+    public synchronized Long countUserEvents(long eventId){
+        return rUserEvent.countUserEvents(eventId);
+    }
+
+    public synchronized List<MUserEvent> selectPageableSearchUserEvents(String userName, long eventId, Pageable pageable) {
+        return conUserEvent.conUserEventList(rUserEvent.findPageableSearchUserEvents(eventId, userName, pageable).getContent());
+    }
+
+    public synchronized Long countSearchUserEvents(String userName, long eventId){
+        return rUserEvent.countSearchUserEvents(eventId, userName);
+    }
+
+    public synchronized boolean updateTotalExpense(long eventId, long userId, double totalExpense) {
+        UserEvent existingUserEvent = rUserEvent.findByUserEventId(new UserEventId(eventId, userId));
+        Event existingEvent = rEvent.findByEventId(eventId);
+        User existingUser = rUser.findByUserId(userId);
+        if (existingUserEvent == null || existingEvent == null || existingUser == null) {
+            return false;
+        } else {
+            existingUserEvent.setTotalExpense(totalExpense);
+            rUserEvent.save(existingUserEvent);
+            return true;
+        }
+    }
+
+    public synchronized boolean updateDebt(long eventId, long userId, double userDebt) {
+        UserEvent existingUserEvent = rUserEvent.findByUserEventId(new UserEventId(eventId, userId));
+        Event existingEvent = rEvent.findByEventId(eventId);
+        User existingUser = rUser.findByUserId(userId);
+        if (existingUserEvent == null || existingEvent == null || existingUser == null) {
+            return false;
+        } else {
+            existingUserEvent.setDebt(userDebt);
+            rUserEvent.save(existingUserEvent);
+            return true;
+        }
     }
 }

@@ -1,6 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from "../../../services/user.service";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {NotificationService} from "../../../modules/notification/services/notification.service";
 import {MUser} from "../../../models/MUser";
@@ -8,6 +6,9 @@ import {MEvent} from "../../../models/MEvent";
 import {EventService} from "../../../services/event.service";
 import {UserEventService} from "../../../services/userEvent.service";
 import {STATUS} from "../../users/listUsers/listUsers.component";
+import {ProductService} from "../../../services/product.service";
+import {Router} from "@angular/router";
+import {UserUserEventService} from "../../../services/userUserEvent.service";
 
 @Component({
     selector: 'app-detailEvent',
@@ -33,8 +34,9 @@ export class DetailEventComponent implements OnInit {
     pagePartaker = 0;
     sizePartaker = 6;
     totalPartaker: number=0;
-    more: string = "Ver más ...";
     message: string = "";
+    statusMessage: string = "";
+    show: boolean = true;
 
     previousEvent: string="";
     nextEvent: string="";
@@ -45,16 +47,15 @@ export class DetailEventComponent implements OnInit {
     _status: string ="";
     messageRequest: boolean;
 
+    close: boolean = false;
 
-    private return = 'events';
-
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private eventService: EventService,
-                private userService: UserService,
+    constructor(private eventService: EventService,
+                private productService: ProductService,
                 private userEventService: UserEventService,
+                private userUserEventService: UserUserEventService,
                 private authenticationService: AuthenticationService,
-                private notificationService: NotificationService
+                private notificationService: NotificationService,
+                private router: Router
     ) {
     }
 
@@ -62,19 +63,45 @@ export class DetailEventComponent implements OnInit {
         this.paginationEventClass();
     }
 
-    messageValue(request: boolean) {
-        this.messageRequest = request;
-        if(request){
-            if (this.status == STATUS.PENDING){
-                this.message = "¿Quieres aceptar la solicitud para participar en el evento?";
-            }else{
-                this.message = "¿Estás seguro de que quieres salir del evento?";
-            }
-        }else if (!request) {
-            if (this.authenticationService.getUser().id == this.event.eventOwner) {
-                this.message = "¿Estás seguro de que deseas eliminar el evento?";
-            }
+    showDetailsAndProducts(){
+        //this.productService.setEvent(this.event);
+        localStorage.setItem("products",  JSON.stringify(this.event));
+        this.router.navigateByUrl("/products");
+    }
+
+    showTransactions(){
+        localStorage.setItem("transactions",  JSON.stringify(this.event));
+        this.router.navigateByUrl("/transactions");
+    }
+
+    messageValue() {
+        this.messageRequest = true;
+        if (this.status == STATUS.PENDING){
+            this.message = "¿Quieres aceptar la solicitud para participar en el evento?";
+        }else{
+            this.message = "¿Estás seguro de que quieres salir del evento?";
         }
+    }
+
+    showDeleteEvent(){
+        this.messageRequest = false;
+        if (this.authenticationService.getUser().id == this.event.eventOwner) {
+            this.message = "¿Estás seguro de que deseas eliminar el evento? Una vez realizada está acción no se podrá deshacer.";
+        }
+    }
+
+    showSetStatus(): boolean{
+        if (this.authenticationService.getUser().id != this.event.eventOwner) {
+            this.messageValue();
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    closeMessage(){
+        this.close = true;
+        this.message = "¿Estás seguro de que deseas cerrar el evento? Una vez realizada está acción no se podrá deshacer."
     }
 
     get previous(){
@@ -83,6 +110,7 @@ export class DetailEventComponent implements OnInit {
 
     @Input() set previous( previous: boolean){
         this._previous = previous;
+        this.paginationEventClass();
     }
 
     get status(){
@@ -92,6 +120,13 @@ export class DetailEventComponent implements OnInit {
     @Input() set status( status: string){
         if (status != undefined){
             this._status = status;
+            if (status == STATUS.PENDING){
+                this.statusMessage = "Aceptar o denegar solicitud";
+                this.show = false;
+            }else{
+                this.statusMessage = "Salir del evento";
+                this.show = true;
+            }
         }
     }
 
@@ -101,6 +136,7 @@ export class DetailEventComponent implements OnInit {
 
     @Input() set next( next: boolean){
         this._next = next;
+        this.paginationEventClass();
     }
 
 
@@ -111,6 +147,7 @@ export class DetailEventComponent implements OnInit {
     @Input() set event (event: MEvent) {
         if (event != undefined) {
             this._event = event;
+            this.partakerReset();
             if (this.event.eventId != null){
                 this.getPartakers(this.event.eventId);
                 this.getTotalPartakers(this.event.eventId);
@@ -120,32 +157,39 @@ export class DetailEventComponent implements OnInit {
         }
         this.eventPartakers = [];
         this.eventPartakersStored = [];
+        this.paginationEventClass();
     }
 
     onDelete($event){
         if($event.valueOf()){
-            if (this.event.eventOwner == this.authenticationService.getUser().id){
-                this.eventService.deleteEvent(this.event.eventId).subscribe(()=>{
-                        this.eventDelete.emit();
-                        this.notificationService.success("Evento eliminado", "Se ha eliminado el evento correctamente.");
-
-                    }
-                );
-            }else{
-                this.userEventService.deleteUserEvent(this.event.eventId, this.authenticationService.getUser().id).subscribe(() => {
-                    this.eventDelete.emit();
-                    this.notificationService.success("Eliminado del evento", "Ya no eres un participante de este evento.");
-                });
-            }
+            this.eventService.deleteEvent(this.event.eventId).subscribe(()=>{
+                this.eventDelete.emit();
+                this.notificationService.success("Evento eliminado", "Se ha eliminado el evento correctamente.");
+            });
         }
     }
 
-    editDelete(): boolean{
+    showButtons(): boolean{
         if (this.event.eventOwner == this.authenticationService.getUser().id){
             return true;
         }else{
             return false;
         }
+    }
+
+    showButtonStatus(): boolean{
+       if (this.showButtons() && this.status == STATUS.PENDING){
+           return true;
+       }else{
+           return false;
+       }
+    }
+
+    closeEvent(){
+        this.eventService.editOpen(this.event.eventId, false).subscribe(()=>{
+            this.userUserEventService.createUserUserEvent(this.event.eventId).subscribe();
+            this.showTransactions();
+        });
     }
 
     ownerLabel(userId:number):string{
@@ -169,38 +213,38 @@ export class DetailEventComponent implements OnInit {
     getPartakers(eventId:number){
         this.userEventService.getPageablePartakers(eventId,this.pagePartaker, this.sizePartaker).subscribe((response) => {
             this.eventPartakers.push(...response);
-            this.paginationEventClass();
-            this.setMoreLabel();
         });
     }
 
     getTotalPartakers(eventId:number){
-        this.userEventService.countPartakers(eventId).subscribe((partakers)=>{
-            this.totalPartaker = partakers;
+        this.userEventService.countPartakers(eventId).subscribe((number)=>{
+            this.totalPartaker = number;
         });
     }
 
-    setMoreLabel(){
-        if (this.eventPartakers.length == this.totalPartaker){
-            this.more = "... Ver menos";
+    getMorePartakers(){
+        this.pagePartaker +=1;
+        if (this.eventPartakers.length < this.eventPartakersStored.length){
+            this.eventPartakers = this.eventPartakersStored.slice(0,this.sizePartaker*(this.pagePartaker+1));
         }else{
-            this.more = "Ver más ...";
+            this.getPartakers(this.event.eventId);
         }
     }
 
-    getMorePartakers(){
-        if (this.eventPartakers.length == this.totalPartaker){
+    getLessPartakers(){
+        if (this.eventPartakersStored.length != this.totalPartaker){
             this.eventPartakersStored = this.eventPartakers;
-            this.eventPartakers = this.eventPartakers.slice(0,this.sizePartaker);
+            this.eventPartakers = this.eventPartakers.slice(0,this.sizePartaker*this.pagePartaker);
         }else{
-            if (this.eventPartakersStored.length ==0){
-                this.pagePartaker +=1;
-                this.getPartakers(this.event.eventId);
-            }else{
-                this.eventPartakers = this.eventPartakersStored;
-            }
+            this.eventPartakers = this.eventPartakersStored.slice(0, this.sizePartaker*this.pagePartaker);
         }
-        this.setMoreLabel();
+        this.pagePartaker -=1;
+    }
+
+    partakerReset(){
+        this.eventPartakers = [];
+        this.eventPartakersStored = [];
+        this.pagePartaker = 0;
     }
 
     private paginationEventClass(){
@@ -221,11 +265,16 @@ export class DetailEventComponent implements OnInit {
 
 
     onRequest($event){
-        if (this.messageRequest){
-            this.setStatus($event);
-            this.eventMessage.emit();
-        }else if (!this.messageRequest){
-            this.onDelete($event);
+        if (this.close && $event.valueOf()){
+            this.closeEvent();
+            this.close = false;
+        }else{
+            if (this.messageRequest){
+                this.setStatus($event);
+                this.eventMessage.emit();
+            }else if (!this.messageRequest) {
+                this.onDelete($event);
+            }
         }
     }
 
@@ -233,22 +282,8 @@ export class DetailEventComponent implements OnInit {
         if ($event.valueOf() && this.status == STATUS.PENDING){
             this.userEventService.editStatus(this.event.eventId, this.authenticationService.getUser().id).subscribe();
         }else{
+
             this.userEventService.deleteUserEvent(this.event.eventId, this.authenticationService.getUser().id).subscribe();
         }
     }
-
-    /*getStatus(status: boolean){
-        if (status){
-            this.status = STATUS.FOLLOW;
-        }else{
-            this.status = STATUS.PENDING;
-        }
-    }*/
-
-    /*getUserEvent(){
-        this.userEventService.getUserEvent(this.event.eventId, this.authenticationService.getUser().id).subscribe((response) =>{
-            this.getStatus(response.accept);
-        });
-
-    }*/
 }

@@ -2,15 +2,15 @@ package esei.tfg.apachas.service;
 
 import esei.tfg.apachas.converter.ConEvent;
 import esei.tfg.apachas.entity.Event;
-import esei.tfg.apachas.entity.Group;
 import esei.tfg.apachas.entity.User;
+import esei.tfg.apachas.entity.UserEvent;
+import esei.tfg.apachas.entity.id.UserEventId;
 import esei.tfg.apachas.model.MEvent;
-import esei.tfg.apachas.model.MUser;
 import esei.tfg.apachas.repository.REvent;
+import esei.tfg.apachas.repository.RUserUserEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import java.sql.Timestamp;
 
 @Service("SEvent")
@@ -19,6 +19,10 @@ public class SEvent {
     @Autowired
     @Qualifier("REvent")
     private REvent rEvent;
+
+    @Autowired
+    @Qualifier("SUserUserEvent")
+    private SUserUserEvent sUserUserEvent;
 
     @Autowired
     @Qualifier("ConEvent")
@@ -54,6 +58,18 @@ public class SEvent {
         if (existingEvent != null) {
             existingEvent.setEventActive(false);
             existingEvent.setEventRemoval(new Timestamp(System.currentTimeMillis()));
+            rEvent.save(existingEvent);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized boolean updateOpen(long eventId, boolean close) {
+        Event existingEvent = rEvent.findByEventId(eventId);
+        if (existingEvent != null) {
+            sUserUserEvent.deleteUserUserEvent(eventId);
+            existingEvent.setEventOpen(close);
             rEvent.save(existingEvent);
             return true;
         } else {

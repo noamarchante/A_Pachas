@@ -2,8 +2,8 @@ export class MEvent {
     eventId: number;
     eventName:string;
     eventDescription:string;
-    eventStart:Date;
-    eventEnd:Date;
+    eventStart:string;
+    eventEnd:string;
     eventLocation:string;
     eventPhoto:string;
     eventOpen:boolean;

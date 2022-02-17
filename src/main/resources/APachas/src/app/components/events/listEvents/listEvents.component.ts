@@ -1,10 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {DomSanitizer} from "@angular/platform-browser";
-import {UserService} from "../../../services/user.service";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {MEvent} from "../../../models/MEvent";
-import {EventService} from "../../../services/event.service";
 import {UserEventService} from "../../../services/userEvent.service";
 import {STATUS} from "../../users/listUsers/listUsers.component";
 
@@ -21,24 +18,16 @@ export class ListEventsComponent implements OnInit {
     defaultImage: string = "./assets/event.jpg";
     totalPage:number= 0;
     page: number= 0;
-    edit: boolean = false;
     selectedEvent: MEvent = new MEvent();
     selectedStatus: string ="";
     size: number= 6;
     index: number;
-    previous: boolean;
-    next:boolean;
-    previousClass:string;
-    nextClass:string;
+    previous:string;
+    next:string;
     pageDirection: number;
     checked: boolean;
 
-
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private userService: UserService,
-                private eventService: EventService,
-                private userEventService: UserEventService,
+    constructor(private userEventService: UserEventService,
                 private authenticationService: AuthenticationService,
                 private sanitizer: DomSanitizer) {}
 
@@ -49,8 +38,17 @@ export class ListEventsComponent implements OnInit {
     }
 
     toggleCheck(){
+        this.page = 0;
         this.checked = !this.checked;
         this.pagination();
+    }
+
+    checkFilter():string{
+        if (this.checked){
+            return "checkFilter"
+        }else{
+            return "";
+        }
     }
 
     setEvent(){
@@ -97,17 +95,17 @@ export class ListEventsComponent implements OnInit {
 
     paginationClass(){
         if(this.page!=0 && this.page+1<this.totalPage){
-            this.previousClass = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9";
-            this.nextClass = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3";
+            this.previous = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9";
+            this.next = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3";
         }else if (this.page==0 && this.page+1<this.totalPage){
-            this.previousClass = "";
-            this.nextClass = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.previous = "";
+            this.next = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
         }else if(this.page!=0 && this.page+1==this.totalPage){
-            this.previousClass = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
-            this.nextClass = "";
+            this.previous = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.next = "";
         }else{
-            this.previousClass = "";
-            this.nextClass = "";
+            this.previous = "";
+            this.next = "";
         }
     }
 
@@ -230,7 +228,6 @@ export class ListEventsComponent implements OnInit {
         mEvents.forEach((mEvent) => {
             this.userEventService.getUserEvent(mEvent.eventId, this.authenticationService.getUser().id).subscribe((response) => {
                 this.status[mEvent.eventId] = this.statusValue(response.accept);
-
             });
         });
     }

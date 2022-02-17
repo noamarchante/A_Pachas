@@ -1,6 +1,8 @@
 export class MUserEvent {
-    userEventId: number;
+    userId: number;
+    eventId: number;
     totalExpense: number;
+    debt: number;
     accept: boolean;
     userEventActive: boolean;
     userEventRemoval: Date;

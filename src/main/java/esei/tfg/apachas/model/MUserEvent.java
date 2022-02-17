@@ -2,7 +2,6 @@ package esei.tfg.apachas.model;
 
 
 import esei.tfg.apachas.entity.UserEvent;
-
 import java.sql.Timestamp;
 
 public class MUserEvent {
@@ -10,6 +9,7 @@ public class MUserEvent {
     private long userId;
     private boolean accept;
     private Double totalExpense;
+    private Double debt;
     private Timestamp userEventCreation;
     private Timestamp userEventRemoval;
     private boolean userEventActive;
@@ -22,14 +22,18 @@ public class MUserEvent {
         this.userId = userEvent.getUserEventId().getUserId();
         this.accept = userEvent.isAccept();
         this.totalExpense = userEvent.getTotalExpense();
+        this.debt = userEvent.getDebt();
         this.userEventActive = userEvent.isUserEventActive();
         this.userEventCreation = userEvent.getUserEventCreation();
         this.userEventRemoval = userEvent.getUserEventRemoval();
     }
 
+    public Double getDebt() {
+        return debt;
+    }
 
-    public boolean getStatus() {
-        return accept;
+    public void setDebt(Double debt) {
+        this.debt = debt;
     }
 
     public void setAccept(boolean accept) {

@@ -52,5 +52,13 @@ public class CEvent {
         }
     }
 
-
+    @PutMapping("/open/{eventId}")
+    public ResponseEntity<Void> editOpen(@PathVariable("eventId") long eventId, @RequestBody @Valid boolean close) {
+        boolean flag = sEvent.updateOpen(eventId, close);
+        if (!flag) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+    }
 }

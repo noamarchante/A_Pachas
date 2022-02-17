@@ -17,6 +17,25 @@
     color: #555;
 }
 
+.drop{
+    margin-top: 5px;
+    margin-left: -5px;
+
+}
+
+.buttonText{
+    text-decoration: none;
+    border: 1px solid #ffffff;
+    box-shadow: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: left;
+    font-weight: 300;
+    color: #333;
+    outline: none;
+}
+
 .button {
     width: 100%;
     padding: 10px;
@@ -118,10 +137,6 @@ div.paginationPartakerDiv {
 
 .paginationPartaker{
     align-items: center;
-}
-
-.previousPartaker{
-    float: left;
 }
 
 .imagePartaker {

@@ -32,7 +32,7 @@ export class UserEventService {
     }
 
     getPageableSearchEvents(eventName: string, authId: number, page: number, size: number): Observable<MEvent[]>{
-        return this.http.get<Event[]>(`${environment.restApi}/usersEvents/pageable/${eventName}/${authId}/?page=${page}&size=${size}`).pipe(
+        return this.http.get<Event[]>(`${environment.restApi}/usersEvents/pageable/events/${eventName}/${authId}/?page=${page}&size=${size}`).pipe(
             map(events => events.map(this.mapEvent.bind(this)))
         );
     }
@@ -44,7 +44,7 @@ export class UserEventService {
     }
 
     countSearchEvents(eventName: string, authId: number): Observable<number> {
-        return this.http.get<number>(`${environment.restApi}/usersEvents/count/${eventName}/${authId}`);
+        return this.http.get<number>(`${environment.restApi}/usersEvents/count/events/${eventName}/${authId}`);
     }
 
     countSearchEventsWithFinished(eventName: string, authId: number): Observable<number> {
@@ -52,7 +52,7 @@ export class UserEventService {
     }
 
     countEvents(authId: number): Observable<number>{
-        return this.http.get<number>(`${environment.restApi}/usersEvents/count/${authId}`);
+        return this.http.get<number>(`${environment.restApi}/usersEvents/count/events/${authId}`);
     }
 
     countEventsWithFinished(authId: number): Observable<number>{
@@ -60,7 +60,7 @@ export class UserEventService {
     }
 
     getPageableEvents(authId: number, page: number, size: number): Observable<MEvent[]> {
-        return this.http.get<Event[]>(`${environment.restApi}/usersEvents/pageable/${authId}?page=${page}&size=${size}`).pipe(
+        return this.http.get<Event[]>(`${environment.restApi}/usersEvents/pageable/events/${authId}?page=${page}&size=${size}`).pipe(
             map(events => events.map(this.mapEvent.bind(this)))
         );
     }
@@ -96,6 +96,7 @@ export class UserEventService {
             "eventId":eventId,
             "userId": userId,
             "accept": accept,
+            "debt": 0,
             "totalExpense": 0,
             "userEventActive": true,
             "userEventCreation": "",
@@ -110,6 +111,20 @@ export class UserEventService {
         return this.http.put<void>(`${environment.restApi}/usersEvents/${eventId}`,userIds)
             .pipe(
                 APachasError.throwOnError('Fallo al editar participantes del evento', `Por favor, inténtelo de nuevo`)
+            );
+    }
+
+    editTotalExpense(mUserEvent: MUserEvent): Observable<void>{
+        return this.http.put<void>(`${environment.restApi}/usersEvents/totalExpense/${mUserEvent.eventId}/${mUserEvent.userId}`, mUserEvent.totalExpense)
+            .pipe(
+                APachasError.throwOnError('Fallo al editar el dinero aportado por el participante autenticado del evento', `Por favor, inténtelo de nuevo`)
+            );
+    }
+
+    editDebt(eventId: number, userId: number, userDebt: number): Observable<void>{
+        return this.http.put<void>(`${environment.restApi}/usersEvents/debt/${eventId}/${userId}`, userDebt)
+            .pipe(
+                APachasError.throwOnError('Fallo al editar el dinero que debe el participante del evento', `Por favor, inténtelo de nuevo`)
             );
     }
 
@@ -130,6 +145,26 @@ export class UserEventService {
         return this.http.get<UserEvent>(`${environment.restApi}/usersEvents/${eventId}/${userId}`).pipe(
             map(this.mapUserEvent.bind(this))
         );
+    }
+
+    getPageableUserEvents(eventId: number, page: number, size: number): Observable<MUserEvent[]>{
+        return this.http.get<UserEvent[]>(`${environment.restApi}/usersEvents/pageable/${eventId}/?page=${page}&size=${size}`).pipe(
+            map(userEvents => userEvents.map(this.mapUserEvent.bind(this)))
+        );
+    }
+
+    countUserEvents(eventId: number): Observable<number>{
+        return this.http.get<number>(`${environment.restApi}/usersEvents/count/${eventId}`);
+    }
+
+    getPageableSearchUserEvents(userName: string, eventId: number, page: number, size: number): Observable<MUserEvent[]>{
+        return this.http.get<UserEvent[]>(`${environment.restApi}/usersEvents/pageable/${userName}/${eventId}/?page=${page}&size=${size}`).pipe(
+            map(userEvents => userEvents.map(this.mapUserEvent.bind(this)))
+        );
+    }
+
+    countSearchUserEvents(userName: string, eventId: number): Observable<number> {
+        return this.http.get<number>(`${environment.restApi}/usersEvents/count/${userName}/${eventId}`);
     }
 
     private mapEvent(event: Event) : MEvent {
@@ -169,8 +204,10 @@ export class UserEventService {
 
     private mapUserEvent(userEvent: UserEvent) : MUserEvent {
         return {
-            userEventId: userEvent.userEventId,
+            userId: userEvent.userId,
+            eventId: userEvent.eventId,
             totalExpense: userEvent.totalExpense,
+            debt: userEvent.debt,
             accept: userEvent.accept,
             userEventActive: userEvent.userEventActive,
             userEventRemoval: userEvent.userEventRemoval,
