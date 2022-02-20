@@ -88,3 +88,28 @@
      min-height: 36px;
      align-items: center;
 }
+
+
+
+.daterangepicker td.active.start-date, .daterangepicker td.active.end-date {
+     background-color: #66bb6a !important;
+}
+
+.daterangepicker td.in-range {
+     background-color: rgba(102, 187, 106, 0.1) !important;
+}
+
+.daterangepicker .applyBtn{
+     background-color: #66bb6a !important;
+     border: none;
+}
+
+.daterangepicker .cancelBtn{
+     color: #fff;
+     background-color: #555;
+     border: none;
+}
+.daterangepicker option:before {
+     background-color: rgba(102, 187, 106, 0.1) !important;
+
+}

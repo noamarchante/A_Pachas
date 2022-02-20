@@ -35,16 +35,16 @@
                                 <ng-template #imagesDiv>
                                     <img class="imageGroup" [src]="defaultImage">
                                 </ng-template>
-                                <div class="date text">
-                                    Creación: {{userGroup.groupCreation | date: 'dd-MM-yyyy'}}</div>
-                                <div class="description-row text"
-                                     name="userGroupDescription"
-                                     id="detailUserGroup_userGroupDescription">
-                                    {{userGroup.groupDescription}}
-
-                                </div>
+                            </div>
+                            <!--<div class="date text">
+                                    Creación: {{userGroup.groupCreation | date: 'dd-MM-yyyy'}}</div>-->
+                            <div *ngIf="userGroup.groupDescription!='' && userGroup.groupDescription!= null" class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 description-row text"
+                                 name="userGroupDescription"
+                                 id="detailUserGroup_userGroupDescription">
+                                <img class="icon" src="./assets/comment.svg" alt="">{{userGroup.groupDescription}}
                             </div>
                         </div>
+
                         <div class="paginationMemberDiv col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="row">
                                 <div *ngFor="let user of groupMembers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">

@@ -18,9 +18,9 @@ import {MGroupMembers} from "../../../models/MGroupMembers";
 })
 export class CreateEventComponent implements OnInit, AfterViewChecked {
 
-    defaultImage = "./assets/event.jpg";
-    defaultUserImage = "./assets/user.png";
-    defaultGroupImage = "./assets/group.jpg";
+    defaultImage = "./assets/event7.jpg";
+    defaultUserImage = "./assets/user16.jpg";
+    defaultGroupImage = "./assets/group7_2.jpg";
 
     friends: MUser[];
     groups: MGroup[];

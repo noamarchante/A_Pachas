@@ -24,8 +24,8 @@ export class DetailProductComponent implements OnInit, AfterViewChecked {
     @Output()
     statusUpdate = new EventEmitter<number>();
 
-    defaultUserImage: string = "./assets/user.png";
-    defaultImage: string = "./assets/product.jpg";
+    defaultUserImage: string = "./assets/user16.jpg";
+    defaultImage: string = "./assets/product3.jpg";
 
     productPartakers: MUser[] = [];
     productPartakersStored: MUser[] = [];

@@ -23,9 +23,9 @@ export class DetailUserComponent implements OnInit {
 
     @Output()
     eventMessage = new EventEmitter<number>();
-    defaultEventImage: string = "./assets/event.jpg";
-    defaultGroupImage: string = "./assets/group.jpg";
-    defaultImage: string = "./assets/user.png";
+    defaultEventImage: string = "./assets/event7.jpg";
+    defaultGroupImage: string = "./assets/group7_2.jpg";
+    defaultImage: string = "./assets/user16.jpg";
     previousUser: string;
     nextUser: string;
 

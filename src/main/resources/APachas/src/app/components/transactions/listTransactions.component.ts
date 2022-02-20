@@ -22,7 +22,7 @@ export class ListTransactionsComponent implements OnInit {
     previous:string;
     next:string;
 
-    defaultUserImage: string = "./assets/user.png";
+    defaultUserImage: string = "./assets/user16.jpg";
     event: MEvent;
     eventPartakers: MUser[] = [];
     totalPartaker: number=0;

@@ -17,6 +17,16 @@
     color: #555;
 }
 
+.icon{
+    width: 25px;
+    height: 20px;
+    padding-right: 5px;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: rgba(102, 187, 106, 0.1);
+}
+
 .row{
     padding-bottom: 10px;
 }
@@ -41,8 +51,8 @@
 }
 
 .description-row{
-    padding-top: 10px;
     text-align: left !important;
+    padding-left: 10px;
 }
 
 .text{

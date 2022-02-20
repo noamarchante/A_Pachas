@@ -110,6 +110,35 @@
     background: #555;
 }
 
+
+.daterangerpicker {
+    width: 100%;
+    outline: none;
+    box-shadow: none;
+    margin: 8px 0;
+    letter-spacing: 1px;
+    font-weight: 300;
+    color: #333;
+    padding-left: 10px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    min-height: 36px;
+    align-items: center;
+}
+
+
+.daterangerpicker .placeholder {
+    color: #777;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-size: 14px;
+    margin: 8px 0;
+    letter-spacing: 1px;
+    font-weight: 300;
+}
+
 @media (max-width: 340px) {
     .buttons{
         width: 45%;

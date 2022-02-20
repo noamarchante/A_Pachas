@@ -26,8 +26,8 @@ export class DetailEventComponent implements OnInit {
     @Output()
     eventDetail = new EventEmitter<number>();
 
-    defaultUserImage: string = "./assets/user.png";
-    defaultImage: string = "./assets/event.jpg";
+    defaultUserImage: string = "./assets/user16.jpg";
+    defaultImage: string = "./assets/event7.jpg";
 
     eventPartakers: MUser[] = [];
     eventPartakersStored: MUser[] = [];

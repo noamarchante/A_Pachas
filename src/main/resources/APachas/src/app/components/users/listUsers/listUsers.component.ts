@@ -19,7 +19,7 @@ export class ListUsersComponent implements OnInit {
     login = "";
     users: MUser[] = [];
     images: {[index:number]: any;} = {};
-    defaultImage = "./assets/user.png";
+    defaultImage = "./assets/user16.jpg";
     friends: {[index: number]: any;} = {};
     totalPage = 0;
     page = 0;

@@ -15,7 +15,7 @@ export class ListEventsComponent implements OnInit {
     events: MEvent[] = [];
     images: {[index:number]: any;} = {};
     status: {[index: number]: any;} = {};
-    defaultImage: string = "./assets/event.jpg";
+    defaultImage: string = "./assets/event7.jpg";
     totalPage:number= 0;
     page: number= 0;
     selectedEvent: MEvent = new MEvent();

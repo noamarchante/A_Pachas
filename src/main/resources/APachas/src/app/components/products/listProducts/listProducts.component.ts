@@ -29,8 +29,8 @@ export class ListProductsComponent implements OnInit {
     pageDirection: number;
 
     //EVENTO
-    defaultEventImage: string = "./assets/event.jpg";
-    defaultUserImage: string = "./assets/user.png";
+    defaultEventImage: string = "./assets/event7.jpg";
+    defaultUserImage: string = "./assets/user16.jpg";
     event: MEvent;
     eventPartakers: MUser[] = [];
     eventPartakersStored: MUser[] = [];
@@ -42,7 +42,7 @@ export class ListProductsComponent implements OnInit {
 
 
     //PRODUCTOS
-    defaultImage: string = "./assets/product.jpg";
+    defaultImage: string = "./assets/product3_2.jpg";
     productName = "";
     products: MProduct[] = [];
     imagesProducts: {[index:number]: any;} = {};

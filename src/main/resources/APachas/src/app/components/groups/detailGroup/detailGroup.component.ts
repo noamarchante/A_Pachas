@@ -20,8 +20,8 @@ export class DetailGroupComponent implements OnInit {
     @Output()
     eventDetail = new EventEmitter<number>();
 
-    defaultUserImage: string = "./assets/user.png";
-    defaultImage: string = "./assets/group.jpg";
+    defaultUserImage: string = "./assets/user16.jpg";
+    defaultImage: string = "./assets/group7_2.jpg";
 
     groupMembers: MUser[] = [];
     groupMembersStored: MUser[] = [];

@@ -40,19 +40,25 @@
                                 <ng-template #imagesDiv>
                                     <img class="imageProduct" [src]="defaultImage">
                                 </ng-template>
-                                <div class="description-row text">
+                                <div class="date text">
                                     Fecha de compra: {{product.productPurchaseDate | date: 'dd-MM-yyyy'}}
                                 </div>
-                                <div class="description-row text"
-                                     name="productQuantityAndCost"
-                                     id="detailProduct_productQuantityAndCost">
-                                    Unidades: {{product.productQuantity}} Precio: {{product.productCost}}€
-                                </div>
-                                <div class="description-row text"
-                                     name="productDescription"
-                                     id="detailProduct_productDescription">
-                                    {{product.productDescription}}
-                                </div>
+
+                            </div>
+                            <div class="description-row text"
+                                 name="productQuantityAndCost"unidades
+                                 id="detailProduct_productAmount">
+                                <img class="icon" src="./assets/amount.svg" alt="">{{product.productQuantity}}
+                            </div>
+                            <div class="description-row text"
+                                 name="productQuantityAndCost"unidades
+                                 id="detailProduct_productCost">
+                                <img class="icon" src="./assets/money.svg" alt="">{{product.productCost}}€
+                            </div>
+                            <div class="description-row text"
+                                 name="productDescription"
+                                 id="detailProduct_productDescription">
+                                <img class="icon" src="./assets/comment.svg" alt="">{{product.productDescription}}
                             </div>
                         </div>
                         <div class="paginationMemberDiv col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">

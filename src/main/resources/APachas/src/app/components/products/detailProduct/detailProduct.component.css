@@ -64,14 +64,27 @@
 }
 
 .description-row{
-    padding-top: 10px;
     text-align: left !important;
+    padding-left: 20px;
+
 }
 
 .drop{
     margin-top: 5px;
     margin-left: -5px;
 
+}
+
+.date{
+    width: 100%;
+    padding-top: 10px;
+    margin-bottom: -20px;
+}
+
+.icon{
+    width: 25px;
+    height: 20px;
+    padding-right: 5px;
 }
 
 .buttonText{

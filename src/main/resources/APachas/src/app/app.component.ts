@@ -12,7 +12,7 @@ import {Router} from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'APachas';
-
+  defaultImage: string = './assets/user16.jpg';
   constructor(
     private notificationService: NotificationService,
     private notificationsService: NotificationsService,
@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
       }
     );
   }
+
   logOut() {
     this.authenticationService.logOut();
     this.router.navigateByUrl('/login');

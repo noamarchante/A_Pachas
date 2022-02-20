@@ -40,7 +40,7 @@
                                     <img class="imageEvent" [src]="defaultImage">
                                 </ng-template>
                                 <div class="date text">
-                                    <img class="icon" src="./assets/calendario.png" alt=""
+                                    <img class="icon" src="./assets/date.svg" alt=""
                                          id="detailUserEvent_date">
                                     {{event.eventStart | date: 'dd-MM-yyyy HH:mm'}}
                                     -
@@ -48,14 +48,15 @@
                                 <div class="description-row text"
                                      name="eventLocation"
                                      id="detailEvent_eventLocation">
-                                    <img class="icon" src="./assets/ubicacion.png" alt=""
+                                    <img class="icon" src="./assets/location.svg" alt=""
                                          id="detailUserEvent_location">
                                     {{event.eventLocation}}
                                 </div>
                                 <div class="description-row text"
                                      name="eventDescription"
                                      id="detailEvent_eventDescription">
-                                    {{event.eventDescription}}
+                                    <img class="icon" src="./assets/comment.svg" alt=""
+                                         id="detailUserEvent_description">{{event.eventDescription}}
                                 </div>
                             </div>
                         </div>

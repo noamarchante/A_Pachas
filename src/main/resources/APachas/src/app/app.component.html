@@ -1,16 +1,40 @@
 <header *ngIf="authenticationService.getUser().authenticated == true">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/home">APACHAS</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/users"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>AMIGOS</a>
-      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/groups"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>GRUPOS</a>
-      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/events"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>EVENTOS</a>
-      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" href="/profile"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>PERFIL</a>
-      <a *ngIf="authenticationService.getUser().authenticated == false" class="nav-link active" aria-current="page" (click)="logIn()"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>Iniciar sesión</a>
-      <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link active" aria-current="page" (click)="logOut()"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: black;"></i>Cerrar sesión</a>
+    <div class="container-fluid">
+      <a class="navbar-brand title" href="/home">A PACHAS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav w-100">
+          <li class="nav-item">
+            <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link text" href="/users">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link text" href="/groups">Grupos</a>
+          </li>
+          <li class="nav-item">
+            <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link text" href="/events">Eventos</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link dropdown-toggle text" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <ng-container *ngIf="authenticationService.getUser().photo; else imagesDiv">
+                <img class="image" [src]="authenticationService.getUser().photo" alt="">
+              </ng-container>
+              <ng-template #imagesDiv>
+                <img class="image" [src]="defaultImage">
+              </ng-template>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a *ngIf="authenticationService.getUser().authenticated == true" class="dropdown-item textDrop" href="/profile">Perfil</a></li>
+              <li><a *ngIf="authenticationService.getUser().authenticated == false" class="dropdown-item textDrop" (click)="logIn()">Iniciar sesión</a></li>
+              <li><a *ngIf="authenticationService.getUser().authenticated == true" class="dropdown-item textDrop" (click)="logOut()">Cerrar sesión</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
 </header>

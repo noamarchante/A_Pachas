@@ -13,7 +13,7 @@ export class ListGroupsComponent implements OnInit {
     groupName = "";
     groups: MGroup[] = [];
     images: {[index:number]: any;} = {};
-    defaultImage = "./assets/group.jpg";
+    defaultImage = "./assets/group7_2.jpg";
     totalPage:number= 0;
     page: number= 0;
     selectedUserGroup: MGroup = new MGroup();

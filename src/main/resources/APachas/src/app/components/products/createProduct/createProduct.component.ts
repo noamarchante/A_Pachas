@@ -11,7 +11,7 @@ import {ProductService} from "../../../services/product.service";
 })
 export class CreateProductComponent implements OnInit {
 
-    defaultImage = "./assets/product.jpg";
+    defaultImage = "./assets/product3.jpg";
     imageFormat: boolean;
     imageColor:string="";
     imageText: string;

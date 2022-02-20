@@ -11,7 +11,10 @@
 .drop{
     margin-top: 5px;
     margin-left: -5px;
+}
 
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: rgba(102, 187, 106, 0.1);
 }
 
 .buttonText{

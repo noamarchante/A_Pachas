@@ -48,6 +48,9 @@ export class AuthenticationService {
 		this.userService.getUser(login).subscribe((response) => {
 			this.user.id = response.userId;
 			this.user.email = response.userEmail;
+			this.user.birthday = response.userBirthday;
+			this.user.name = response.userName;
+			this.user.surname = response.userSurname;
 			this.user.permission = response.permissions;
 			this.user.rol = response.roles;
 			this.user.save();

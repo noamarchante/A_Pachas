@@ -79,6 +79,10 @@
     cursor: pointer;
 }
 
+.filterSearch:hover{
+    background-color: rgba(102, 187, 106, 0.1);
+}
+
 .dropdown-menu{
     width: 200%;
 }
@@ -144,7 +148,9 @@ input[type="search"]::-webkit-search-cancel-button{
 .divAligment{
     text-align: center !important;
 }
-
+.dropd{
+    width: 10px!important;
+}
 .col{
     padding-top: 15px;
     padding-bottom: 20px;
