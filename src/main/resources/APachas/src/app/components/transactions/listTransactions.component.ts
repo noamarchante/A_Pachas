@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, OnInit} from '@angular/core';
 import {MUserUserEvent} from "../../models/MUserUserEvent";
 import {ProductService} from "../../services/product.service";
 import {UserEventService} from "../../services/userEvent.service";
@@ -44,9 +44,9 @@ export class ListTransactionsComponent implements OnInit {
     ngOnInit() {
         if (localStorage.getItem("transactions") != undefined){
             this.event = JSON.parse(<string>localStorage.getItem("transactions"));
+            this.getTransactions();
             this.getPartakers(this.event.eventId);
             this.getAuthUserEvent();
-            this.getTransactions();
         }else{
             this.event = new MEvent();
         }
@@ -82,7 +82,7 @@ export class ListTransactionsComponent implements OnInit {
     }
 
     getTransactions(){
-        this.userUserEventService.getPageableUserUserEvents(this.event.eventId, this.transactionPage, this.size).subscribe((response) => {
+        this.userUserEventService.getPageableUserUserEventsByEvent(this.event.eventId, this.transactionPage, this.size).subscribe((response) => {
             this.transactions = response;
             this.totalTransactionPages();
 
@@ -90,13 +90,13 @@ export class ListTransactionsComponent implements OnInit {
     }
     paginationClass(){
         if(this.transactionPage!=0 && this.transactionPage+1<this.totalTransactionPage){
-            this.previous = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9";
-            this.next = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3";
+            this.previous = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9 col-6";
+            this.next = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6";
         }else if (this.transactionPage==0 && this.transactionPage+1<this.transactionPage){
             this.previous = "";
-            this.next = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.next = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
         }else if(this.transactionPage!=0 && this.transactionPage+1==this.transactionPage){
-            this.previous = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.previous = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
             this.next = "";
         }else{
             this.previous = "";
@@ -110,24 +110,21 @@ export class ListTransactionsComponent implements OnInit {
         });
     }
 
-    colorDebt(senderId: number): string{
+    colorDebt(senderId: number, receiverId: number): string{
         if (senderId == this.authUserEvent.userId){
-            return "colorDebt";
+            return "colorDebtSender";
+        }else if (receiverId == this.authUserEvent.userId){
+            return "colorDebtReceiver";
         }else{
             return "";
         }
     }
 
-    colorButtonDebt(senderId: number): string{
-        if (senderId == this.authUserEvent.userId){
-            return "colorButtonDebt";
-        }else{
-            return "";
-        }
-    }
+
+
 
     private totalTransactionPages() {
-        this.userUserEventService.countUserUserEvents(this.event.eventId).subscribe((response) => {
+        this.userUserEventService.countUserUserEventsByEvent(this.event.eventId).subscribe((response) => {
             this.totalTransactionPage = Math.ceil(response/this.size);
         });
     }
@@ -147,7 +144,7 @@ export class ListTransactionsComponent implements OnInit {
     }
 
     private searchTransaction(){
-        this.userUserEventService.getPageableSearchUserUserEvents(this.transactionActorName, this.event.eventId, this.transactionPage, this.size).subscribe((response) => {
+        this.userUserEventService.getPageableSearchUserUserEventsByEvent(this.transactionActorName, this.event.eventId, this.transactionPage, this.size).subscribe((response) => {
             this.transactions = response;
             this.searchTransactionTotalPages();
         });
@@ -158,8 +155,13 @@ export class ListTransactionsComponent implements OnInit {
         this.transactionPagination();
     }
 
+
+    cost(cost: number): number{
+        return Math.round(cost*100)/100;
+    }
+
     private searchTransactionTotalPages(){
-        this.userUserEventService.countSearchUserUserEvents(this.transactionActorName, this.event.eventId).subscribe((response) => {
+        this.userUserEventService.countSearchUserUserEventsByEvent(this.transactionActorName, this.event.eventId).subscribe((response) => {
             this.totalTransactionPage = Math.ceil(response/this.size);
         });
     }

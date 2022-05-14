@@ -25,7 +25,7 @@ public class UserUserEvent implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("eventId")
-    @JoinColumn(name = "eventId", referencedColumnName = "eventId", nullable = false)
+    @JoinColumn(name = "eventId", referencedColumnName = "eventId")
     private Event event;
 
     @Column(name = "paid", length = 1)
