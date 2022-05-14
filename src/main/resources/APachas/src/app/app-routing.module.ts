@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './components/authUser/login/login.component';
+import {LoginComponent} from './components/authUser/login/login/login.component';
 import {HomeComponent} from './components/home/home.component';
 import {AuthGuard} from './guards/authGuard';
 import {RegisterComponent} from "./components/authUser/register/register.component";
@@ -19,6 +19,12 @@ import {DetailProductComponent} from "./components/products/detailProduct/detail
 import {CreateUserEventExpenseComponent} from "./components/products/createUserEventExpense/createUserEventExpense.component";
 import {DetailProfileComponent} from "./components/authUser/profile/detailProfile/detailProfile.component";
 import {ListTransactionsComponent} from "./components/transactions/listTransactions.component";
+import {EditProfileComponent} from "./components/authUser/profile/editProfile/editProfile.component";
+import {VerifyEmailComponent} from "./components/authUser/email/verifyEmail/verifyEmail.component";
+import {RetrievePasswordComponent} from "./components/authUser/email/retrievePassword/retrievePassword.component";
+import {RetrievePasswordEmailComponent} from "./components/authUser/login/retrievePasswordEmail/retrievePasswordEmail.component";
+import {TransactionHistoryComponent} from "./components/authUser/transactionHistory/transactionHistory.component";
+import {PaypalComponent} from "./components/authUser/paypal/paypal.component";
 
 const routes: Routes = [
 	{
@@ -74,6 +80,24 @@ const routes: Routes = [
 	},
 	{
 		path: 'profile', component: DetailProfileComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'editProfile', component: EditProfileComponent, canActivate: [AuthGuard]
+	},
+	{
+		path: 'verifyEmail', component: VerifyEmailComponent
+	},
+	{
+		path: 'retrievePassword', component: RetrievePasswordComponent
+	},
+	{
+		path: 'retrievePasswordEmail', component: RetrievePasswordEmailComponent
+	},
+	{
+		path: 'transactionHistory', component: TransactionHistoryComponent
+	},
+	{
+		path: 'paypal', component: PaypalComponent
 	},
 	{
 		path: '', redirectTo: 'home', pathMatch: 'full'

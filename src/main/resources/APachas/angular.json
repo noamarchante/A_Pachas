@@ -33,7 +33,8 @@
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "src/styles.css",
               "@ng-select/ng-select/themes/default.theme.css",
-              "node_modules/ng2-daterangepicker/assets/daterangepicker.css"
+              "node_modules/ng2-daterangepicker/assets/daterangepicker.css",
+              "node_modules/angular-calendar/css/angular-calendar.css"
             ],
             "scripts": [
               "node_modules/@popperjs/core/dist/umd/popper.min.js",

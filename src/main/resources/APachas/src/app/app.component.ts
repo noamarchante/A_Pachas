@@ -4,6 +4,10 @@ import {NotificationsService} from 'angular2-notifications';
 import {Severity} from './modules/notification/entities';
 import {AuthenticationService} from './services/authentication.service';
 import {Router} from '@angular/router';
+import {UserEventService} from "./services/userEvent.service";
+import {UserUserService} from "./services/userUser.service";
+
+declare var paypal;
 
 @Component({
   selector: 'app-root',
@@ -13,11 +17,15 @@ import {Router} from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'APachas';
   defaultImage: string = './assets/user16.jpg';
+  notifications: string[] = [];
+  badge: string ="";
   constructor(
     private notificationService: NotificationService,
     private notificationsService: NotificationsService,
     public authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private userEventService: UserEventService,
+    private userUserService: UserUserService
   ) {
   }
 
@@ -40,6 +48,34 @@ export class AppComponent implements OnInit {
         }
       }
     );
+    this.getEventNotifications();
+  }
+
+  getEventNotifications() {
+    this.userEventService.getNotifications(this.authenticationService.getUser().id).subscribe((response) => {
+      response.forEach((eventName) => {
+        this.notifications.push("Invitación a evento " + eventName);
+      });
+      this.setBadge();
+    });
+    this.getUserNotifications();
+  }
+
+  getUserNotifications() {
+    this.userUserService.getNotifications(this.authenticationService.getUser().id).subscribe((response) => {
+      response.forEach((userLogin) => {
+        this.notifications.push("Solicitud de amistad de " + userLogin);
+      });
+      this.setBadge();
+    });
+  }
+
+  setBadge(){
+    if (this.notifications.length != 0) {
+      this.badge = "bg-danger";
+    }else{
+      this.badge = "";
+    }
   }
 
   logOut() {

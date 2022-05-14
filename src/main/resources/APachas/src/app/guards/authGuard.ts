@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {ProductService} from "../services/product.service";
+import {AuthenticationService} from "../services/authentication.service";
 /*
 Es un servicio injectable que devuelve true si el usuario puede acceder a una ruta o false si no puede.
  */
@@ -10,6 +10,7 @@ export class AuthGuard implements CanActivate {
 	}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+
 		if (localStorage.getItem('currentUser')) {
 			if (route.url.toString() == "products" && localStorage.getItem("products") == undefined) {
 				this.router.navigate(['/events']);
@@ -26,6 +27,10 @@ export class AuthGuard implements CanActivate {
 			}
 			if (route.url.toString() != "transactions"){
 				localStorage.removeItem("transactions");
+			}
+
+			if (route.url.toString() != "profile"){
+				localStorage.removeItem("profile");
 			}
 			return true;
 		}

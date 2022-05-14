@@ -47,7 +47,19 @@ public class DbInit implements CommandLineRunner {
 
         User otro = new User(0, "otro", "otro", "otro", securityConfiguration.passwordEncoder().encode("abc123."), "otro@otro.com",new Timestamp(12) , null, "USER", "");
 
-        List<User> users = Arrays.asList(noa, laura, juanma, marcos, jony, marcus, millan, cris, miguel, aaron, brais, admin, otro);
+        User otro2 = new User(0, "otro", "otro", "otro2", securityConfiguration.passwordEncoder().encode("abc123."), "otro2@otro.com",new Timestamp(12) , null, "USER", "");
+
+        User otro3 = new User(0, "otro", "otro", "otro3", securityConfiguration.passwordEncoder().encode("abc123."), "otro3@otro.com",new Timestamp(12) , null, "USER", "");
+
+        User otro4 = new User(0, "otro", "otro", "otro4", securityConfiguration.passwordEncoder().encode("abc123."), "otro4@otro.com",new Timestamp(12) , null, "USER", "");
+
+        User otro5 = new User(0, "otro", "otro", "otro5", securityConfiguration.passwordEncoder().encode("abc123."), "otro5@otro.com",new Timestamp(12) , null, "USER", "");
+
+        User otro6 = new User(0, "otro", "otro", "otro6", securityConfiguration.passwordEncoder().encode("abc123."), "otro6@otro.com",new Timestamp(12) , null, "USER", "");
+
+        User otro7 = new User(0, "otro", "otro", "otro7", securityConfiguration.passwordEncoder().encode("abc123."), "otro7@otro.com",new Timestamp(12) , null, "USER", "");
+
+        List<User> users = Arrays.asList(noa, laura, juanma, marcos, jony, marcus, millan, cris, miguel, aaron, brais, admin, otro, otro2, otro3, otro4, otro5, otro6, otro7);
 
 
         this.rUser.saveAll(users);

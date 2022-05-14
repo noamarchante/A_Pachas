@@ -1,7 +1,7 @@
 <header *ngIf="authenticationService.getUser().authenticated == true">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand title" href="/home">A PACHAS</a>
+      <a class="navbar-brand title" href="/home"><img class="logo" src="../assets/logo.png"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -18,7 +18,20 @@
           </li>
         </ul>
         <ul class="navbar-nav">
-          <li class="nav-item dropdown">
+          <li class="dropdown not">
+            <button type="button" class="notButton nav-link  text" id="navbarDropdownMenuLink2" data-bs-toggle="dropdown" aria-expanded="false">
+              <span [ngClass]="badge" class="position-absolute top-0 start-100 translate-middle p-1 border border-light rounded-circle">
+                <span class="visually-hidden">Notificaciones</span>
+              </span>
+            </button>
+            <ul class="dropdown-menu notification-menu" aria-labelledby="navbarDropdownMenuLink2">
+              <li class="dropdown-item textDrop" *ngFor="let notification of notifications">
+                <p >{{notification}}</p>
+              </li>
+              <li class="dropdown-item textDrop" [hidden]="notifications.length > 0"><p >No hay notificaciones pendientes</p></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown profile">
             <a *ngIf="authenticationService.getUser().authenticated == true" class="nav-link dropdown-toggle text" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <ng-container *ngIf="authenticationService.getUser().photo; else imagesDiv">
                 <img class="image" [src]="authenticationService.getUser().photo" alt="">
@@ -27,8 +40,11 @@
                 <img class="image" [src]="defaultImage">
               </ng-template>
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a *ngIf="authenticationService.getUser().authenticated == true" class="dropdown-item textDrop" href="/profile">Perfil</a></li>
+            <ul class="dropdown-menu profileDrop" aria-labelledby="navbarDropdownMenuLink">
+              <li>
+                <a *ngIf="authenticationService.getUser().authenticated == true" class="dropdown-item textDrop" href="/profile">Perfil</a>
+              </li>
+              <li><a *ngIf="authenticationService.getUser().authenticated == true" class="dropdown-item textDrop" href="/transactionHistory">Historial de transacciones</a></li>
               <li><a *ngIf="authenticationService.getUser().authenticated == false" class="dropdown-item textDrop" (click)="logIn()">Iniciar sesión</a></li>
               <li><a *ngIf="authenticationService.getUser().authenticated == true" class="dropdown-item textDrop" (click)="logOut()">Cerrar sesión</a></li>
             </ul>

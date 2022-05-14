@@ -16,6 +16,21 @@
     padding-left: 10px;
 }
 
+.not{
+    margin-top: 30px;
+    margin-right: 10px;
+
+}
+
+.notButton{
+    width: 20px;
+    height: 50px;
+    background: url("../../src/assets/alert.svg") top left no-repeat ;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
 .title {
     font-size: 24px;
     font-weight: 600;
@@ -35,6 +50,7 @@
     color: #333;
     outline: none;
 }
+
 
 .textDrop{
     text-decoration: none;
@@ -57,7 +73,15 @@
 }
 
 .dropdown-menu{
-    margin-left: -50px;
+    margin-left: -13rem;
+}
+
+.notification-menu{
+    margin-left: -24rem;
+}
+
+.logo{
+    width: 200px;
 }
 
 .image {
@@ -65,4 +89,111 @@
     height:60px;
     border-radius:90px;
     background-color: white;
+}
+
+@media (min-width: 654px) and (max-width: 768px){
+    .profile{
+        margin-right: 45%;
+    }
+    .dropdown-menu{
+        margin-left: 0rem;
+
+    }
+
+
+    .notButton{
+        margin-left: 49%;
+    }
+
+    .start-100{
+        margin-left: -47% !important;
+    }
+
+
+}
+
+@media (min-width: 420px) and (max-width: 654px){
+    .dropdown-menu{
+        margin-left: 0rem;
+    }
+
+    .profileDrop{
+        margin-right: -40%;
+
+    }
+    .notification-menu{
+        margin-left: 0rem;
+    }
+    .profile{
+        margin-right: 43%;
+    }
+    .notButton{
+        margin-left: 49%;
+    }
+
+    .start-100{
+        margin-left: -45% !important;
+    }
+
+}
+
+@media (min-width: 316px) and (max-width: 420px){
+
+
+    .dropdown-menu {
+        margin-left: -8%;
+    }
+
+    .profileDrop{
+        margin-right: -60%;
+
+    }
+    .notification-menu{
+        margin-left: 0rem;
+    }
+    .profile{
+        margin-right: 39%;
+    }
+    .notButton{
+        margin-left: 49%;
+    }
+
+    .start-100{
+        margin-left: -43% !important;
+    }
+}
+
+@media (max-width: 316px){
+    .dropdown-menu{
+        margin-left: -10%;
+    }
+
+
+    .profileDrop{
+        margin-right: -45%;
+
+    }
+    .notification-menu{
+        margin-left: 0rem;
+    }
+    .profile{
+        margin-right: 35%;
+    }
+
+    .logo{
+        margin-left: 15%;
+    }
+
+    .navbar-toggler{
+        margin-left: 40%;
+    }
+    .notButton{
+        margin-left: 49%;
+    }
+
+    .start-100{
+        margin-left: -43% !important;
+    }
+
+
 }

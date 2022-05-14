@@ -7,7 +7,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NotificationModule} from './modules/notification/notification.module';
 import {SimpleNotificationsModule} from 'angular2-notifications';
 import {ErrorNotificationHandler} from './modules/notification/handlers/error-notification.handler';
-import {LoginComponent} from './components/authUser/login/login.component';
+import {LoginComponent} from './components/authUser/login/login/login.component';
 import {AuthenticationInterceptor} from './helpers/authentication.interceptor';
 import {HomeComponent} from './components/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,8 +29,20 @@ import {DetailProductComponent} from "./components/products/detailProduct/detail
 import {CreateUserEventExpenseComponent} from "./components/products/createUserEventExpense/createUserEventExpense.component";
 import {DetailProfileComponent} from "./components/authUser/profile/detailProfile/detailProfile.component";
 import {ListTransactionsComponent} from "./components/transactions/listTransactions.component";
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {LOCALE_ID } from '@angular/core';
+import localeEs from '@angular/common/locales/es';
+import {registerLocaleData} from "@angular/common";
+import {EditProfileComponent} from "./components/authUser/profile/editProfile/editProfile.component";
+import {VerifyEmailComponent} from "./components/authUser/email/verifyEmail/verifyEmail.component";
+import {RetrievePasswordComponent} from "./components/authUser/email/retrievePassword/retrievePassword.component";
+import {RetrievePasswordEmailComponent} from "./components/authUser/login/retrievePasswordEmail/retrievePasswordEmail.component";
+import {TransactionHistoryComponent} from "./components/authUser/transactionHistory/transactionHistory.component";
+import {NgxPayPalModule} from "ngx-paypal";
+import {PaypalComponent} from "./components/authUser/paypal/paypal.component";
 
-
+registerLocaleData(localeEs, 'es');
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +63,13 @@ import {ListTransactionsComponent} from "./components/transactions/listTransacti
     DetailProductComponent,
     ListTransactionsComponent,
     DetailProfileComponent,
-    HomeComponent
+    HomeComponent,
+    EditProfileComponent,
+    VerifyEmailComponent,
+    RetrievePasswordComponent,
+    RetrievePasswordEmailComponent,
+    TransactionHistoryComponent,
+    PaypalComponent
   ],
     imports: [
         AppRoutingModule,
@@ -61,13 +79,18 @@ import {ListTransactionsComponent} from "./components/transactions/listTransacti
         HttpClientModule,
         NotificationModule,
         BrowserAnimationsModule,
+        CalendarModule.forRoot({
+            provide: DateAdapter,
+            useFactory: adapterFactory,
+        }),
         SimpleNotificationsModule.forRoot({
             timeOut: 10000,
             preventDuplicates: true,
             pauseOnHover: true,
             clickToClose: true
         }),
-        Daterangepicker
+        Daterangepicker,
+        NgxPayPalModule
     ],
 
   providers: [
@@ -78,7 +101,8 @@ import {ListTransactionsComponent} from "./components/transactions/listTransacti
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthenticationInterceptor, multi: true
-    }
+    },
+      {provide: LOCALE_ID, useValue: 'es'}
   ],
   bootstrap: [AppComponent]
 })
