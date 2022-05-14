@@ -5,7 +5,6 @@ import {AuthenticationService} from "../../../services/authentication.service";
 import {NotificationService} from "../../../modules/notification/services/notification.service";
 import {MUser} from "../../../models/MUser";
 import {MGroup} from "../../../models/MGroup";
-import {STATUS} from "../../users/listUsers/listUsers.component";
 
 @Component({
     selector: 'app-detailGroup',

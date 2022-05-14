@@ -15,8 +15,8 @@ import {MGroup} from "../../../models/MGroup";
 })
 export class CreateGroupComponent implements OnInit {
 
-    defaultImage = "./assets/group.jpg";
-    defaultUserImage = "./assets/user.png";
+    defaultImage = "./assets/group7_2.jpg";
+    defaultUserImage = "./assets/user16.jpg";
     friends: MUser[];
     imageFormat: boolean;
     groupMembers: number[];

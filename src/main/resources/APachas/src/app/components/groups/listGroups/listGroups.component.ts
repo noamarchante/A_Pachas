@@ -64,8 +64,8 @@ export class ListGroupsComponent implements OnInit {
 
     paginationClass(){
         if(this.page!=0 && this.page+1<this.totalPage){
-            this.previousClass = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9";
-            this.nextClass = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3";
+            this.previousClass = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9 col-6";
+            this.nextClass = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6";
         }else if (this.page==0 && this.page+1<this.totalPage){
             this.previousClass = "";
             this.nextClass = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";

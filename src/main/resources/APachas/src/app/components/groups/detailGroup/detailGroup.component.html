@@ -15,7 +15,7 @@
                                     (click)="pageMember=0">Editar</button></li>
                         <li><button type="button" *ngIf="showButtons()" class="dropdown-item buttonText" title="Eliminar grupo"  data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
                                     (click)="messageValue(false);pageMember=0">Eliminar</button></li>
-                        <li><button type="button" class="dropdown-item buttonText" title="Salir del grupo"  data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
+                        <li><button type="button" *ngIf="!showButtons()" class="dropdown-item buttonText" title="Salir del grupo"  data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
                                     (click)="messageValue(true);pageMember=0">Salir del grupo</button></li>
                     </ul>
                 </div>
@@ -47,7 +47,7 @@
 
                         <div class="paginationMemberDiv col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="row">
-                                <div *ngFor="let user of groupMembers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                <div *ngFor="let user of groupMembers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-6 members">
                                     <ng-container *ngIf="user.userPhoto; else userImagesDiv">
                                         <p title="{{ownerLabel(user.userId)}}" class="imageP">
                                             <img class="imageMember" [ngClass]="ownerBorder(user.userId)"

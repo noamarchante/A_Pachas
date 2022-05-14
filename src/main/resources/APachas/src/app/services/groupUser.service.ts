@@ -29,7 +29,9 @@ export class GroupUserService {
     }
 
     countMembers(groupId: number): Observable<number>{
-        return this.http.get<number>(`${environment.restApi}/groupsUsers/count/members/${groupId}`);
+        return this.http.get<number>(`${environment.restApi}/groupsUsers/count/members/${groupId}`).pipe(
+            APachasError.throwOnError('Fallo al contar los integrantes del grupo', `Por favor, inténtelo de nuevo más tarde.`)
+        );
     }
 
     createGroupUser(groupId: any, userId: number): Observable<void> {
@@ -41,14 +43,14 @@ export class GroupUserService {
             "groupUserActive": true
         })
             .pipe(
-                APachasError.throwOnError('Fallo al añadir integrantes al grupo', `Por favor, inténtelo de nuevo`)
+                APachasError.throwOnError('Fallo al añadir integrantes al grupo', `Por favor, inténtelo de nuevo más tarde.`)
             );
     }
 
     editGroupUser(groupId: number, userIds: number[]): Observable<void> {
         return this.http.put<void>(`${environment.restApi}/groupsUsers/${groupId}`,userIds)
             .pipe(
-                APachasError.throwOnError('Fallo al editar integrantes del grupo', `Por favor, inténtelo de nuevo`)
+                APachasError.throwOnError('Fallo al editar integrantes del grupo', `Por favor, inténtelo de nuevo más tarde.`)
             );
     }
 
@@ -108,7 +110,8 @@ export class GroupUserService {
             permissions: user.permissions,
             userCreation: user.userCreation,
             userRemoval: user.userRemoval,
-            userActive: user.userActive
+            userActive: user.userActive,
+            userNotify: user.userNotify
         }
     }
 

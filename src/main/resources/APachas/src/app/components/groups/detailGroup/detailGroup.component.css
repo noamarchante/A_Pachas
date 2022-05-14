@@ -227,7 +227,6 @@ ul.paginationUserGroup li:last-child a
     letter-spacing: 1px;
     text-transform: uppercase;
     font-weight: 600;
-    text-decoration: none;
     color: #66bb6a;
     cursor:pointer;
     vertical-align: center;
@@ -237,7 +236,10 @@ ul.paginationUserGroup li:last-child a
     justify-content: center;
     align-items: end;
     padding-bottom: 20px;
+}
 
+.more a:hover{
+    text-decoration: underline !important;
 }
 
 .deleteButton{
@@ -262,6 +264,23 @@ ul.paginationUserGroup li:last-child a
     margin-top: -50px;
 }
 
+@media (min-width: 576px) and (max-width: 991px) {
+    .title{
+        margin-left: 4% !important;
+    }
+}
+@media (min-width: 485px) and (max-width: 576px) {
+    .title{
+        margin-left: 6% !important;
+    }
+}
+
+@media (min-width: 280px) and (max-width: 485px) {
+    .title{
+        margin-left: 10% !important;
+    }
+}
+
 @media (max-width: 349px) {
 
     ul.paginationUserGroup li {
@@ -270,6 +289,10 @@ ul.paginationUserGroup li:last-child a
     .previousUserGroup{
         float: none;
         margin-left: -40px;
+    }
+
+    .members{
+        margin-left: 25% !important;
     }
 
     .nextUserGroup{

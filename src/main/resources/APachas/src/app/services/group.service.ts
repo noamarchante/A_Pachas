@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import {environment} from "../../environments/environment";
 import {APachasError} from "../modules/notification/entities";
 import {MGroup} from "../models/MGroup";
-import {Group} from "./entities/Group";
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +24,7 @@ export class GroupService {
             "groupActive": true
         })
             .pipe(
-                APachasError.throwOnError('Fallo al crear el grupo', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo`)
+                APachasError.throwOnError('Fallo al crear el grupo', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo.`)
             );
     }
 
@@ -41,13 +40,13 @@ export class GroupService {
             "groupActive": null
         })
             .pipe(
-                APachasError.throwOnError('Fallo al editar el grupo', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo`)
+                APachasError.throwOnError('Fallo al editar el grupo', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo.`)
             );
     }
 
     deleteGroup(groupId: number): Observable<void> {
         return this.http.delete<void>(`${environment.restApi}/groups/${groupId}`).pipe(
-            APachasError.throwOnError('Fallo al eliminar grupo', `Por favor, inténtelo de nuevo`)
+            APachasError.throwOnError('Fallo al eliminar grupo', `Por favor, inténtelo de nuevo más tarde.`)
         );
     }
 }

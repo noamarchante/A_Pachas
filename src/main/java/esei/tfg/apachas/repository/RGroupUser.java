@@ -11,6 +11,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Repository("RGroupUser")
@@ -50,4 +53,17 @@ public interface RGroupUser extends CrudRepository<GroupUser, GroupUserId>, Pagi
 
     @Query("SELECT DISTINCT g FROM uGroup g, groupUser gU where g.groupId = gU.groupUserId.groupId AND gU.groupUserId.userId= :authId AND gU.groupUserActive = TRUE AND g.groupActive = TRUE ORDER BY g.groupName ASC")
     List<Group> getGroups(@Param("authId") long authId);
+
+    @Query("SELECT DISTINCT u FROM user u, uGroup g, groupUser gU " +
+            "WHERE u.userId = gU.groupUserId.userId AND " +
+            "g.groupId = gU.groupUserId.groupId AND " +
+            "u.userActive = TRUE AND " +
+            "g.groupActive = TRUE AND " +
+            "gU.groupUserActive = TRUE AND " +
+            "u.userNotify = TRUE AND " +
+            "gU.groupUserCreation >= :previousDate AND " +
+            "gU.groupUserCreation <= :currentDate")
+    List<User> findAddedNewGroup(@Param("currentDate") Date currentDate, @Param("previousDate") Date previousDate);
+
+    List<GroupUser> findAllByGroupUserCreationIsNotNull();
 }

@@ -1,11 +1,11 @@
 <div class="searchDiv row">
-    <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-8 col-sm-8 col-8">
+    <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-8 col-sm-9 col-10">
         <form ngNativeValidate (input)="searchInput()" #searchGroupsForm="ngForm">
             <input type="search" id="groups_groupName" name="groupName" placeholder="Buscar por nombre de grupo"
                    [(ngModel)]="groupName" required #userGroupNameForm="ngModel" aria-label="Search">
         </form>
     </div>
-    <div class="col-xxl-1 col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 createDiv">
+    <div class="col-xxl-1 col-xl-1 col-lg-1 col-md-1 col-sm-1 col-12 createDiv">
         <button type="button" class="button" data-bs-toggle="modal" data-bs-target="#createGroupModal" (click)="setGroup();">Añadir</button>
     </div>
 </div>
