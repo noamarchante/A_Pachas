@@ -32,6 +32,7 @@
 
 .title{
     padding-top: 5px;
+    margin-left: 5%;
     padding-right: 10px;
     font-size: 18px;
     font-weight: 600;
@@ -84,9 +85,16 @@
     outline: none;
 }
 
+.userText{
+    padding-left: 20%;
+}
+
 .subtitle{
     color: #555!important;
     font-weight: 450!important;
+}
+.userSubtitle{
+    margin-top: -6% ;
 }
 
 .closeButton{
@@ -96,6 +104,7 @@
 .modal-body{
     margin-bottom: -25px;
 }
+
 ul.paginationUser{
     display: flex;
     padding-left: 0;
@@ -218,6 +227,10 @@ div.mutualRight{
     width: 100%;
 }
 
+.userDiv{
+    padding-left: 23%;
+}
+
 .imageMutuals {
     width:100px;
     height:100px;
@@ -245,5 +258,424 @@ div.mutualRight{
     color: #66bb6a;
     text-transform: uppercase;
     cursor:pointer;
+    padding-left: 10%;
 
+}
+
+.moreMutual{
+    display:flex;
+    justify-content: center;
+    align-items: end;
+    padding-bottom: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #66bb6a;
+    text-transform: uppercase;
+    cursor:pointer;
+    padding-left: 10%;
+}
+
+.more a:hover{
+    text-decoration: underline;
+}
+
+.mutualUser{
+    width: 180%!important;
+}
+
+@media (min-width: 576px) and (max-width: 991px){
+    .title{
+        padding-left: 22% !important;
+    }
+
+    .dropdown{
+        padding-left: 5% !important;
+    }
+
+    .userSubtitle{
+        margin-top: -12% !important;
+    }
+
+    .mutualUser{
+        width: 100%!important;
+    }
+
+    .userDiv{
+        padding-left: 40% !important;
+    }
+
+    .userText{
+        padding-left: 30% !important;
+    }
+
+    .more{
+        padding-left: 40% !important;
+    }
+
+    .moreMutual{
+        padding-left: 30% !important;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 575px){
+    .title{
+        padding-left: 22% !important;
+    }
+
+    .dropdown{
+        padding-left: 5%!important;
+    }
+
+    .withoutText{
+        margin-left: -5%!important;
+    }
+
+    .mutualUser{
+        width: 120%!important;
+    }
+
+    .text{
+        margin-left: 7% !important;
+    }
+
+    .userText{
+        margin-right: 10%!important;
+    }
+
+    .imageUserDiv{
+        margin-left: 4% !important;
+    }
+
+    .userScroll{
+        padding-right: 3% !important;
+    }
+
+    .userDiv{
+        margin-left: 2% !important;
+    }
+
+    .mutualDiv{
+       margin-left: 8% !important;
+    }
+
+    .subtitle{
+        margin-left: 15% !important;
+    }
+
+    .userSubtitle{
+        margin-left: 6% !important;
+    }
+
+    .more{
+        padding-left: 20% !important;
+    }
+
+    .moreMutual{
+        padding-left: 20% !important;
+    }
+
+}
+
+
+@media (min-width: 400px) and (max-width: 500px){
+    .title{
+        padding-left: 20%!important;
+    }
+    .text{
+        margin-left: 7% !important;
+    }
+
+    .mutualUser{
+        width: 160%!important;
+    }
+
+    .userText{
+        margin-right: 10%!important;
+    }
+
+    .dropdown{
+        padding-left: 15%!important;
+    }
+    .mutualDiv{
+        margin-left: 8% !important;
+    }
+    .subtitle{
+        margin-left: 15% !important;
+    }
+
+    .userSubtitle{
+        margin-left: 6% !important;
+    }
+    .userDiv{
+        margin-left: 2% !important;
+    }
+    .userScroll{
+        padding-right: 1% !important;
+    }
+
+    .more{
+        padding-left: 23% !important;
+    }
+
+    .moreMutual{
+        padding-left: 23% !important;
+    }
+}
+
+
+@media (min-width: 360px) and (max-width: 400px){
+    .title{
+        padding-left: 10%!important;
+    }
+    .text{
+        margin-left: 10% !important;
+    }
+    .mutual{
+        width: 140% !important;
+    }
+
+    .mutualUser{
+        width: 280% !important;
+    }
+    .userText{
+        margin-right: 2%!important;
+    }
+
+    .dropdown{
+        padding-left: 15%!important;
+    }
+    .mutualDiv{
+        margin-left: 30% !important;
+    }
+    .subtitle{
+        margin-left: 15% !important;
+    }
+
+    .userSubtitle{
+        margin-left: 4% !important;
+    }
+    .userDiv{
+        margin-left: 20% !important;
+    }
+    .userScroll{
+        padding-right: 1% !important;
+    }
+
+    .more{
+        padding-left: 28% !important;
+    }
+
+    .moreMutual{
+        padding-left: 28% !important;
+    }
+}
+
+@media (min-width: 343px) and (max-width: 360px){
+    .title{
+        padding-left: 10%!important;
+    }
+
+    .mutual{
+        width: 140% !important;
+    }
+
+    .mutualUser{
+        width: 250% !important;
+    }
+
+    .dropdown{
+        padding-left: 15%!important;
+    }
+    .text{
+        margin-left: 10% !important;
+    }
+
+    .userText{
+        margin-right: 2%!important;
+    }
+
+    .mutualDiv{
+        margin-left: 30% !important;
+    }
+    .subtitle{
+        margin-left: 15% !important;
+    }
+
+    .userSubtitle{
+        margin-left: 4% !important;
+    }
+    .userDiv{
+        margin-left: 23% !important;
+    }
+    .userScroll{
+        padding-right: 1% !important;
+    }
+    .more{
+        margin-left: 34% !important;
+    }
+
+    .moreMutual{
+        margin-left: 34% !important;
+    }
+}
+
+@media (min-width: 310px) and (max-width: 343px){
+    .title{
+        padding-left: 5%!important;
+    }
+
+    .mutual{
+        width: 150% !important;
+    }
+    .mutualUser{
+        width: 250% !important;
+    }
+    .dropdown{
+        padding-left: 15%!important;
+    }
+    .text{
+        margin-left: 10% !important;
+    }
+
+    .userText{
+        margin-right: 2%!important;
+    }
+
+    .mutualDiv{
+        margin-left: 30% !important;
+    }
+    .subtitle{
+        margin-left: 15% !important;
+    }
+
+    .userSubtitle{
+        margin-left: 4% !important;
+    }
+    .userDiv{
+        margin-left: 23% !important;
+    }
+    .userScroll{
+        padding-right: 0.01% !important;
+    }
+
+    .more{
+        margin-left: 34% !important;
+    }
+    .moreMutual{
+        margin-left: 34% !important;
+    }
+}
+
+@media (min-width: 309px) and  (max-width: 311px){
+    .title{
+        padding-left: 5%!important;
+    }
+
+    .mutual{
+        width: 170% !important;
+    }
+
+    .mutualUser{
+        width: 260% !important;
+    }
+
+    .dropdown{
+        padding-left: 25%!important;
+    }
+
+    .text{
+        margin-left: 10% !important;
+    }
+
+    .userText{
+        margin-right: 2%!important;
+    }
+
+    .mutualDiv{
+        margin-left: 30% !important;
+    }
+    .subtitle{
+        margin-left: 15% !important;
+    }
+
+    .userSubtitle{
+        margin-left: 4% !important;
+    }
+    .userDiv{
+        margin-left: 23% !important;
+    }
+    .userScroll{
+        padding-right: 0.01% !important;
+    }
+
+    .more{
+        margin-left: 34% !important;
+    }
+
+    .moreMutual{
+        margin-left: 34% !important;
+    }
+}
+
+@media (max-width: 308px){
+    .title{
+        padding-left: 5%!important;
+    }
+
+    .dropdown{
+        padding-left: 25%!important;
+    }
+
+
+    .text{
+        margin-left: 10% !important;
+    }
+
+    .userText{
+        margin-right: 2%!important;
+    }
+
+
+    .mutualDiv{
+        margin-left: 25% !important;
+    }
+    .subtitle{
+        margin-left: 15% !important;
+    }
+
+    .userSubtitle{
+        margin-left: 4% !important;
+    }
+    .userDiv{
+        margin-left: 23% !important;
+    }
+    .userScroll{
+        padding-right: 0.01% !important;
+    }
+
+    ul.paginationUser li {
+        padding-bottom: 20px;
+    }
+
+    .previousUser{
+        float: none;
+        margin-left: -60px;
+    }
+    .mutual{
+       width: 170% !important;
+    }
+
+    .nextUser{
+        float: none;
+    }
+
+    .mutualUser{
+        width: 350% !important;
+    }
+    .more{
+        margin-left: 40% !important;
+    }
+    .moreMutual{
+        margin-left: 40% !important;
+    }
 }

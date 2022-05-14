@@ -73,6 +73,12 @@ public class CUserUser {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
+    @GetMapping("/notifications/{authId}")
+    public ResponseEntity<String[]> getNotifications(@PathVariable("authId") long authId) {
+        String[] notifications = sUserUser.selectNotifications(authId);
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
+    }
+
     @GetMapping("/{friendId}/{userId}")
     public ResponseEntity<MUserUser> getUserUser(@PathVariable("friendId") long friendId, @PathVariable("userId") long userId) {
 

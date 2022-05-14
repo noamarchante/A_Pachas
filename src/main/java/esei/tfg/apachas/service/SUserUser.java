@@ -99,6 +99,10 @@ public class SUserUser {
         return conUserUser.conUserUser(userUser);
     }
 
+    public synchronized String[] selectNotifications(long authId) {
+       return rUserUser.findNotifications(authId);
+    }
+
     public synchronized List<MUser> selectFriendsByFriendId(long friendId) {
         List<User> userList = rUserUser.findFriendsByFriendId(friendId);
         return conUser.conUserList(userList);

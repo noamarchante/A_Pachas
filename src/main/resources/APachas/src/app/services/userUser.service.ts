@@ -22,6 +22,10 @@ export class UserUserService {
         );
     }
 
+    getNotifications(authId: number): Observable<string[]> {
+        return this.http.get<string[]>(`${environment.restApi}/usersUsers/notifications/${authId}`);
+    }
+
     getDeletedUserUser(friendId: number, userId: number): Observable<MUserUser> {
         return this.http.get<UserUser>(`${environment.restApi}/usersUsers/deleted/${friendId}/${userId}`).pipe(
             map(this.mapUserUser.bind(this))
@@ -89,7 +93,8 @@ export class UserUserService {
             permissions: user.permissions,
             userCreation: user.userCreation,
             userRemoval: user.userRemoval,
-            userActive: user.userActive
+            userActive: user.userActive,
+            userNotify: user.userNotify
         }
     }
 
