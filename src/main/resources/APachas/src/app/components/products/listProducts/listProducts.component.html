@@ -1,6 +1,6 @@
 <section class="section">
     <div class="row">
-        <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+        <div class="col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-6 col-12">
             <div class="imageEventDiv">
                 <ng-container *ngIf="event.eventPhoto; else imagesDiv">
                     <img class="imageEvent" [src]="imageEvent" alt=""
@@ -11,28 +11,34 @@
                 </ng-template>
             </div>
         </div>
-        <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-5">
+        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-6 col-sm-6 col-12">
             <h5 class="row modal-title title eventTitle">
                 {{event.eventName}}
             </h5>
             <div class="row date text">
-                <img class="icon" src="./assets/calendario.png" alt=""
+                <img class="icon" src="./assets/date.svg" alt=""
                      id="detailUserEvent_date">
-                {{event.eventStart | date: 'dd-MM-yyyy HH:mm'}}
-                -
+                {{event.eventStart | date: 'dd-MM-yyyy HH:mm'}}<br>
                 {{event.eventEnd | date: 'dd-MM-yyyy HH:mm'}}
             </div>
             <div class="row description-row text"
                  name="eventLocation"
                  id="detailEvent_eventLocation">
-                <img class="icon" src="./assets/ubicacion.png" alt=""
+                <img class="icon" src="./assets/location.svg" alt=""
                      id="detailUserEvent_location">
                 {{event.eventLocation}}
             </div>
+            <div class="row description-row text"
+                     name="eventDescription"
+                     id="detailEvent_eventDescription">
+                <img class="icon" src="./assets/comment.svg" alt=""
+                     id="detailUserEvent_description">
+                {{event.eventDescription}}
+            </div>
         </div>
-        <div class="paginationPartakerDiv col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-5">
+        <div class="paginationPartakerDiv col-xxl-5 col-xl-5 col-lg-4 col-md-12 col-sm-12 col-12">
             <div class="row">
-                <div *ngFor="let user of eventPartakers" class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 partakerDiv">
+                <div *ngFor="let user of eventPartakers" class="col-xxl-4 col-xl-4 col-lg-6 col-md-4 col-sm-4 col-5 partakerDiv">
                     <ng-container *ngIf="user.userPhoto; else userImagesDiv">
                         <p title="{{ownerLabel(user.userId)}}" class="imageP">
                             <img class="imagePartaker" [ngClass]="ownerBorder(user.userId)"
@@ -40,12 +46,6 @@
                         </p>
                         <p title="{{ownerLabel(user.userId)}}" class="partaker">
                             {{user.userLogin}}
-                        </p>
-                        <p title="Dinero adelantado para el evento" class="partaker">
-                            {{getUserExpense(user.userId)}}€
-                        </p>
-                        <p>
-                            <input *ngIf="showExpenseButton(user.userId)" type="button" data-bs-toggle="modal" data-bs-target="#createUserEventExpenseModal" class="button" value="">
                         </p>
                     </ng-container>
                     <ng-template #userImagesDiv>
@@ -55,25 +55,59 @@
                         <p title="{{ownerLabel(user.userId)}}" class="partaker">
                             {{user.userLogin}}
                         </p>
-                        <p  title="Dinero adelantado para el evento" class="partaker">
-                            {{getUserExpense(user.userId)}}€
-                            <input *ngIf="showExpenseButton(user.userId)" type="button" class="button" data-bs-toggle="modal" data-bs-target="#createUserEventExpenseModal" value="">
-                        </p>
                     </ng-template>
-                    <app-createUserEventExpense (eventSave)="getUserEvents();" [userEvent]="authUserEvent"></app-createUserEventExpense>
+                    <app-createUserEventExpense (eventSave)="getAuthUserEvent()" [userEvent]="authUserEvent"></app-createUserEventExpense>
                 </div>
-                <div *ngIf="eventPartakers.length > sizePartaker" class="col-xxl-4 col-xl-4 col-lg-4 col-md-5 col-sm-5 col-5 more" (click)="getLessPartakers()"><a>
+                <div *ngIf="eventPartakers.length > sizePartaker" [ngClass]="previousMember" class="more" (click)="getLessPartakers()"><a>
                     Ver menos</a></div>
-                <div *ngIf="eventPartakers.length < totalPartaker" class="col-xxl-4 col-xl-4 col-lg-4 col-md-5 col-sm-5 col-5 more" (click)="getMorePartakers()"><a>
+                <div *ngIf="eventPartakers.length < totalPartaker" [ngClass]="nextMember" class="more" (click)="getMorePartakers()"><a>
                     Ver más</a></div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 description text"
-             name="eventDescription"
-             id="detailEvent_eventDescription">
-            {{event.eventDescription}}
+    <div class="row moneyCircles">
+        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 circle">
+            <div class="money">
+                <p  title="Dinero que he aportado al evento" class="partakerExpense">
+                    {{totalExpense}}€
+                </p>
+                <p  title="Dinero que he aportado al evento" class="partakerTextExpense">
+                    Dinero adelantado
+                </p>
+            </div>
+            <div class="moneyButton">
+                <button *ngIf="event.eventOpen" type="button" class="button" data-bs-toggle="modal" data-bs-target="#createUserEventExpenseModal">Añadir</button>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 circle">
+            <div class="money">
+                <p class="partakerExpense" title="Dinero que he gastado en el evento">
+                    {{debt}}€
+                </p>
+                <p class="partakerTextExpense" title="Dinero que he gastado en el evento">
+                    Dinero gastado
+                </p>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 circle">
+            <div class="money">
+                <p  title="Dinero total adelantado al evento" class="partakerExpense">
+                    {{totalEventExpense}}€
+                </p>
+                <p  title="Dinero total adelantado al evento" class="partakerTextExpense">
+                    Dinero total adelantado
+                </p>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 circle">
+            <div class="money">
+                <p  title="Dinero total gastado en el evento" class="partakerExpense">
+                    {{totalProductCost}}€
+                </p>
+                <p  title="Dinero total gastado en el evento" class="partakerTextExpense">
+                    Dinero total gastado
+                </p>
+            </div>
         </div>
     </div>
 </section>

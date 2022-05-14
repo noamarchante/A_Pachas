@@ -1,6 +1,7 @@
 package esei.tfg.apachas.service;
 
 import esei.tfg.apachas.entity.Product;
+import esei.tfg.apachas.repository.RUserProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,10 @@ public class SProduct {
     @Autowired
     @Qualifier("RProduct")
     private RProduct rProduct;
+
+    @Autowired
+    @Qualifier("RUserProduct")
+    private RUserProduct rUserProduct;
 
     @Autowired
     @Qualifier("REvent")
@@ -66,6 +71,15 @@ public class SProduct {
     public synchronized Long countProducts(long eventId){
         return rProduct.countByEvent_EventIdAndProductActiveTrue(eventId);
     }
+
+    public synchronized double sumTotalProductCost(long eventId){
+        if (rProduct.countByEvent_EventIdAndProductActiveTrue(eventId) > 0){
+            return rProduct.sumTotalProductCost(eventId);
+        }else{
+            return 0L;
+        }
+    }
+
     public synchronized Long countSearchProducts(long eventId, String productName){
         return rProduct.countByEvent_EventIdAndProductNameContainingAndProductActiveTrue(eventId, productName);
     }
@@ -78,6 +92,16 @@ public class SProduct {
     public synchronized List<MProduct> selectProducts(long eventId) {
         List<Product> productList = rProduct.findByEvent_EventIdAndProductActiveTrueOrderByProductNameAsc(eventId);
         return conProduct.conProductList(productList);
+    }
+
+    public synchronized Boolean selectAllProductsPartakers(long eventId) {
+        boolean all = true;
+        for (MProduct product : selectProducts(eventId)) {
+            if (rUserProduct.countPartakers(product.getProductId()) <=0){
+                all = false;
+            }
+        }
+        return all;
     }
 
     public synchronized List<MProduct> selectPageableSearchProducts(long eventId, String productName, Pageable pageable) {

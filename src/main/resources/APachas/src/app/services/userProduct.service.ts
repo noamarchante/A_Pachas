@@ -92,7 +92,8 @@ export class UserProductService {
             permissions: user.permissions,
             userActive: user.userActive,
             userRemoval: user.userRemoval,
-            userCreation: user.userCreation
+            userCreation: user.userCreation,
+            userNotify: user.userNotify
         }
     }
 

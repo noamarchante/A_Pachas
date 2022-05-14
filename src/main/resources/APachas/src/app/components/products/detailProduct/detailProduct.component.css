@@ -17,6 +17,10 @@
     color: #555;
 }
 
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: rgba(102, 187, 106, 0.1);
+}
+
 .button {
     width: 100%;
     padding: 10px;
@@ -65,7 +69,9 @@
 
 .description-row{
     text-align: left !important;
-    padding-left: 20px;
+    padding-left: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 
 }
 
@@ -266,6 +272,10 @@ ul.paginationProduct li:last-child a
 
 }
 
+.more a:hover{
+    text-decoration: underline;
+}
+
 .deleteButton{
     cursor:pointer;
     border: none;
@@ -296,6 +306,11 @@ ul.paginationProduct li:last-child a
 
     .nextProduct{
         float: none;
+    }
+
+    .productMember{
+        margin-left: 25%;
+        margin-right: 25%;
     }
 
     div.paginationMemberDiv {

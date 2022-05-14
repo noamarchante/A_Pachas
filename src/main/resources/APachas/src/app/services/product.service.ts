@@ -17,15 +17,6 @@ export class ProductService {
     event: MEvent;
     constructor(private http: HttpClient) { }
 
-
-    /*getEvent(){
-        return this.event;
-    }
-
-    setEvent(event: MEvent){
-        this.event = event;
-    }*/
-
     createProduct(mProduct: MProduct): Observable<number> {
         return this.http.post<number>(`${environment.restApi}/products`,{
             "productId": mProduct.productId,
@@ -41,7 +32,7 @@ export class ProductService {
             "eventRemoval": ""
         })
             .pipe(
-                APachasError.throwOnError('Fallo al crear el producto', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo`)
+                APachasError.throwOnError('Fallo al crear el producto', `Por favor, compruebe que los datos son correcto e inténtelo de nuevo.`)
             );
     }
 
@@ -84,10 +75,24 @@ export class ProductService {
         return this.http.get<number>(`${environment.restApi}/products/count/${eventId}`);
     }
 
+    sumTotalProductCost(eventId: number): Observable<number>{
+        return this.http.get<number>(`${environment.restApi}/products/sum/${eventId}`);
+    }
+
     getPageableProducts(eventId: number, page: number, size: number): Observable<MProduct[]> {
         return this.http.get<Group[]>(`${environment.restApi}/products/pageable/${eventId}?page=${page}&size=${size}`).pipe(
             map(products => products.map(this.mapProduct.bind(this)))
         );
+    }
+
+    getProducts(eventId: number): Observable<MProduct[]> {
+        return this.http.get<Group[]>(`${environment.restApi}/products/${eventId}`).pipe(
+            map(products => products.map(this.mapProduct.bind(this)))
+        );
+    }
+
+    getAllProductsPartakers(eventId: number): Observable<boolean> {
+        return this.http.get<boolean>(`${environment.restApi}/products/allProductsPartakers/${eventId}`);
     }
 
     private mapProduct(product: Product) : MProduct {

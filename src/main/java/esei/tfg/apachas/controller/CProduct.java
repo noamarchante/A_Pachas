@@ -73,9 +73,27 @@ public class CProduct {
         return new ResponseEntity<>(productCount, HttpStatus.OK);
     }
 
+    @GetMapping("/sum/{eventId}")
+    public ResponseEntity<Double> sumTotalProductCost( @PathVariable("eventId") long eventId) {
+        Double totalProductCost = sProduct.sumTotalProductCost(eventId);
+        return new ResponseEntity<>(totalProductCost, HttpStatus.OK);
+    }
+
     @GetMapping("/count/{productName}/{eventId}")
     public ResponseEntity<Long> countSearchProducts(@PathVariable("eventId") long eventId, @PathVariable("productName") String productName) {
         long productCount = sProduct.countSearchProducts(eventId, productName);
         return new ResponseEntity<>(productCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/{eventId}")
+    public ResponseEntity<List<MProduct>> getProducts(@PathVariable("eventId") long eventId) {
+        List<MProduct> mProductList = sProduct.selectProducts(eventId);
+        return new ResponseEntity<>(mProductList, HttpStatus.OK);
+    }
+
+    @GetMapping("/allProductsPartakers/{eventId}")
+    public ResponseEntity<Boolean> getAllProductsPartakers(@PathVariable("eventId") long eventId) {
+        boolean all = sProduct.selectAllProductsPartakers(eventId);
+        return new ResponseEntity<>(all, HttpStatus.OK);
     }
 }

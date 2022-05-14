@@ -73,7 +73,7 @@ export class DetailProductComponent implements OnInit, AfterViewChecked {
     }
 
     get open(){
-        return this._previous;
+        return this._open;
     }
 
     @Input() set open( open: boolean){
@@ -187,6 +187,7 @@ export class DetailProductComponent implements OnInit, AfterViewChecked {
     }
 
     setStatus(){
+        this.statusUpdate.emit();
         if (this.status == PRODUCTJOIN.JOIN){
             this.userProductService.getUserProduct(this.product.productId, this.authenticationService.getUser().id).subscribe((response)=>{
                 if (response.productId != 0){
@@ -199,6 +200,5 @@ export class DetailProductComponent implements OnInit, AfterViewChecked {
             this.userProductService.deleteUserProduct(this.product.productId, this.authenticationService.getUser().id).subscribe(()=>{
             });
         }
-        this.statusUpdate.emit();
     }
 }

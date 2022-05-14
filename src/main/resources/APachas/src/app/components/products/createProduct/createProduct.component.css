@@ -16,6 +16,10 @@
     color: #555;
 }
 
+.align-self-center{
+    margin-top: 5px;
+}
+
 .file {
     opacity: 0;
     width: 0.1px;

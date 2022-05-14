@@ -39,6 +39,10 @@ export class ListProductsComponent implements OnInit {
     totalPartaker: number=0;
     imagesPartakers: {[index:number]: any;} = {};
     imageEvent: any;
+    moneyColor: string;
+    moneyText: string;
+    previousMember:string;
+    nextMember: string;
 
 
     //PRODUCTOS
@@ -58,11 +62,13 @@ export class ListProductsComponent implements OnInit {
     totalUserEventPage:number= 0;
     userEventPage: number= 0;
     authUserEvent: MUserEvent;
+    totalExpense: number = 0;
+    totalEventExpense: number = 0;
+    totalProductCost: number = 0;
+    debt: number = 0;
 
     //TRANSACCIÓN
-    transactionActorName = "";
     transactions: MUserUserEvent[] = [];
-    totalTransactionPage:number= 0;
     transactionPage: number= 0;
     selectedTransaction: MUserUserEvent = new MUserUserEvent();
 
@@ -84,8 +90,19 @@ export class ListProductsComponent implements OnInit {
             this.getURLEvent();
             this.paginationClass();
             this.getAuthUserEvent();
+            this.paginationMembersClass();
         }else{
             this.event = new MEvent();
+        }
+    }
+
+    changeStyle($event){
+        if ($event.type == "mouseover"){
+            this.moneyColor = "moneyColor";
+            this.moneyText = "moneyText";
+        }else{
+            this.moneyColor = "";
+            this.moneyText= "";
         }
     }
 
@@ -103,6 +120,7 @@ export class ListProductsComponent implements OnInit {
         this.userEventService.getPageablePartakers(eventId,this.pagePartaker, this.sizePartaker).subscribe((response) => {
             this.eventPartakers.push(...response);
             this.getURLPartaker(response);
+            this.paginationMembersClass();
         });
     }
 
@@ -119,6 +137,7 @@ export class ListProductsComponent implements OnInit {
         }else{
             this.getPartakers(this.event.eventId);
         }
+        this.paginationMembersClass();
     }
 
     getLessPartakers(){
@@ -129,6 +148,7 @@ export class ListProductsComponent implements OnInit {
             this.eventPartakers = this.eventPartakersStored.slice(0, this.sizePartaker*this.pagePartaker);
         }
         this.pagePartaker -=1;
+        this.paginationMembersClass();
     }
 
     partakerReset(){
@@ -145,6 +165,18 @@ export class ListProductsComponent implements OnInit {
         return value;
     }
 
+    getTotalExpense(){
+        if (this.authUserEvent != undefined){
+            this.totalExpense = this.authUserEvent.totalExpense;
+        }
+    }
+
+    getDebt(){
+        if (this.authUserEvent != undefined){
+            this.debt = this.authUserEvent.debt;
+        }
+    }
+
     ownerBorder(userId: number):string{
         if(userId == this.event.eventOwner){
             return "owner";
@@ -156,27 +188,47 @@ export class ListProductsComponent implements OnInit {
     getProducts(){
         this.productService.getPageableProducts(this.event.eventId, this.productPage, this.size).subscribe((response) => {
             this.products = response;
+            this.getAuthUserEvent();
             this.setSelectedProductPage();
             this.getURLProduct(response);
             this.totalProductPages();
             this.getStatus(response);
-
+            this.sumTotalEventExpense();
+            this.sumTotalProductCost();
+            this.getTotalExpense();
+            this.getDebt();
         });
     }
 
     paginationClass(){
         if(this.productPage!=0 && this.productPage+1<this.totalProductPage){
-            this.previous = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9";
-            this.next = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3";
+            this.previous = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9 col-6";
+            this.next = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6";
         }else if (this.productPage==0 && this.productPage+1<this.totalProductPage){
             this.previous = "";
-            this.next = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.next = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
         }else if(this.productPage!=0 && this.productPage+1==this.totalProductPage){
-            this.previous = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.previous = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
             this.next = "";
         }else{
             this.previous = "";
             this.next = "";
+        }
+    }
+
+    private paginationMembersClass(){
+        if(this.eventPartakers.length > this.sizePartaker && this.eventPartakers.length < this.totalPartaker){
+            this.previousMember = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6";
+            this.nextMember = "col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 nextMember";
+        }else if (this.eventPartakers.length <= this.sizePartaker && this.eventPartakers.length < this.totalPartaker){
+            this.previousMember = "";
+            this.nextMember = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
+        }else if(this.eventPartakers.length > this.sizePartaker && this.eventPartakers.length >= this.totalPartaker){
+            this.previousMember = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
+            this.nextMember = "";
+        }else{
+            this.previousMember = "";
+            this.nextMember = "";
         }
     }
 
@@ -301,6 +353,7 @@ export class ListProductsComponent implements OnInit {
         this.userEventService.getPageableUserEvents(this.event.eventId, this.userEventPage, this.totalPartaker).subscribe((response) => {
             this.userEvents = response;
             this.totalUserEventPages();
+
         });
     }
 
@@ -325,6 +378,22 @@ export class ListProductsComponent implements OnInit {
     getAuthUserEvent(){
         this.userEventService.getUserEvent(this.event.eventId, this.authenticationService.getUser().id).subscribe((userEvent) =>{
             this.authUserEvent = userEvent;
+            this.debt = this.authUserEvent.debt;
+            this.totalExpense = this.authUserEvent.totalExpense;
+            this.sumTotalEventExpense();
+            this.sumTotalProductCost();
+        });
+    }
+
+    sumTotalEventExpense(){
+        this.userEventService.sumTotalEventExpense(this.event.eventId).subscribe((totalEventExpense)=>{
+            this.totalEventExpense = totalEventExpense;
+        });
+    }
+
+    sumTotalProductCost(){
+        this.productService.sumTotalProductCost(this.event.eventId).subscribe((totalProductCost) => {
+            this.totalProductCost = totalProductCost;
         });
     }
 

@@ -45,14 +45,10 @@
                                 </div>
 
                             </div>
-                            <div class="description-row text"
+                            <div class="text"
                                  name="productQuantityAndCost"unidades
                                  id="detailProduct_productAmount">
                                 <img class="icon" src="./assets/amount.svg" alt="">{{product.productQuantity}}
-                            </div>
-                            <div class="description-row text"
-                                 name="productQuantityAndCost"unidades
-                                 id="detailProduct_productCost">
                                 <img class="icon" src="./assets/money.svg" alt="">{{product.productCost}}€
                             </div>
                             <div class="description-row text"
@@ -63,7 +59,7 @@
                         </div>
                         <div class="paginationMemberDiv col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="row">
-                                <div *ngFor="let user of productPartakers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                <div *ngFor="let user of productPartakers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-6 productMember">
                                     <ng-container *ngIf="user.userPhoto; else userImagesDiv">
                                         <p class="imageP">
                                             <img class="imageMember"

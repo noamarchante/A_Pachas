@@ -3,6 +3,7 @@ package esei.tfg.apachas.repository;
 import esei.tfg.apachas.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +17,9 @@ public interface RProduct extends CrudRepository<Product, Long>, PagingAndSortin
     Product findByProductId(long productId);
 
     List<Product> findByEvent_EventId(long eventId);
+
+    @Query("SELECT SUM(p.productQuantity*p.productCost) FROM product p WHERE p.event.eventId = :eventId AND p.productActive = TRUE")
+    Double sumTotalProductCost(@Param("eventId") long eventId);
 
     Long countByEvent_EventIdAndProductActiveTrue(@Param("eventId") long eventId);
 

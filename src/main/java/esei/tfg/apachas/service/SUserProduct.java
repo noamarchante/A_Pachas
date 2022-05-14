@@ -8,10 +8,14 @@ import esei.tfg.apachas.model.MProduct;
 import esei.tfg.apachas.model.MUser;
 import esei.tfg.apachas.model.MUserProduct;
 import esei.tfg.apachas.repository.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -118,8 +122,8 @@ public class SUserProduct {
         return conUserProduct.conUserProduct(rUserProduct.findUserProductByUserProductId_ProductIdAndUserProductId_UserId(productId, authId));
     }
 
+    @Transactional
     public synchronized void setUserDebt(long eventId){
-
         Event existingEvent = rEvent.findByEventId(eventId);
         if (existingEvent != null) {
             List<MProduct> productList = sProduct.selectProducts(eventId);
@@ -130,13 +134,15 @@ public class SUserProduct {
             });
             productList.forEach((product)->{
                 List<MUserProduct> userProductList = conUserProduct.conUserProductList(rUserProduct.findByProduct_ProductIdAndUserProductActiveTrue(product.getProductId()));
-                double productDebt = (product.getProductCost() * product.getProductQuantity())/userProductList.size();
-                userProductList.forEach((userProduct) -> existingUserEventList.forEach((userEvent) -> {
-                    if (userProduct.getUserId() == userEvent.getUser().getUserId()){
-                        userEvent.setDebt(userEvent.getDebt() + productDebt);
-                        rUserEvent.save(userEvent);
-                    }
-                }));
+                if (userProductList.size() != 0) {
+                    double productDebt = Math.round(((product.getProductCost() * product.getProductQuantity()) / userProductList.size())*100.0)/100.0;
+                    userProductList.forEach((userProduct) -> existingUserEventList.forEach((userEvent) -> {
+                        if (userProduct.getUserId() == userEvent.getUser().getUserId()){
+                            userEvent.setDebt(userEvent.getDebt() + productDebt);
+                            rUserEvent.save(userEvent);
+                        }
+                    }));
+                }
             });
         }
     }
