@@ -142,6 +142,10 @@ public class SUserEvent {
         return rUserEvent.countPartakers(eventId);
     }
 
+    public synchronized String[] selectNotifications(Long authId) {
+        return rUserEvent.findNotifications(authId);
+    }
+
     public synchronized List<MEvent> selectPageableEvents(Long userId, Pageable pageable) {
         List<Event> eventList = rUserEvent.findPageableEvents(userId, pageable).getContent();
         return conEvent.conEventList(eventList);
@@ -190,7 +194,13 @@ public class SUserEvent {
     public synchronized Long countUserEvents(long eventId){
         return rUserEvent.countUserEvents(eventId);
     }
-
+    public synchronized double sumTotalEventExpense(long eventId){
+        if (rUserEvent.countUserEvents(eventId) >0){
+            return rUserEvent.sumTotalEventExpense(eventId);
+        }else{
+            return 0L;
+        }
+    }
     public synchronized List<MUserEvent> selectPageableSearchUserEvents(String userName, long eventId, Pageable pageable) {
         return conUserEvent.conUserEventList(rUserEvent.findPageableSearchUserEvents(eventId, userName, pageable).getContent());
     }
@@ -223,5 +233,15 @@ public class SUserEvent {
             rUserEvent.save(existingUserEvent);
             return true;
         }
+    }
+
+    public synchronized List<MEvent> selectOpenEvents(Long userId) {
+        List<Event> eventList = rUserEvent.findOpenEvents(userId);
+        return conEvent.conEventList(eventList);
+    }
+
+    public synchronized List<MEvent> selectClosedEvents(Long userId) {
+        List<Event> eventList = rUserEvent.findClosedEvents(userId);
+        return conEvent.conEventList(eventList);
     }
 }

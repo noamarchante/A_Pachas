@@ -25,6 +25,12 @@ export class UserEventService {
         return this.http.get<number>(`${environment.restApi}/usersEvents/count/mutual/${userId}/${authId}`);
     }
 
+    getNotifications(authId: number): Observable<string[]> {
+        if (authId != undefined){
+            return this.http.get<string[]>(`${environment.restApi}/usersEvents/notifications/${authId}`);
+        }
+    }
+
     getPageableMutualEvents(userId: number, authId: number, page: number, size: number): Observable<MEvent[]> {
         return this.http.get<Event[]>(`${environment.restApi}/usersEvents/pageable/mutual/${userId}/${authId}?page=${page}&size=${size}`).pipe(
             map(events => events.map(this.mapEvent.bind(this)))
@@ -53,6 +59,10 @@ export class UserEventService {
 
     countEvents(authId: number): Observable<number>{
         return this.http.get<number>(`${environment.restApi}/usersEvents/count/events/${authId}`);
+    }
+
+    sumTotalEventExpense(eventId: number): Observable<number>{
+        return this.http.get<number>(`${environment.restApi}/usersEvents/sum/${eventId}`);
     }
 
     countEventsWithFinished(authId: number): Observable<number>{
@@ -167,6 +177,20 @@ export class UserEventService {
         return this.http.get<number>(`${environment.restApi}/usersEvents/count/${userName}/${eventId}`);
     }
 
+    getOpenEvents(authId: number):Observable<MEvent[]>{
+        return this.http.get<Event[]>(`${environment.restApi}/usersEvents/events/open/${authId}`).pipe(
+            map(events => events.map(this.mapEvent.bind(this)))
+        );
+    }
+
+    getClosedEvents(authId: number):Observable<MEvent[]>{
+        return this.http.get<Event[]>(`${environment.restApi}/usersEvents/events/closed/${authId}`).pipe(
+            map(events => events.map(this.mapEvent.bind(this)))
+        );
+    }
+
+
+
     private mapEvent(event: Event) : MEvent {
         return {
             eventId: event.eventId,
@@ -198,7 +222,8 @@ export class UserEventService {
             permissions: user.permissions,
             userActive: user.userActive,
             userRemoval: user.userRemoval,
-            userCreation: user.userCreation
+            userCreation: user.userCreation,
+            userNotify: user.userNotify
         }
     }
 

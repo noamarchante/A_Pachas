@@ -104,6 +104,11 @@ public class CUserEvent {
         return new ResponseEntity<>(eventCount, HttpStatus.OK);
     }
 
+    @GetMapping("/notifications/{authId}")
+    public ResponseEntity<String[]> getNotifications(@PathVariable("authId") long authId) {
+        String[] notifications = sUserEvent.selectNotifications(authId);
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
+    }
 
     @GetMapping("/pageable/mutual/{userId}/{authId}")
     public ResponseEntity<List<MEvent>> getPageableMutualEvents(@PathVariable("userId") long userId, @PathVariable("authId") long authId, Pageable pageable) {
@@ -173,6 +178,12 @@ public class CUserEvent {
         return new ResponseEntity<>(userEventCount, HttpStatus.OK);
     }
 
+    @GetMapping("/sum/{eventId}")
+    public ResponseEntity<Double> sumTotalEventExpense( @PathVariable("eventId") long eventId) {
+        Double totalEventExpense = sUserEvent.sumTotalEventExpense(eventId);
+        return new ResponseEntity<>(totalEventExpense, HttpStatus.OK);
+    }
+
     @GetMapping("/pageable/{userName}/{eventId}")
     public ResponseEntity<List<MUserEvent>> getPageableSearchUserEvents(@PathVariable("userName") String userName, @PathVariable("eventId") long eventId, Pageable pageable) {
         List<MUserEvent> userEventList = sUserEvent.selectPageableSearchUserEvents(userName, eventId,pageable);
@@ -204,4 +215,18 @@ public class CUserEvent {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
     }
+
+    @GetMapping("/events/open/{authId}")
+    public ResponseEntity<List<MEvent>> getOpenEvents(@PathVariable("authId") long authId) {
+        List<MEvent> mEventList = sUserEvent.selectOpenEvents(authId);
+        return new ResponseEntity<>(mEventList, HttpStatus.OK);
+    }
+
+    @GetMapping("/events/closed/{authId}")
+    public ResponseEntity<List<MEvent>> getClosedEvents(@PathVariable("authId") long authId) {
+        List<MEvent> mEventList = sUserEvent.selectClosedEvents(authId);
+        return new ResponseEntity<>(mEventList, HttpStatus.OK);
+    }
+
+
 }

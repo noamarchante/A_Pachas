@@ -11,6 +11,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository("RUserEvent")
@@ -20,13 +23,14 @@ public interface RUserEvent extends CrudRepository<UserEvent, UserEventId>, Pagi
 
     List<UserEvent> findByUserEventId_EventId(long eventId);
 
-    @Query("SELECT DISTINCT uE FROM userEvent uE WHERE uE.userEventId.eventId = :eventId AND uE.userEventActive = TRUE AND uE.debt >= 0 ORDER BY uE.debt ASC")
+    @Query("SELECT uE.event.eventName FROM userEvent uE WHERE uE.userEventId.userId = :authId AND uE.accept = FALSE AND uE.userEventActive = TRUE")
+    String[] findNotifications(@Param("authId") long authId);
+
+    @Query("SELECT DISTINCT uE FROM userEvent uE WHERE uE.userEventId.eventId = :eventId AND uE.userEventActive = TRUE AND uE.debt > 0 ORDER BY uE.debt ASC")
     List<UserEvent> findByEvent_EventIdAndDebtGreaterThanEqualOrderByDebtAsc(@Param("eventId") long eventId);
 
     @Query("SELECT DISTINCT uE FROM userEvent uE WHERE uE.userEventId.eventId = :eventId AND uE.userEventActive = TRUE AND uE.debt < 0 ORDER BY uE.debt DESC")
     List<UserEvent> findByEvent_EventIdAndDebtGreaterThanEqualOrderByDebtDesc(long eventId);
-
-
 
     @Override
     Page<UserEvent> findAll(Pageable pageable);
@@ -45,6 +49,9 @@ public interface RUserEvent extends CrudRepository<UserEvent, UserEventId>, Pagi
 
     @Query("SELECT COUNT(DISTINCT e) FROM event e, userEvent uE WHERE e.eventId = uE.userEventId.eventId AND uE.userEventId.userId = :authId AND uE.userEventActive = TRUE AND e.eventActive = TRUE AND e.eventOpen = TRUE")
     Long countEvents(@Param("authId") long authId);
+
+    @Query("SELECT SUM(uE.totalExpense) FROM userEvent uE WHERE uE.userEventId.eventId = :eventId AND uE.userEventActive = TRUE")
+    Double sumTotalEventExpense(@Param("eventId") long eventId);
 
     @Query("SELECT COUNT(DISTINCT e) FROM event e, userEvent uE WHERE e.eventId = uE.userEventId.eventId AND uE.userEventId.userId = :authId AND uE.userEventActive = TRUE AND e.eventActive = TRUE AND e.eventOpen = FALSE")
     Long countEventsWithFinished(@Param("authId") long authId);
@@ -87,4 +94,21 @@ public interface RUserEvent extends CrudRepository<UserEvent, UserEventId>, Pagi
     @Query("SELECT COUNT(DISTINCT uE) FROM userEvent uE WHERE uE.userEventId.eventId = :eventId AND uE.userEventActive = TRUE AND uE.accept = TRUE AND uE.user.userName LIKE %:userName%")
     Long countSearchUserEvents(@Param("eventId")long eventId, @Param("userName") String userName);
 
+    @Query("SELECT DISTINCT e FROM event e, userEvent uE WHERE e.eventId = uE.userEventId.eventId AND uE.userEventId.userId = :authId AND uE.userEventActive = TRUE AND e.eventActive = TRUE AND e.eventOpen = TRUE ORDER BY e.eventName ASC")
+    List<Event> findOpenEvents(@Param("authId") long authId);
+
+    @Query("SELECT DISTINCT e FROM event e, userEvent uE WHERE e.eventId = uE.userEventId.eventId AND uE.userEventId.userId = :authId AND uE.userEventActive = TRUE AND e.eventActive = TRUE AND e.eventOpen = FALSE ORDER BY e.eventName ASC")
+    List<Event> findClosedEvents(@Param("authId") long authId);
+
+    @Query("SELECT DISTINCT u FROM user u, event e, userEvent uE WHERE u.userId = uE.userEventId.userId AND e.eventId = uE.userEventId.eventId AND u.userActive = TRUE AND e.eventActive = TRUE AND uE.userEventActive = TRUE AND e.eventOpen = TRUE AND u.userNotify = TRUE AND uE.userEventCreation >= :previousDate AND uE.userEventCreation <= :currentDate")
+    List<User> findAddedNewEvent(@Param("currentDate") Date currentDate, @Param("previousDate") Date previousDate);
+
+    @Query("SELECT DISTINCT u FROM user u, event e, userEvent uE WHERE u.userId = uE.userEventId.userId AND e.eventId = uE.userEventId.eventId AND u.userActive = TRUE AND e.eventActive = TRUE AND uE.userEventActive = TRUE AND e.eventOpen = TRUE AND u.userNotify = TRUE AND e.eventStart = :date")
+    List<User> findNearEvent(@Param("date") Date date);
+
+    @Query("SELECT DISTINCT u FROM user u, event e, userEvent uE WHERE u.userId = uE.userEventId.userId AND e.eventId = uE.userEventId.eventId AND u.userActive = TRUE AND e.eventActive = TRUE AND uE.userEventActive = TRUE AND e.eventOpen = TRUE AND u.userNotify = TRUE AND e.eventStart = :date")
+    List<User> findEventStart(@Param("date") Date date);
+
+    @Query("SELECT DISTINCT u FROM user u, event e, userUserEvent uUe WHERE (u.userId = uUe.userUserEventId.receiverId OR u.userId = uUe.userUserEventId.senderId) AND e.eventId = uUe.userUserEventId.eventId AND u.userActive = TRUE AND e.eventActive = TRUE AND uUe.userUserEventActive = TRUE AND e.eventOpen = FALSE AND u.userNotify = TRUE AND uUe.userUserEventCreation >= :previousDate AND uUe.userUserEventCreation <= :currentDate")
+    List<User> findEventFinished(@Param("currentDate") Date currentDate, @Param("previousDate") Date previousDate);
 }

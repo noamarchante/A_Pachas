@@ -10,7 +10,7 @@
                 <form (submit)="onEdit()"  ngNativeValidate #createUserEventExpenseForm="ngForm">
                     <div class="col container-fluid">
                         <div class="row">
-                            <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <p class="text">{{showOperation}}</p>
                                 <input type="text" class="text-area inputs" name="totalExpense"
                                        id="createUserEventExpense_totalExpense" required
@@ -29,66 +29,66 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                 <button type="button" class="calculatorButton resetButton" (click)="calculator(-1,'C')">CLEAR</button>
                             </div>
-                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                 <button type="button" class="calculatorButton resetButton" (click)="calculator(-1,'R')">RESET</button>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(7,'')">7</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(8,'')">8</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(9,'')">9</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(-1,'/')">/</button>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(4,'')">4</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(5,'')">5</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(6,'')">6</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton"(click)="calculator(-1,'*')">x</button>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(1,'')">1</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(2,'')">2</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(3,'')">3</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(-1,'-')">-</button>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(0,'')">0</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton"(click)="calculator(-1,'.')">.</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(-1,'=')">=</button>
                             </div>
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                                 <button type="button" class="calculatorButton" (click)="calculator(-1,'+')">+</button>
                             </div>
                         </div>
