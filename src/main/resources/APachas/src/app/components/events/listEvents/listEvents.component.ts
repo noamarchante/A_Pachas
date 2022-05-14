@@ -95,13 +95,13 @@ export class ListEventsComponent implements OnInit {
 
     paginationClass(){
         if(this.page!=0 && this.page+1<this.totalPage){
-            this.previous = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9";
-            this.next = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3";
+            this.previous = "col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9";
+            this.next = "col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3";
         }else if (this.page==0 && this.page+1<this.totalPage){
             this.previous = "";
-            this.next = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.next = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 cpl-12";
         }else if(this.page!=0 && this.page+1==this.totalPage){
-            this.previous = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12";
+            this.previous = "col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12";
             this.next = "";
         }else{
             this.previous = "";

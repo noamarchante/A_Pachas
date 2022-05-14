@@ -9,6 +9,8 @@ import {STATUS} from "../../users/listUsers/listUsers.component";
 import {ProductService} from "../../../services/product.service";
 import {Router} from "@angular/router";
 import {UserUserEventService} from "../../../services/userUserEvent.service";
+import {UserProductService} from "../../../services/userProduct.service";
+import {connectableObservableDescriptor} from "rxjs/internal/observable/ConnectableObservable";
 
 @Component({
     selector: 'app-detailEvent',
@@ -34,7 +36,7 @@ export class DetailEventComponent implements OnInit {
     pagePartaker = 0;
     sizePartaker = 6;
     totalPartaker: number=0;
-    message: string = "";
+    message: string = "¿Estás seguro de que quieres salir del evento?";
     statusMessage: string = "";
     show: boolean = true;
 
@@ -46,12 +48,14 @@ export class DetailEventComponent implements OnInit {
     _event: MEvent = new MEvent();
     _status: string ="";
     messageRequest: boolean;
-
     close: boolean = false;
+
+    googleCalendarUrl: string = "";
 
     constructor(private eventService: EventService,
                 private productService: ProductService,
                 private userEventService: UserEventService,
+                private userProductService: UserProductService,
                 private userUserEventService: UserUserEventService,
                 private authenticationService: AuthenticationService,
                 private notificationService: NotificationService,
@@ -64,13 +68,12 @@ export class DetailEventComponent implements OnInit {
     }
 
     showDetailsAndProducts(){
-        //this.productService.setEvent(this.event);
-        localStorage.setItem("products",  JSON.stringify(this.event));
+        localStorage.setItem("products", JSON.stringify(this.event));
         this.router.navigateByUrl("/products");
     }
 
     showTransactions(){
-        localStorage.setItem("transactions",  JSON.stringify(this.event));
+        localStorage.setItem("transactions", JSON.stringify(this.event));
         this.router.navigateByUrl("/transactions");
     }
 
@@ -78,8 +81,6 @@ export class DetailEventComponent implements OnInit {
         this.messageRequest = true;
         if (this.status == STATUS.PENDING){
             this.message = "¿Quieres aceptar la solicitud para participar en el evento?";
-        }else{
-            this.message = "¿Estás seguro de que quieres salir del evento?";
         }
     }
 
@@ -130,6 +131,7 @@ export class DetailEventComponent implements OnInit {
         }
     }
 
+
     get next(){
         return this._next;
     }
@@ -151,6 +153,7 @@ export class DetailEventComponent implements OnInit {
             if (this.event.eventId != null){
                 this.getPartakers(this.event.eventId);
                 this.getTotalPartakers(this.event.eventId);
+                this.addEventGoogleCalendar(this.event);
             }else{
                 this._event = new MEvent();
             }
@@ -186,9 +189,24 @@ export class DetailEventComponent implements OnInit {
     }
 
     closeEvent(){
-        this.eventService.editOpen(this.event.eventId, false).subscribe(()=>{
-            this.userUserEventService.createUserUserEvent(this.event.eventId).subscribe();
-            this.showTransactions();
+        this.userEventService.sumTotalEventExpense(this.event.eventId).subscribe((totalEventExpense) =>{
+            this.productService.sumTotalProductCost(this.event.eventId).subscribe((totalProductCost) =>{
+                if (totalProductCost == totalEventExpense){
+                    this.productService.getAllProductsPartakers(this.event.eventId).subscribe((response) => {
+                       if (response){
+                           this.eventService.editOpen(this.event.eventId, false).subscribe(() => {
+                               this.userUserEventService.createUserUserEvent(this.event.eventId).subscribe(()=>{
+                                   this.showTransactions();
+                               });
+                           });
+                       }else{
+                           this.notificationService.warning("Comprueba que todos los productos tienen al menos un participante.", "No es pposible finalizar el evento");
+                       }
+                    });
+                }else{
+                    this.notificationService.warning("Comprueba que el dinero adelantado para el evento es igual al dinero gastado por el evento.", "No es posible finalizar el evento");
+                }
+            });
         });
     }
 
@@ -285,5 +303,16 @@ export class DetailEventComponent implements OnInit {
 
             this.userEventService.deleteUserEvent(this.event.eventId, this.authenticationService.getUser().id).subscribe();
         }
+    }
+
+
+    addEventGoogleCalendar(event: MEvent){
+        let startDate: string = this.event.eventStart.replace(new RegExp(' ', 'g'), 'T').replace(new RegExp(':', 'g'), '').replace(new RegExp('-', 'g'), '');
+        let endDate: string = this.event.eventEnd.replace(new RegExp(' ', 'g'), 'T').replace(new RegExp(':', 'g'), '').replace(new RegExp('-', 'g'), '');
+        let date: string = startDate.substring(0,9) + (parseInt(startDate.substring(9))+20000).toString() + "/" + endDate.substring(0,9) + (parseInt(endDate.substring(9))+20000).toString();
+        let title: string = this.event.eventName.replace(new RegExp(' ', 'g'), '+');
+        let location: string = this.event.eventLocation.replace(new RegExp(' ', 'g'), '+');
+        let description: string = this.event.eventDescription.replace(new RegExp(' ', 'g'), '+');
+        this.googleCalendarUrl = "https://calendar.google.com/calendar/u/0/r/eventedit?text=" + title + "&dates=" + date + "&details=" + description + "&location=" + location + "&sf=true&output=xml";
     }
 }

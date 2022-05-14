@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service("SEvent")
 public class SEvent {
@@ -75,5 +76,10 @@ public class SEvent {
         } else {
             return false;
         }
+    }
+
+    public synchronized MEvent selectEvent(Long eventId) {
+        Event event = rEvent.findByEventId(eventId);
+        return conEvent.conEvent(event);
     }
 }

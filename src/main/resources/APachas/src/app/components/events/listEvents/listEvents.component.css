@@ -86,6 +86,11 @@
 .dropdown-menu{
     width: 200%;
 }
+.dropdown-menu.show{
+    margin-right: 10% !important;
+
+}
+
 
 .checkFilter{
     background: rgba(102, 187, 106, 0.12);
@@ -106,7 +111,6 @@ input[type="search"]::-webkit-search-cancel-button{
 
 .button
 {
-    width: 100%;
     padding: 10px;
     border: none;
     outline: none;
@@ -150,6 +154,7 @@ input[type="search"]::-webkit-search-cancel-button{
 }
 .dropd{
     width: 10px!important;
+    text-align: left !important;
 }
 .col{
     padding-top: 15px;
@@ -164,6 +169,7 @@ input[type="search"]::-webkit-search-cancel-button{
     background: rgba(102, 187, 106, 0.12);
     cursor:pointer;
 }
+
 
 ul.pagination{
     display: flex;
@@ -267,14 +273,6 @@ ul li:last-child a
     cursor:pointer;
 }
 
-.previous{
-    float: left;
-}
-
-.next{
-    float: right;
-}
-
 /*XXL*/
 @media (min-width: 1400px) {
     .card-text{
@@ -316,6 +314,7 @@ ul li:last-child a
     .searchDiv{
         text-align: right;
     }
+
 }
 
 /*M*/
@@ -331,8 +330,10 @@ ul li:last-child a
         width: 70%;
     }
     .searchDiv{
-        text-align: center;
+        text-align: right;
+        margin-left: -10%;
     }
+
 
 }
 
@@ -342,18 +343,16 @@ ul li:last-child a
         padding-right: 45px;
     }
     .searchDiv input {
-        width: 100%;
+        width: 70%;
     }
     .searchDiv{
         text-align: right;
-    }
-    .createDiv{
-        text-align: center!important;
+        margin-left: -20%;
     }
 }
 
 /*XS*/
-@media (max-width: 576px) {
+@media (min-width: 525px) and (max-width: 576px) {
     .title{
         padding-top: 20px;
     }
@@ -368,7 +367,63 @@ ul li:last-child a
         text-align: right;
     }
     .createDiv{
-        padding-top: 10px;
         text-align: center!important;
+    }
+
+    .createFirstDiv{
+        margin-top: 3%;
+        margin-left: 17%;
+    }
+
+ .dropdown-menu{
+     margin-left: 80% !important;
+ }
+}
+
+@media (min-width: 390px) and (max-width: 525px){
+    .title{
+        padding-top: 20px;
+    }
+    .card-text{
+        text-align: center;
+        padding-left: 0px;
+    }
+    .searchDiv input {
+        width: 80%;
+    }
+    .searchDiv{
+        text-align: right;
+    }
+    .createDiv{
+        text-align: center!important;
+    }
+
+    .createFirstDiv{
+        margin-top: 3%;
+        margin-left: 20%;
+    }
+}
+
+@media (max-width: 390px){
+    .title{
+        padding-top: 20px;
+    }
+    .card-text{
+        text-align: center;
+        padding-left: 0px;
+    }
+    .searchDiv input {
+        width: 80%;
+    }
+    .searchDiv{
+        text-align: right;
+    }
+    .createDiv{
+        text-align: center!important;
+    }
+
+    .createFirstDiv{
+        margin-top: 3%;
+        margin-left: 25%;
     }
 }

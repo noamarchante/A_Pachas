@@ -10,14 +10,15 @@
                         <i class="zmdi zmdi-label"></i>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><button type="button" *ngIf="showButtons()" class="dropdown-item buttonText" title="Editar evento"
+                        <li><button type="button" *ngIf="showButtons() && event.eventOpen" class="dropdown-item buttonText" title="Editar evento"
                                     data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#createEventModal"
                                     (click)="pagePartaker=0">Editar evento</button></li>
                         <li><button type="button" *ngIf="showButtons()" class="dropdown-item buttonText" title="Eliminar evento" data-bs-toggle="modal" data-bs-target="#messageConfirmModal"
                                     (click)="showDeleteEvent();pagePartaker=0">Eliminar evento</button></li>
-                        <li><button *ngIf="showSetStatus()" type="button" class="dropdown-item buttonText" title="Cambiar de estado"
+                        <li><button *ngIf="showSetStatus() && event.eventOpen" type="button" class="dropdown-item buttonText" title="Cambiar de estado"
                                     data-bs-toggle="modal" data-bs-target="#messageConfirmModal" (click)="messageValue();">{{statusMessage}}</button></li>
-                        <li><button *ngIf="showButtons()" type="button" id="close" class="dropdown-item buttonText" title=""
+                        <li><a [href]="googleCalendarUrl" target="_blank" type="button" class="dropdown-item buttonText" title="googleCalendar">Añadir a Google Calendar</a></li>
+                        <li><button *ngIf="showButtons() && event.eventOpen" type="button" id="close" class="dropdown-item buttonText" title=""
                                     data-bs-toggle="modal" data-bs-target="#messageConfirmModal" (click)="closeMessage()">Finalizar evento</button></li>
                         <li><button *ngIf="show" (click)="showDetailsAndProducts()" data-bs-dismiss="modal" type="button" class="dropdown-item buttonText" title="Gestion evento">Gestión del evento</button></li>
                         <li><button *ngIf="show && !event.eventOpen" (click)="showTransactions()" data-bs-dismiss="modal" type="button" class="dropdown-item buttonText" title="Transacciones">Transacciones</button></li>
@@ -41,10 +42,8 @@
                                 </ng-template>
                                 <div class="date text">
                                     <img class="icon" src="./assets/date.svg" alt=""
-                                         id="detailUserEvent_date">
-                                    {{event.eventStart | date: 'dd-MM-yyyy HH:mm'}}
-                                    -
-                                    {{event.eventEnd | date: 'dd-MM-yyyy HH:mm'}}</div>
+                                            id="detailUserEvent_date">{{event.eventStart | date: 'dd-MM-yyyy HH:mm'}}
+                                    <p class="finalDate">{{event.eventEnd | date: 'dd-MM-yyyy HH:mm'}}</p></div>
                                 <div class="description-row text"
                                      name="eventLocation"
                                      id="detailEvent_eventLocation">
@@ -62,13 +61,13 @@
                         </div>
                         <div class="paginationPartakerDiv col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="row">
-                                <div *ngFor="let user of eventPartakers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                <div *ngFor="let user of eventPartakers" class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-6 members">
                                     <ng-container *ngIf="user.userPhoto; else userImagesDiv">
                                         <p title="{{ownerLabel(user.userId)}}" class="imageP">
                                             <img class="imagePartaker" [ngClass]="ownerBorder(user.userId)"
                                                  [src]="user.userPhoto" alt="" id="detailUser_photo">
                                         </p>
-                                        <p title="{{ownerLabel(user.userId)}}" class="member">
+                                        <p title="{{ownerLabel(user.userId)}}" class="partaker">
                                             {{user.userLogin}}
                                         </p>
                                     </ng-container>

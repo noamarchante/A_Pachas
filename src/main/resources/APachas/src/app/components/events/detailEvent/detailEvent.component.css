@@ -17,6 +17,10 @@
     color: #555;
 }
 
+.finalDate{
+    padding-left: 15%;
+}
+
 .drop{
     margin-top: 5px;
     margin-left: -5px;
@@ -105,10 +109,6 @@
     outline: none;
 }
 
-.modal-footer{
-    margin-top: -30px;
-}
-
 div.paginationPartakerDiv {
     padding-top: 10px;
     height: 290px;
@@ -182,6 +182,8 @@ div.paginationPartakerDiv {
 .date{
     width: 100%;
     padding-top: 10px;
+    margin-left: -5%;
+    margin-bottom: -10%;
 }
 
 .modal-body{
@@ -272,6 +274,10 @@ ul.paginationEvent li:last-child a
 
 }
 
+.more a:hover{
+    text-decoration: underline;
+}
+
 .deleteButton{
     cursor:pointer;
     border: none;
@@ -288,6 +294,22 @@ ul.paginationEvent li:last-child a
 
 .closeButton{
     margin-top: -50px;
+}
+@media (min-width: 576px) and (max-width: 991px) {
+    .title{
+        margin-left: 4% !important;
+    }
+}
+@media (min-width: 485px) and (max-width: 576px) {
+    .title{
+        margin-left: 6% !important;
+    }
+}
+
+@media (min-width: 280px) and (max-width: 485px) {
+    .title{
+        margin-left: 10% !important;
+    }
 }
 
 @media (max-width: 349px) {
@@ -311,5 +333,13 @@ ul.paginationEvent li:last-child a
 
     .editDiv{
         padding-left: 15px;
+    }
+
+    .title{
+        margin-left: 10% !important;
+    }
+
+    .members{
+        margin-left: 25% !important;
     }
 }

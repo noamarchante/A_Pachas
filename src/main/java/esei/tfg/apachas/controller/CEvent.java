@@ -10,6 +10,7 @@ import esei.tfg.apachas.model.MEvent;
 import esei.tfg.apachas.service.SEvent;
 import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/events")
@@ -60,5 +61,11 @@ public class CEvent {
         } else {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
+    }
+
+    @GetMapping("/{eventId}")
+    public ResponseEntity<MEvent> getEvent(@PathVariable("eventId") long eventId) {
+        MEvent mEvent = sEvent.selectEvent(eventId);
+        return new ResponseEntity<>(mEvent, HttpStatus.OK);
     }
 }

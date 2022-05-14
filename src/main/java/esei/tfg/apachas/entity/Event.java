@@ -75,6 +75,11 @@ public class Event implements Serializable {
     @Transient
     private Set<UserEvent> userEventSet = new HashSet<>();
 
+   /* //N:M EVENTO PARTICIPA USUARIO
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserUserEvent> userUserEventSet = new HashSet<>();*/
+
     public Event() {
     }
 
