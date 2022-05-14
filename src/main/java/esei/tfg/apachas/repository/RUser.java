@@ -3,6 +3,7 @@ package esei.tfg.apachas.repository;
 import esei.tfg.apachas.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -12,13 +13,26 @@ public interface RUser extends CrudRepository<User, Long>, PagingAndSortingRepos
 
     User findByUserId(long userId);
 
-    User findByUserLoginAndUserActiveTrue(String userLogin);
+    User findByUserEmail(String email);
 
-    Page<User> findUsersByRolesEqualsAndUserIdIsNotAndUserActiveTrueOrderByUserLoginAsc(String roles, long authId, Pageable pageable);
+    User findByUserEmailAndUserActiveTrueAndUserVerifiedTrue(String email);
 
-    Page<User> findUsersByUserLoginContainingAndUserIdIsNotAndRolesEqualsAndUserActiveTrueOrderByUserLoginAsc(String userLogin, long authId, String roles, Pageable pageable);
+    User findByUserEmailAndUserVerifiedFalse(String email);
 
-    Long countByRolesAndUserIdIsNotAndUserActiveTrue(String roles, long authId);
+    User findByUserLoginAndUserActiveTrueAndUserVerifiedTrue(String userLogin);
 
-    Long countByRolesAndUserLoginContainingAndUserIdIsNotAndUserActiveTrue(String roles, String userLogin, long authId);
+    User findByUserIdAndUserActiveTrueAndUserVerifiedTrue(long userId);
+
+    Page<User> findUsersByRolesEqualsAndUserIdIsNotAndUserActiveTrueAndUserVerifiedTrueOrderByUserLoginAsc(String roles, long authId, Pageable pageable);
+
+    Page<User> findUsersByUserLoginContainingAndUserIdIsNotAndRolesEqualsAndUserActiveTrueAndUserVerifiedTrueOrderByUserLoginAsc(String userLogin, long authId, String roles, Pageable pageable);
+
+    Long countByRolesAndUserIdIsNotAndUserActiveTrueAndUserVerifiedTrue(String roles, long authId);
+
+    Long countByRolesAndUserLoginContainingAndUserIdIsNotAndUserActiveTrueAndUserVerifiedTrue(String roles, String userLogin, long authId);
+
+    @Query("SELECT COUNT(u) FROM user u WHERE EXISTS (SELECT u FROM user u WHERE u.userLogin= :login)")
+    Long findLoginAvailable(String login);
+
+    User findByUserEmailAndTokenPasswordNull(String userEmail);
 }

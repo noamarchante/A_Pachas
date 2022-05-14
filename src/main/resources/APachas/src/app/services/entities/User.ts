@@ -12,4 +12,5 @@ export class User {
     userActive: boolean;
     userCreation: Date;
     userRemoval: Date;
+    userNotify: boolean;
 }

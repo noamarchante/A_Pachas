@@ -18,6 +18,8 @@ public class MUser {
     private Timestamp userCreation;
     private Timestamp userRemoval;
     private boolean userActive;
+    private boolean userVerified;
+    private boolean userNotify;
 
     public MUser() {
     }
@@ -36,6 +38,16 @@ public class MUser {
         this.userCreation = user.getUserCreation();
         this.userRemoval = user.getUserRemoval();
         this.userActive = user.isUserActive();
+        this.userVerified = user.isUserVerified();
+        this.userNotify = user.isUserNotify();
+    }
+
+    public boolean isUserNotify() {
+        return userNotify;
+    }
+
+    public void setUserNotify(boolean userNotify) {
+        this.userNotify = userNotify;
     }
 
     public long getUserId() {
@@ -140,5 +152,13 @@ public class MUser {
 
     public void setUserActive(boolean userActive) {
         this.userActive = userActive;
+    }
+
+    public boolean isUserVerified() {
+        return userVerified;
+    }
+
+    public void setUserVerified(boolean userVerified) {
+        this.userVerified = userVerified;
     }
 }

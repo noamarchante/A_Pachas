@@ -2,7 +2,9 @@ package esei.tfg.apachas.service;
 
 import esei.tfg.apachas.converter.ConUser;
 import esei.tfg.apachas.entity.User;
+import esei.tfg.apachas.model.MRetrievePassword;
 import esei.tfg.apachas.model.MUser;
+import esei.tfg.apachas.model.MVerifyEmail;
 import esei.tfg.apachas.repository.RUser;
 import esei.tfg.apachas.repository.RGroup;
 import esei.tfg.apachas.repository.RGroupUser;
@@ -44,7 +46,7 @@ public class SUser implements UserDetailsService {
     //JWT: ESTE MÉTODO BUSCAR UN USUARIO CON EL NOMBRE PASADO POR PARÁMETRO Y DEVUELVE UN OBJETO DE TIPO USERDETAILS CON LOGIN + CONTRASEÑA + LISTA DE PERMISOS VACÍA
     @Override
     public UserDetails loadUserByUsername(String userLogin) throws UsernameNotFoundException {
-        User user = rUser.findByUserLoginAndUserActiveTrue(userLogin);
+        User user = rUser.findByUserLoginAndUserActiveTrueAndUserVerifiedTrue(userLogin);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with userLogin: " + userLogin);
         }else {
@@ -71,29 +73,134 @@ public class SUser implements UserDetailsService {
             user.setUserCreation(new Timestamp(System.currentTimeMillis()));
             user.setUserRemoval(null);
             user.setUserActive(true);
+            user.setUserVerified(false);
             rUser.save(user);
             return true;
         }
     }
 
+    public synchronized boolean updateUser(MUser mUser) {
+        User user = conUser.conMUser(mUser);
+        User existingUser = rUser.findByUserId(user.getUserId());
+        if (existingUser != null) {
+            existingUser.setUserPassword(user.getUserPassword());
+            existingUser.setUserBirthday(user.getUserBirthday());
+            existingUser.setUserLogin(user.getUserLogin());
+            existingUser.setUserName(user.getUserName());
+            existingUser.setUserSurname(user.getUserSurname());
+            existingUser.setUserPhoto(user.getUserPhoto());
+            rUser.save(existingUser);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized boolean updateTokenPassword(MUser mUser, String tokenPassword) {
+
+        User user = conUser.conMUser(mUser);
+        User existingUser = rUser.findByUserEmail(user.getUserEmail());
+
+        if (existingUser != null) {
+            existingUser.setTokenPassword(tokenPassword);
+            rUser.save(existingUser);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized boolean verifyUser(MVerifyEmail mVerifyEmail) {
+        User existingUser = rUser.findByUserEmailAndUserVerifiedFalse(mVerifyEmail.getUserEmail());
+        if (existingUser != null) {
+            if (existingUser.getTokenPassword().equals(mVerifyEmail.getTokenPassword())){
+                existingUser.setUserVerified(true);
+                existingUser.setTokenPassword(null);
+                rUser.save(existingUser);
+                return true;
+            }else{
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized boolean retrievePassword(MRetrievePassword mRetrievePassword) {
+        User existingUser = rUser.findByUserEmailAndUserActiveTrueAndUserVerifiedTrue(mRetrievePassword.getUserEmail());
+        if (existingUser != null) {
+            if (existingUser.getTokenPassword().equals(mRetrievePassword.getTokenPassword())){
+                existingUser.setUserPassword(mRetrievePassword.getNewPassword());
+                existingUser.setTokenPassword(null);
+                rUser.save(existingUser);
+                return true;
+            }else{
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized boolean unverifiedUser(MUser mUser) {
+        User existingUser = rUser.findByUserEmail(mUser.getUserEmail());
+        if (existingUser != null && !existingUser.isUserVerified()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized boolean verifiedUser(MUser mUser) {
+        User existingUser = rUser.findByUserEmail(mUser.getUserEmail());
+        if (existingUser != null && existingUser.isUserVerified()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public synchronized Long countUsers(long authId){
-        return rUser.countByRolesAndUserIdIsNotAndUserActiveTrue("USER",authId);
+        return rUser.countByRolesAndUserIdIsNotAndUserActiveTrueAndUserVerifiedTrue("USER",authId);
     }
 
     public synchronized Long countSearchUsers(String userLogin, long authId){
-        return rUser.countByRolesAndUserLoginContainingAndUserIdIsNotAndUserActiveTrue("USER",userLogin,authId);
+        return rUser.countByRolesAndUserLoginContainingAndUserIdIsNotAndUserActiveTrueAndUserVerifiedTrue("USER",userLogin,authId);
     }
 
     public synchronized List<MUser> selectPageableUsers(long authId, Pageable pageable) {
-        return conUser.conUserList(rUser.findUsersByRolesEqualsAndUserIdIsNotAndUserActiveTrueOrderByUserLoginAsc("USER", authId,pageable).getContent());
+        return conUser.conUserList(rUser.findUsersByRolesEqualsAndUserIdIsNotAndUserActiveTrueAndUserVerifiedTrueOrderByUserLoginAsc("USER", authId,pageable).getContent());
     }
 
     public synchronized List<MUser> selectPageableSearchUsers(String userLogin, long authId, Pageable pageable) {
-        return conUser.conUserList(rUser.findUsersByUserLoginContainingAndUserIdIsNotAndRolesEqualsAndUserActiveTrueOrderByUserLoginAsc(userLogin, authId, "USER", pageable).getContent());
+        return conUser.conUserList(rUser.findUsersByUserLoginContainingAndUserIdIsNotAndRolesEqualsAndUserActiveTrueAndUserVerifiedTrueOrderByUserLoginAsc(userLogin, authId, "USER", pageable).getContent());
     }
 
     public synchronized MUser selectUser(String userLogin) {
-        User user = rUser.findByUserLoginAndUserActiveTrue(userLogin);
+        User user = rUser.findByUserLoginAndUserActiveTrueAndUserVerifiedTrue(userLogin);
         return conUser.conUser(user);
+    }
+
+    public synchronized MUser selectUserById(long userId) {
+        User user = rUser.findByUserIdAndUserActiveTrueAndUserVerifiedTrue(userId);
+        return conUser.conUser(user);
+    }
+
+    public synchronized boolean isTokenPassword(String userEmail) {
+        User existingUser = rUser.findByUserEmailAndTokenPasswordNull(userEmail);
+       if ( existingUser!= null) {
+           return false;
+       }else{
+           return true;
+       }
+    }
+
+    public synchronized boolean loginAvailable(String login) {
+        long available = rUser.findLoginAvailable(login);
+        if (available == 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

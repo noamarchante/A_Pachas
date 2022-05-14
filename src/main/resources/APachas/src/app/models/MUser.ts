@@ -12,4 +12,5 @@ export class MUser {
     userActive: boolean;
     userCreation: Date;
     userRemoval: Date;
+    userNotify: boolean;
 }

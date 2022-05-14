@@ -67,6 +67,17 @@ public class User implements Serializable {
     @Size(min = 1, max = 1)
     private boolean userActive;
 
+    @Column(name = "userVerified", length = 1)
+    @Size(min = 1, max = 1)
+    private boolean userVerified;
+
+    @Column(name = "tokenPassword")
+    private String tokenPassword;
+
+    @Column(name = "userNotify", length = 1)
+    @Size(min = 1, max = 1)
+    private boolean userNotify;
+
     //N:M USUARIO RELACIONADO CON USUARIO
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Transient
@@ -92,6 +103,16 @@ public class User implements Serializable {
     @Transient
     private Set<GroupUser> groupUserSet = new HashSet<>();
 
+    /*//N:M USUARIO emite pago evento
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserUserEvent> senderSet = new HashSet<>();
+
+    //N:M USUARIO recive pago evento
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    @Transient
+    private Set<UserUserEvent> receiverSet = new HashSet<>();*/
+
     public User() {
     }
 
@@ -109,6 +130,32 @@ public class User implements Serializable {
         this.setUserCreation(new Timestamp(System.currentTimeMillis()));
         this.setUserRemoval(null);
         this.setUserActive(true);
+        this.setUserVerified(true);
+        this.setUserNotify(true);
+    }
+
+    public boolean isUserNotify() {
+        return userNotify;
+    }
+
+    public void setUserNotify(boolean userNotify) {
+        this.userNotify = userNotify;
+    }
+
+    public String getTokenPassword() {
+        return tokenPassword;
+    }
+
+    public void setTokenPassword(String tokenPassword) {
+        this.tokenPassword = tokenPassword;
+    }
+
+    public boolean isUserVerified() {
+        return userVerified;
+    }
+
+    public void setUserVerified(boolean userVerified) {
+        this.userVerified = userVerified;
     }
 
     public User(long userId){

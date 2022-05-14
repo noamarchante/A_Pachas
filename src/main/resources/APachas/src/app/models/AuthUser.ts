@@ -11,8 +11,9 @@ export class AuthUser {
   private userId: number;
   private userName: string;
   private userSurname: string;
-  private userBirthday: Date;
+  private userBirthday: string;
   private userPhoto: string;
+  private userNotify: boolean;
 
   constructor() {
     const user: AuthUser = JSON.parse(<string>localStorage.getItem('currentUser'));
@@ -29,6 +30,7 @@ export class AuthUser {
       this.userSurname = user.userSurname;
       this.userBirthday = user.userBirthday;
       this.userPhoto = user.userPhoto;
+      this.userNotify = user.userNotify;
     } else {
       this._authenticated = false;
     }
@@ -74,11 +76,11 @@ export class AuthUser {
     this.userSurname = value;
   }
 
-  get birthday(): Date {
+  get birthday(): string {
     return this.userBirthday;
   }
 
-  set birthday(value: Date) {
+  set birthday(value: string) {
     this.userBirthday = value;
   }
 
@@ -128,6 +130,14 @@ export class AuthUser {
 
   set id(value: number) {
     this.userId = value;
+  }
+
+  get notify(): boolean {
+    return this.userNotify;
+  }
+
+  set notify(value: boolean) {
+    this.userNotify = value;
   }
 
   //ALMACENA AL USUARIO LOGGEADO ASOCIADO A LA CLAVE currentUser EN FORMATO JSON
