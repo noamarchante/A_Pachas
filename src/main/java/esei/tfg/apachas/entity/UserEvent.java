@@ -25,7 +25,7 @@ public class UserEvent implements Serializable {
     @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     private User user;
 
-    @Column(name = "accept", length = 1)
+    @Column(name = "accept", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean accept;
 
@@ -36,13 +36,13 @@ public class UserEvent implements Serializable {
     @ColumnDefault(value = "0.0")
     private Double totalExpense;
 
-    @Column(name = "userEventCreation")
+    @Column(name = "userEventCreation", nullable = false)
     private Timestamp userEventCreation;
 
     @Column(name = "userEventRemoval")
     private Timestamp userEventRemoval;
 
-    @Column(name = "userEventActive", length = 1)
+    @Column(name = "userEventActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean userEventActive;
 

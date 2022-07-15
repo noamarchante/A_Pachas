@@ -20,16 +20,16 @@ public class GroupUser implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     private User user;
 
-    @Column(name = "groupUserCreation")
+    @Column(name = "groupUserCreation", nullable = false)
     private Timestamp groupUserCreation;
 
     @Column(name = "groupUserRemoval")
     private Timestamp groupUserRemoval;
 
-    @Column(name = "groupUserActive", length = 1)
+    @Column(name = "groupUserActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean groupUserActive;
 

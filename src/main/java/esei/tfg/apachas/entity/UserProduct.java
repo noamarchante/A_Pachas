@@ -22,13 +22,13 @@ public class UserProduct implements Serializable {
     @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     private User user;
 
-    @Column(name = "userProductCreation")
+    @Column(name = "userProductCreation", nullable = false)
     private Timestamp userProductCreation;
 
     @Column(name = "userProductRemoval")
     private Timestamp userProductRemoval;
 
-    @Column(name = "userProductActive", length = 1)
+    @Column(name = "userProductActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean userProductActive;
 

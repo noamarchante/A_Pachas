@@ -31,13 +31,13 @@ public class Group implements Serializable {
     @Column(name = "groupPhoto", length = 100000)
     private String groupPhoto;
 
-    @Column(name = "groupCreation")
+    @Column(name = "groupCreation", nullable = false)
     private Timestamp groupCreation;
 
     @Column(name = "groupRemoval")
     private Timestamp groupRemoval;
 
-    @Column(name = "groupActive", length = 1)
+    @Column(name = "groupActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean groupActive;
 

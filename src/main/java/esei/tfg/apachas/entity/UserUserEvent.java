@@ -25,27 +25,27 @@ public class UserUserEvent implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("eventId")
-    @JoinColumn(name = "eventId", referencedColumnName = "eventId")
+    @JoinColumn(name = "eventId", referencedColumnName = "eventId", nullable = false)
     private Event event;
 
-    @Column(name = "paid", length = 1)
+    @Column(name = "paid", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean paid;
 
-    @Column(name = "confirmed", length = 1)
+    @Column(name = "confirmed", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean confirmed;
 
-    @Column(name = "cost")
+    @Column(name = "cost", nullable = false)
     private double cost;
 
-    @Column(name = "userUserEventCreation")
+    @Column(name = "userUserEventCreation", nullable = false)
     private Timestamp userUserEventCreation;
 
     @Column(name = "userUserEventRemoval")
     private Timestamp userUserEventRemoval;
 
-    @Column(name = "userUserEventActive", length = 1)
+    @Column(name = "userUserEventActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean userUserEventActive;
 

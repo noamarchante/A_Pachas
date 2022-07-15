@@ -23,17 +23,17 @@ public class UserUser implements Serializable {
     @JoinColumn(name = "friendId", referencedColumnName = "userId", nullable = false)
     private User friend;
 
-    @Column(name = "accept")
+    @Column(name = "accept", nullable = false)
     private boolean accept;
 
-    @Column(name = "userUserCreation")
+    @Column(name = "userUserCreation", nullable = false)
     private Timestamp userUserCreation;
 
     @Column(name = "userUserRemoval")
     private Timestamp userUserRemoval;
 
     //ATRIBUTO: USUARIO DE EVENTO ACTIVO (SI SE HA ELIMINADO O NO)
-    @Column(name = "userUserActive", length = 1)
+    @Column(name = "userUserActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean userUserActive;
 

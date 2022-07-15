@@ -41,18 +41,18 @@ public class Event implements Serializable {
     @Column(name = "eventPhoto", length = 100000)
     private String eventPhoto;
 
-    @Column(name = "eventOpen", length = 1)
+    @Column(name = "eventOpen", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean eventOpen;
 
     @Column(name = "eventEnd", nullable = false, length = 19)
     private Timestamp eventEnd;
 
-    @Column(name = "eventActive", length = 1)
+    @Column(name = "eventActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean eventActive;
 
-    @Column(name = "eventCreation", length = 19)
+    @Column(name = "eventCreation", length = 19, nullable = false)
     private Timestamp eventCreation;
 
     @Column(name = "eventRemoval", length = 19)

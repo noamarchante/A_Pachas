@@ -187,7 +187,7 @@ public class SUserEvent {
     }
 
     public synchronized List<MUserEvent> selectUserEvents(Long eventId) {
-        List<UserEvent> userEventList = rUserEvent.findPageableUserEvents(eventId);
+        List<UserEvent> userEventList = rUserEvent.findUserEvents(eventId);
         return conUserEvent.conUserEventList(userEventList);
     }
 

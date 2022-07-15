@@ -63,18 +63,18 @@ public class User implements Serializable {
     @Column(name = "userRemoval")
     private Timestamp userRemoval;
 
-    @Column(name = "userActive", length = 1)
+    @Column(name = "userActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean userActive;
 
-    @Column(name = "userVerified", length = 1)
+    @Column(name = "userVerified", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean userVerified;
 
     @Column(name = "tokenPassword")
     private String tokenPassword;
 
-    @Column(name = "userNotify", length = 1)
+    @Column(name = "userNotify", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean userNotify;
 
@@ -130,7 +130,7 @@ public class User implements Serializable {
         this.setUserCreation(new Timestamp(System.currentTimeMillis()));
         this.setUserRemoval(null);
         this.setUserActive(true);
-        this.setUserVerified(true);
+        this.setUserVerified(false);
         this.setUserNotify(true);
     }
 

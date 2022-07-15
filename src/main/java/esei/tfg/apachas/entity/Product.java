@@ -57,13 +57,13 @@ public class Product implements Serializable {
     @NotBlank
     private Timestamp productPurchaseDate;
 
-    @Column(name = "productCreation", length = 19)
+    @Column(name = "productCreation", length = 19, nullable = false)
     private Timestamp productCreation;
 
     @Column(name = "productRemoval", length = 19)
     private Timestamp productRemoval;
 
-    @Column(name = "productActive", length = 1)
+    @Column(name = "productActive", length = 1, nullable = false)
     @Size(min = 1, max = 1)
     private boolean productActive;
 

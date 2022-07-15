@@ -79,11 +79,11 @@ public interface RUserEvent extends CrudRepository<UserEvent, UserEventId>, Pagi
 
     UserEvent findUserEventByUserEventId_EventIdAndUserEventId_UserId(@Param("eventId") long eventId, @Param("authId") long authId);
 
-    @Query("SELECT DISTINCT uE FROM userEvent uE WHERE uE.userEventId.eventId = :eventId AND uE.userEventActive = TRUE AND uE.accept = TRUE ORDER BY uE.user.userLogin ASC")
+    @Query("SELECT DISTINCT uE FROM userEvent uE, user u WHERE uE.userEventId.eventId = :eventId AND uE.userEventId.userId = u.userId AND uE.userEventActive = TRUE AND uE.accept = TRUE ORDER BY u.userLogin ASC")
     Page<UserEvent> findPageableUserEvents(@Param("eventId") long eventId, Pageable pageable);
 
     @Query("SELECT DISTINCT uE FROM userEvent uE WHERE uE.userEventId.eventId = :eventId AND uE.userEventActive = TRUE AND uE.accept = TRUE ORDER BY uE.user.userLogin ASC")
-    List<UserEvent> findPageableUserEvents(@Param("eventId") long eventId);
+    List<UserEvent> findUserEvents(@Param("eventId") long eventId);
 
     @Query("SELECT COUNT(DISTINCT uE) FROM userEvent uE WHERE uE.userEventId.eventId = :eventId AND uE.userEventActive = TRUE AND uE.accept = TRUE")
     Long countUserEvents(@Param("eventId") long eventId);
