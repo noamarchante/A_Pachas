@@ -12,7 +12,7 @@
                 <div class="card mb-3 color" data-bs-toggle="modal" data-bs-target="#detailUserModal" (click)="selectUser(users.indexOf(user))">
                     <div class="row g-0">
                         <div class="col-xxl-5 col-xl-12 col-lg-5 col-md-12 col-sm-5">
-                            <ng-container *ngIf="user.userPhoto != null; else imagesDiv">
+                            <ng-container *ngIf="user.userPhoto; else imagesDiv">
                                 <img class="image" [src]="images[user.userId]">
                             </ng-container>
                             <ng-template #imagesDiv>

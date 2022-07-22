@@ -20,7 +20,7 @@
                     </div>
                     <div>
                         <input type="text" id="register_userSurname" name="userSurname" placeholder="Apellidos*"
-                               [(ngModel)]="surname" pattern="[a-zA-ZñÑ ]{1,100}" title="Must be an alpha" required
+                               [(ngModel)]="surname" pattern="[a-zA-Zñáéíóú ]{1,100}" title="Must be an alpha" required
                                #userSurnameForm="ngModel" minlength="6">
                         <div *ngIf="loginForm.submitted && userSurnameForm.invalid" class="alert alert-danger">
                             <div *ngIf="userSurnameForm.errors.required">El apellido es un campo obligatorio</div>

@@ -3,6 +3,9 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {NotificationService} from "../../../modules/notification/services/notification.service";
 import {MProduct} from "../../../models/MProduct";
 import {ProductService} from "../../../services/product.service";
+import {PRODUCTJOIN} from "../listProducts/listProducts.component";
+import {UserProductService} from "../../../services/userProduct.service";
+import {AuthenticationService} from "../../../services/authentication.service";
 
 @Component({
     selector: 'app-createProduct',
@@ -67,7 +70,9 @@ export class CreateProductComponent implements OnInit {
 
     constructor(private productService: ProductService,
                 private sanitizer: DomSanitizer,
-                private notificationService: NotificationService
+                private notificationService: NotificationService,
+                private userProductService: UserProductService,
+                private authenticationService: AuthenticationService
     ) {
     }
 
@@ -133,6 +138,13 @@ export class CreateProductComponent implements OnInit {
 
     onEdit(){
         this.productService.editProduct(this.product).subscribe(() => {
+            this.userProductService.getUserProduct(this.product.productId, this.authenticationService.getUser().id).subscribe((response)=>{
+                    if (response.productId != 0){
+                        this.userProductService.editUserProduct(this.product.productId, this.authenticationService.getUser().id).subscribe();
+                    }else{
+                        this.userProductService.createUserProduct(this.product.productId, this.authenticationService.getUser().id).subscribe();
+                    }
+                });
             this.eventSave.emit();
             this.closeModal();
             document.getElementById("closeProductButton").click();

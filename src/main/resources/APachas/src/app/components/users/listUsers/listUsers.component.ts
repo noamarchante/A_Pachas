@@ -106,7 +106,7 @@ export class ListUsersComponent implements OnInit {
 
     private getURL(users: MUser[]){
         users.forEach((user) => {
-            this.images[user.userId] = this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;png;base64,' + user.userPhoto);
+            this.images[user.userId] = user.userPhoto;
         });
     }
 

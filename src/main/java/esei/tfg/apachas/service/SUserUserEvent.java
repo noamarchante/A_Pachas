@@ -156,13 +156,13 @@ public class SUserUserEvent {
     }
 
     //ordena los usuarios segun su deuda
-    private LinkedHashMap<Long,Double> sortUserUserEventCost (HashMap<Long, Double> userUserEventCostHash){
+    /*private LinkedHashMap<Long,Double> sortUserUserEventCost (HashMap<Long, Double> userUserEventCostHash){
         return userUserEventCostHash
                 .entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(a,b) -> a, LinkedHashMap::new));
-    }
+    }*/
 
     public synchronized List<MUserUserEvent> selectPageableUserUserEventsByEvent(Long eventId, Pageable pageable) {
         List<UserUserEvent> userUserEventList = rUserUserEvent.findPageableUserUserEvents(eventId, pageable).getContent();

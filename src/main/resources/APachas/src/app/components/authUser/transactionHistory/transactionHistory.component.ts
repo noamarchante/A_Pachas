@@ -428,7 +428,7 @@ export class TransactionHistoryComponent implements OnInit {
 
     private getURLEvent(event: MEvent){
         if (event.eventPhoto != null){
-            this.imagesPartakers[event.eventId] = this.sanitizer.bypassSecurityTrustUrl(event.eventPhoto);
+            this.imagesEvents[event.eventId] = this.sanitizer.bypassSecurityTrustUrl(event.eventPhoto);
         }
     }
 

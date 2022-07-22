@@ -478,7 +478,7 @@ public class RUserUserEventTests {
         assertThat(savedUserUserEvent).hasSize(1).contains(userUserEvent);
     }
 
-    @Test
+    /*@Test
     public void testFindPageableUserUserEventsWithAuthUserIdByEvent() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -566,7 +566,7 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableUserUserEventsWithAuthUserIdByEvent(user2.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
-    }
+    }*/
 
     @Test
     public void testFindPageableUserUserEventsDebtsWithAuthUserId() {
@@ -658,7 +658,7 @@ public class RUserUserEventTests {
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
     }
 
-    @Test
+    /*@Test
     public void testFindPageableUserUserEventsDebtsWithAuthUserIdByEvent() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -746,7 +746,7 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableUserUserEventsDebtsWithAuthUserIdByEvent(user2.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
-    }
+    }*/
 
     @Test
     public void testFindPageableUserUserEventsPaymentsWithAuthUserId() {
@@ -838,7 +838,7 @@ public class RUserUserEventTests {
         assertThat(savedUserUserEvent).hasSize(1).contains(userUserEvent);
     }
 
-    @Test
+    /*@Test
     public void testFindPageableUserUserEventsPaymentsWithAuthUserIdByEvent() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -926,7 +926,7 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableUserUserEventsPaymentsWithAuthUserIdByEvent(user.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(1).contains(userUserEvent);
-    }
+    }*/
 
     @Test
     public void testFindPageableNotFinishedUserUserEventsWithAuthUserId() {
@@ -1018,7 +1018,7 @@ public class RUserUserEventTests {
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
     }
 
-    @Test
+    /*@Test
     public void testFindPageableNotFinishedUserUserEventsWithAuthUserIdByEvent() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1106,7 +1106,7 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableNotFinishedUserUserEventsWithAuthUserIdByEvent(user2.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
-    }
+    }*/
 
     @Test
     public void testFindPageableNotFinishedUserUserEventsDebtsWithAuthUserId() {
@@ -1198,7 +1198,7 @@ public class RUserUserEventTests {
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
     }
 
-    @Test
+    /*@Test
     public void testFindPageableNotFinishedUserUserEventsDebtsWithAuthUserIdByEvent() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1286,7 +1286,7 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableNotFinishedUserUserEventsDebtsWithAuthUserIdByEvent(user2.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
-    }
+    }*/
 
     @Test
     public void testFindPageableNotFinishedUserUserEventsPaymentsWithAuthUserId() {
@@ -1378,7 +1378,7 @@ public class RUserUserEventTests {
         assertThat(savedUserUserEvent).hasSize(1).contains(userUserEvent);
     }
 
-    @Test
+    /*@Test
     public void testFindPageableNotFinishedUserUserEventsPaymentsWithAuthUserIdByEvent() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1466,9 +1466,9 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableNotFinishedUserUserEventsPaymentsWithAuthUserIdByEvent(user.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(1).contains(userUserEvent);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testFindPageableUserUserEventsWithAuthUserIdByDate() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1537,9 +1537,9 @@ public class RUserUserEventTests {
         em.persist(userUserEvent2);
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableUserUserEventsWithAuthUserIdByDate(user2.getUserId(), Pageable.unpaged());
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testFindPageableUserUserEventsDebtsWithAuthUserIdByDate() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1627,9 +1627,9 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableUserUserEventsDebtsWithAuthUserIdByDate(user2.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testFindPageableUserUserEventsPaymentsWithAuthUserIdByDate() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1717,9 +1717,9 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableUserUserEventsPaymentsWithAuthUserIdByDate(user.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(1).contains(userUserEvent);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testFindPageableNotFinishedUserUserEventsWithAuthUserIdByDate() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1807,9 +1807,9 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableNotFinishedUserUserEventsWithAuthUserIdByDate(user2.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testFindPageableNotFinishedUserUserEventsDebtsWithAuthUserIdByDate() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1897,9 +1897,9 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableNotFinishedUserUserEventsDebtsWithAuthUserIdByDate(user2.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(2).contains(userUserEvent, userUserEvent2);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testFindPageableNotFinishedUserUserEventsPaymentsWithAuthUserIdByDate() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1987,7 +1987,7 @@ public class RUserUserEventTests {
         Page<UserUserEvent> savedUserUserEvent = rUserUserEvent.findPageableNotFinishedUserUserEventsPaymentsWithAuthUserIdByDate(user.getUserId(), Pageable.unpaged());
 
         assertThat(savedUserUserEvent).hasSize(1).contains(userUserEvent);
-    }
+    }*/
 
     @Test
     public void testCountUserUserEvents() {

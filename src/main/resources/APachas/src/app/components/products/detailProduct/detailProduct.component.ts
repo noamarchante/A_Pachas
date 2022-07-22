@@ -123,7 +123,8 @@ export class DetailProductComponent implements OnInit, AfterViewChecked {
     onDelete($event){
         if($event.valueOf()){
             this.productService.deleteProduct(this.product.productId).subscribe(()=>{
-                this.eventDelete.emit();
+                this.userProductService.deleteUserProduct(this.product.productId, this.authenticationService.getUser().id).subscribe(()=>{});
+                    this.eventDelete.emit();
                 this.notificationService.success("Producto eliminado", "Se ha eliminado el producto correctamente.");
             });
         }

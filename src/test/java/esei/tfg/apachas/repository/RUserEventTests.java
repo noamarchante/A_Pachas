@@ -1130,7 +1130,7 @@ public class RUserEventTests {
         assertThat(savedUserEvent).isEqualTo(userEvent);
     }
 
-    @Test
+   /*@Test
     public void testFindPageableUserEvents() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1172,9 +1172,9 @@ public class RUserEventTests {
         em.persist(userEvent5);
         Page<UserEvent> savedUserEvent = rUserEvent.findPageableUserEvents(event.getEventId(), Pageable.unpaged());
         assertThat(savedUserEvent).hasSize(2);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testFindUserEvents() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1216,7 +1216,7 @@ public class RUserEventTests {
         em.persist(userEvent5);
         List<UserEvent> savedUserEvent = rUserEvent.findUserEvents(event.getEventId());
         assertThat(savedUserEvent).hasSize(3).contains(userEvent, userEvent2, userEvent3);
-    }
+    }*/
 
     @Test
     public void testCountUserEvents() {
@@ -1274,7 +1274,7 @@ public class RUserEventTests {
         assertThat(savedUserEvent).isEqualTo(2);
     }
 
-    @Test
+    /*@Test
     public void testFindPageableSearchUserEvents() {
         User user = new User(0, "noa", "López Marchante", "noamarchante", "abc123.", "noamarchante@gmail.com", new Timestamp(12), null, "USER", "");
         User user2 = new User(0, "laura", "Blanco Delgado", "lauraBlanco", "abc123.", "laurablanco@gmail.com",new Timestamp(12) , null, "USER", "");
@@ -1316,7 +1316,7 @@ public class RUserEventTests {
         em.persist(userEvent5);
         Page<UserEvent> savedUserEvent = rUserEvent.findPageableSearchUserEvents(event.getEventId(), "a" , Pageable.unpaged());
         assertThat(savedUserEvent).hasSize(1).contains(userEvent2);
-    }
+    }*/
 
     @Test
     public void testCountSearchUserEvents() {

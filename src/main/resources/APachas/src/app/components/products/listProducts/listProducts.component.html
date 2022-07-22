@@ -69,7 +69,7 @@
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 circle">
             <div class="money">
                 <p  title="Dinero que he aportado al evento" class="partakerExpense">
-                    {{totalExpense}}€
+                    {{cost(totalExpense)}}€
                 </p>
                 <p  title="Dinero que he aportado al evento" class="partakerTextExpense">
                     Dinero adelantado
@@ -82,7 +82,7 @@
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 circle">
             <div class="money">
                 <p class="partakerExpense" title="Dinero que he gastado en el evento">
-                    {{debt}}€
+                    {{cost(debt)}}€
                 </p>
                 <p class="partakerTextExpense" title="Dinero que he gastado en el evento">
                     Dinero gastado
@@ -92,7 +92,7 @@
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 circle">
             <div class="money">
                 <p  title="Dinero total adelantado al evento" class="partakerExpense">
-                    {{totalEventExpense}}€
+                    {{cost(totalEventExpense)}}€
                 </p>
                 <p  title="Dinero total adelantado al evento" class="partakerTextExpense">
                     Dinero total adelantado
@@ -102,7 +102,7 @@
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 circle">
             <div class="money">
                 <p  title="Dinero total gastado en el evento" class="partakerExpense">
-                    {{totalProductCost}}€
+                    {{cost(totalProductCost)}}€
                 </p>
                 <p  title="Dinero total gastado en el evento" class="partakerTextExpense">
                     Dinero total gastado

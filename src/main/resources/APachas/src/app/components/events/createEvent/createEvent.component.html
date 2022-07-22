@@ -147,7 +147,7 @@
                                     <ng-container *ngIf="item.userPhoto; else userPhotoDiv">
                                         <span class="ng-value-label" id="{{item.groupId + '-'+ item.userId}}" title="{{item.userLogin}}"><img
                                                         [src]="item.userPhoto" class="imageSelect"><p
-                                                        class="selectedText">{{item.userLogin}}</p></span>
+                                                        class="selectedText listSelect">{{item.userLogin}}</p></span>
                                     </ng-container>
                                     <ng-template #userPhotoDiv>
                                         <span class="ng-value-label" id="{{item.groupId + '-'+item.userId}}" title="{{item.userLogin}}"><img

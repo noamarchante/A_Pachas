@@ -106,6 +106,10 @@ export class ListProductsComponent implements OnInit {
         }
     }
 
+    cost(cost: number): number{
+        return Math.round(cost*100)/100;
+    }
+
     private getURLEvent(){
         this.imageEvent= this.sanitizer.bypassSecurityTrustUrl(this.event.eventPhoto);
     }
